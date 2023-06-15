@@ -1,0 +1,72 @@
+<form>
+  <div class="main-content position-relative max-height-vh-100 h-100">
+    <div class="container-fluid py-4">
+      <div class="row">
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <p class="text-uppercase text-sm">Activation</p>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="form-check form-switch ms-auto text-end">
+                      <input class="form-check-input" type="checkbox" id="active">
+                      <label class="form-check-label" for="active">Active</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr class="horizontal dark">
+              <p class="text-uppercase text-sm">General Information </p>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="name" class="form-control-label">Name</label>
+                    <input class="form-control" name="name" id="name" type="text" value="Jesse">
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="hourlyRate" class="form-control-label">Hourly rate $</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                      </div>
+                      <input type="text" class="form-control" name="hourlyRate" id="hourlyRate" aria-label="Dollar amount (with dot and two decimal places)">
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+
+
+              <hr class="horizontal dark">
+              <p class="text-uppercase text-sm">Description</p>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="desciption" class="form-control-label">Description</label>
+                    <textarea class="form-control" name="desciption" id="desciption" value="A beautiful Dashboard for Bootstrap 5. It is Free and Open Source."  rows="3"></textarea>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</form>
+<script>
+
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+  </script>
