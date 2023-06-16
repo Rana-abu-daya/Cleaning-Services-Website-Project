@@ -33,4 +33,10 @@ public class ServicesServiceImp implements ServicesService {
         List<Services> list= servicesRepository.findAll();
         return list;
     }
+    @Override
+    public List<Services> getActiveServies(){
+        List<Services> list= servicesRepository.findByActiveTrue();
+        return list;
+
+    }
 }

@@ -22,7 +22,7 @@ public class mainController {
 
     @ModelAttribute("ServicesList")
     private List<List<Services>> getServices(){
-        List<Services> list =  servicesServiceImp.getAllServices();
+        List<Services> list =  servicesServiceImp.getActiveServies();
         List<List<Services>> finals = new ArrayList<>();
         int sublistSize = 3;
 
@@ -35,8 +35,17 @@ public class mainController {
     }
     @GetMapping(value = {"/","/home", "/homey"})
     public String home(){
-
-
         return "index";
+    }
+    @GetMapping(value = {"/dashboard"})
+    public  String  dashboard(){
+
+        return "dashboard";
+    }
+
+    @GetMapping(value = {"/dashboard/dash"})
+    public  String  dash(){
+
+        return "dash";
     }
 }

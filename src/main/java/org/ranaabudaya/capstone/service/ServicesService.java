@@ -9,5 +9,6 @@ public interface ServicesService {
     public void saveService(Services service);
     public Services findServiceByName(String name);
     public List<Services> getAllServices();
+    public List<Services> getActiveServies();
 
 }
