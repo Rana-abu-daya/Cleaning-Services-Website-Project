@@ -1,0 +1,169 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<footer>
+
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js" th:src="@{/assets/js/core/popper.min.js}"></script>
+<script src="../assets/js/core/bootstrap.min.js"  th:src="@{/assets/js/core/bootstrap.min.js}"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"  th:src="@{/assets/js/plugins/perfect-scrollbar.min.js}"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"  th:src="@{/assets/js/plugins/smooth-scrollbar.min.js}"></script>
+
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/argon-dashboard.min.js?v=2.0.4" th:src="@{/assets/js/argon-dashboard.min.js?v=2.0.4}"></script>
+
+<!--<script>-->
+<!--if ( document.getElementById('divContent').textContent.trim() === '' ){-->
+<!--fetch('/dashboard/dash')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--}-->
+<!--     document.getElementById('dashboard').addEventListener('click', function(event) {-->
+<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--      let gg = document.getElementsByClassName('nav-link active');-->
+<!--           gg[0].classList.remove("active");-->
+<!--           document.getElementById('dashboard').classList.add("active");-->
+<!--      fetch('/dashboard/dash')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--    });-->
+
+<!--    document.getElementById('employee').addEventListener('click', function(event) {-->
+<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--        let gg = document.getElementsByClassName('nav-link active');-->
+<!--           gg[0].classList.remove("active");-->
+<!--           document.getElementById('employee').classList.add("active");-->
+<!--      fetch('../pages/cleaner.html')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+
+<!--    });-->
+<!--     document.getElementById('profile').addEventListener('click', function(event) {-->
+<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--          let gg = document.getElementsByClassName('nav-link active');-->
+<!--           gg[0].classList.remove("active");-->
+<!--           document.getElementById('profile').classList.add("active");-->
+<!--      fetch(' ../pages/profile2.html')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--    });-->
+
+<!--     document.getElementById('booking').addEventListener('click', function(event) {-->
+<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--          let gg = document.getElementsByClassName('nav-link active');-->
+<!--           gg[0].classList.remove("active");-->
+<!--           document.getElementById('booking').classList.add("active");-->
+<!--      fetch(' ../pages/bookings.html')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--    });-->
+
+<!--    document.getElementById('customer').addEventListener('click', function(event) {-->
+<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--          let gg = document.getElementsByClassName('nav-link active');-->
+<!--           gg[0].classList.remove("active");-->
+<!--           document.getElementById('customer').classList.add("active");-->
+<!--      fetch(' ../pages/customer.html')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--    });-->
+
+<!--      document.getElementById('services').addEventListener('click', function(event) {-->
+<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--          let gg = document.getElementsByClassName('nav-link active');-->
+<!--           gg[0].classList.remove("active");-->
+<!--           document.getElementById('services').classList.add("active");-->
+<!--      fetch('/services/services')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--        console.log(data);-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--    });-->
+<!--function ClickTheEditLink(){-->
+
+<!--event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--       event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--           document.getElementById('employee').classList.add("active");-->
+<!--      fetch(' ../pages/becomeCleanerAdmin.html')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--}-->
+
+<!--function ClickTheEditBooking(){-->
+
+<!--event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--       event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--           document.getElementById('booking').classList.add("active");-->
+<!--      fetch(' ../pages/BookingEdit.html')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--}-->
+
+
+<!--function ClickTheEditCustomer(){-->
+
+<!--event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--       event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--           document.getElementById('customer').classList.add("active");-->
+<!--      fetch(' ../pages/CustomerAdmin.html')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--}-->
+
+
+
+<!--function newService(){-->
+<!--event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--       event.preventDefault(); // Prevent the link from navigating elsewhere-->
+<!--           document.getElementById('services').classList.add("active");-->
+<!--      fetch('/services/add-service')-->
+<!--        .then(response => response.text())-->
+<!--        .then(data => {-->
+<!--          document.getElementById('divContent').innerHTML = data;-->
+<!--        })-->
+<!--        .catch(err => console.warn(err));-->
+<!--}-->
+
+<!--  </script>-->
+
+
+</footer>
+</html>
