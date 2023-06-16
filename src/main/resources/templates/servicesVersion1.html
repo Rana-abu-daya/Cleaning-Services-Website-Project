@@ -1,0 +1,55 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <main class="main-content position-relative border-radius-lg ">
+    <!-- Navbar -->
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-md-12 mt-4">
+          <div class="card">
+            <div class="card-header pb-0 px-3" style="display: flex;">
+              <div class="d-flex flex-column">
+              <h6 class="mb-0">Services Information</h6>
+              </div>
+              <div class="ms-auto text-end">
+                <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" onclick="newService()" style="color:#1d64dc !important;;"><i class="fas fa-plus me-2" aria-hidden="true" ></i>New Service</a>
+              </div>
+            </div>
+            <div class="card-body pt-4 p-3">
+              <ul class="list-group">
+                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg" th:each="service : ${ServicesList}">
+                  <div class="d-flex flex-column">
+
+                    <h6 class="mb-3 text-sm" th:text="${service.name}"></h6>
+
+                    <span class="mb-2 text-xs">Price:$ <span class="text-dark font-weight-bold ms-sm-2" th:text="${service.price}+ hourly"></span></span>
+                    <span class="mb-2 text-xs">Discreption : <span class="text-dark ms-sm-2 font-weight-bold">
+                      <ul class="list" >
+                                            <li class="active" th:each='desc : ${#strings.arraySplit(service.description, "**")}' th:text="${desc}"></li>
+
+                                        </ul>
+
+
+                    </span></span>
+<!--                    <span class="text-xs">VAT Number: <span class="text-dark ms-sm-2 font-weight-bold">FRB1235476</span></span>-->
+
+                  </div>
+                  <div class="ms-auto text-center">
+                    <span  class="badge " th:classappend="${service.active} ? alert-success: alert-warning"  th:text="${service.active} ? Active: Inactive"role="alert"></span>
+                  </div>
+                  <div class="ms-auto text-end">
+
+                    <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                    <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" onclick="newService()"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
+
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</html>
