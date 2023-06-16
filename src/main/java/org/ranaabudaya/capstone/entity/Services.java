@@ -15,13 +15,9 @@ public class Services {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @NotBlank
     private String name;
-    @NotNull
     private double price;
-    @NotBlank
     private String description;
-    @NotNull
     private boolean active;
 
 }
