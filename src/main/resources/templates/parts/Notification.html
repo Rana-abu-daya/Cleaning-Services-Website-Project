@@ -1,0 +1,8 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<div class="container">
+  <div th:if="${message}" id="notification" th:class="'alert ' + ${alertType}" style="color:white;padding:10px">
+    <strong><span th:text="${message}"></span></strong>
+  </div>
+</div>
+</html>
