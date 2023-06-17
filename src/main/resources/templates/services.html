@@ -17,6 +17,7 @@
 
   <!-- End Navbar -->
   <div class="container-fluid py-4">
+    <th:block th:insert="parts/Notification.html :: div"></th:block>
 
     <div id="divContent">
       <main class="main-content position-relative border-radius-lg ">
@@ -31,18 +32,18 @@
                     <h6 class="mb-0">Services Information</h6>
                   </div>
                   <div class="ms-auto text-end">
-                    <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" onclick="newService()" style="color:#1d64dc !important;;"><i class="fas fa-plus me-2" aria-hidden="true" ></i>New Service</a>
+                    <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/services/add-service}" style="color:#1d64dc !important;;"><i class="fas fa-plus me-2" aria-hidden="true" ></i>New Service</a>
                   </div>
                 </div>
                 <div class="card-body pt-4 p-3">
                   <ul class="list-group">
-                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg" th:each="service : ${ServicesList}">
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"  th:each="service : ${ServicesList}" th:id="'serviceDiv'+${service.id}">
                       <div class="d-flex flex-column">
 
                         <h6 class="mb-3 text-sm" th:text="${service.name}"></h6>
 
-                        <span class="mb-2 text-xs">Price:$ <span class="text-dark font-weight-bold ms-sm-2" th:text="${service.price}+ hourly"></span></span>
-                        <span class="mb-2 text-xs">Discreption : <span class="text-dark ms-sm-2 font-weight-bold">
+                        <span class="mb-2 text-xs">Price: $ <span class="text-dark font-weight-bold ms-sm-2" th:text="${service.price}+ '/hr'"></span></span>
+                        <span class=" mb-2 text-xs">Discreption : <span class="text-dark ms-sm-2 font-weight-bold">
                       <ul class="list" >
                                             <li class="active" th:each='desc : ${#strings.arraySplit(service.description, "**")}' th:text="${desc}"></li>
 
@@ -53,13 +54,36 @@
                         <!--                    <span class="text-xs">VAT Number: <span class="text-dark ms-sm-2 font-weight-bold">FRB1235476</span></span>-->
 
                       </div>
-                      <div class="ms-auto text-center">
-                        <span  class="badge " th:classappend="${service.active} ? alert-success: alert-warning"  th:text="${service.active} ? Active: Inactive"role="alert"></span>
-                      </div>
+
                       <div class="ms-auto text-end">
 
-                        <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;"><i class="far fa-trash-alt me-2"></i>Delete</a>
-                        <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" onclick="newService()"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
+                        <span  class="badge " th:classappend="${service.active} ? alert-success: alert-warning"  th:text="${service.active} ? Active: Inactive"role="alert"></span>
+                        <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="#" data-bs-toggle="modal"  th:attr="data-bs-target='#exampleModal'+${service.id}" ><i class="far fa-trash-alt me-2"></i>Delete</a>
+                        <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" th:href="@{/services/edit-service/}+${service.id}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
+
+                        <!-- Modal href="javascript:void(0);" onclick="deleteService(this)" -->
+                        <div class="modal fade" th:id="'exampleModal'+${service.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                               <span style="float: left;" th:text="'Are you sure? Delete: '+ ${service.name}"></span>
+                              </div>
+                              <div class="modal-footer">
+                                <input type="hidden"  name="id" th:value="${service.id}" class="idService">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                                <button type="button"  class="btn btn-danger" onclick="deleteService(this)">Yes</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
 
                       </div>
                     </li>
@@ -75,36 +99,7 @@
 
 
     </div>
-    <footer class="footer pt-3  ">
-      <div class="container-fluid">
-        <div class="row align-items-center justify-content-lg-between">
-          <div class="col-lg-6 mb-lg-0 mb-4">
-            <div class="copyright text-center text-sm text-muted text-lg-start">
-              © <script>
-                  document.write(new Date().getFullYear())
-                </script>,
-              made with <i class="fa fa-heart"></i>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-              <li class="nav-item">
-                <a href="" class="nav-link text-muted" target="_blank">Creative Tim</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link text-muted" target="_blank">About Us</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link text-muted" target="_blank">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link pe-0 text-muted" target="_blank">License</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <th:block th:insert="parts/FooterDiv.html :: footer"></th:block>
   </div>
 </main>
 

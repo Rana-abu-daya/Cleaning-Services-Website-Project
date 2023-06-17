@@ -3,6 +3,7 @@ package org.ranaabudaya.capstone.service;
 import org.ranaabudaya.capstone.entity.Services;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ServicesService {
 
@@ -10,5 +11,7 @@ public interface ServicesService {
     public Services findServiceByName(String name);
     public List<Services> getAllServices();
     public List<Services> getActiveServies();
+    public int deleteById(int id);
+    public Optional<Services> getServiceById(int id);
 
 }

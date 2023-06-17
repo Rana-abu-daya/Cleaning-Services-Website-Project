@@ -20,4 +20,12 @@ public class Services {
     private String description;
     private boolean active;
 
+    public Services(int id, String name, double price, String description, boolean active) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.active = active;
+    }
+
 }

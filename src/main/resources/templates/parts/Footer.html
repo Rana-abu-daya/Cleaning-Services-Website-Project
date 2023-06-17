@@ -20,150 +20,33 @@
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="../assets/js/argon-dashboard.min.js?v=2.0.4" th:src="@{/assets/js/argon-dashboard.min.js?v=2.0.4}"></script>
+<script>
+<!--this is for activate the section -->
+  if ( document.getElementById('divContent').textContent.trim() === '' ){
+fetch('/dashboard/dash')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('divContent').innerHTML = data;
+        })
+        .catch(err => console.warn(err));
+}
+           url = window.location.pathname
+           const myArray = url.split("/");
+           let gg = document.getElementsByClassName('nav-link active');
+           gg[0].classList.remove("active");
+           document.getElementById(myArray[1]).classList.add("active");
 
-<!--<script>-->
-<!--if ( document.getElementById('divContent').textContent.trim() === '' ){-->
-<!--fetch('/dashboard/dash')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--}-->
-<!--     document.getElementById('dashboard').addEventListener('click', function(event) {-->
-<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--      let gg = document.getElementsByClassName('nav-link active');-->
-<!--           gg[0].classList.remove("active");-->
-<!--           document.getElementById('dashboard').classList.add("active");-->
-<!--      fetch('/dashboard/dash')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--    });-->
+           document.getElementById('title_page_dash').innerHTML=myArray[1].toUpperCase();
 
-<!--    document.getElementById('employee').addEventListener('click', function(event) {-->
-<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--        let gg = document.getElementsByClassName('nav-link active');-->
-<!--           gg[0].classList.remove("active");-->
-<!--           document.getElementById('employee').classList.add("active");-->
-<!--      fetch('../pages/cleaner.html')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
+      var textareas = document.getElementsByTagName("textarea");
+      for (var i = 0; i < textareas.length; i++) {
+        var textarea = textareas[i];
+        var textareaValue = textarea.value;
+        var modifiedValue = textareaValue.replaceAll("**", '');
+        textarea.value = modifiedValue;
+        }
+</script>
 
-<!--    });-->
-<!--     document.getElementById('profile').addEventListener('click', function(event) {-->
-<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--          let gg = document.getElementsByClassName('nav-link active');-->
-<!--           gg[0].classList.remove("active");-->
-<!--           document.getElementById('profile').classList.add("active");-->
-<!--      fetch(' ../pages/profile2.html')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--    });-->
-
-<!--     document.getElementById('booking').addEventListener('click', function(event) {-->
-<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--          let gg = document.getElementsByClassName('nav-link active');-->
-<!--           gg[0].classList.remove("active");-->
-<!--           document.getElementById('booking').classList.add("active");-->
-<!--      fetch(' ../pages/bookings.html')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--    });-->
-
-<!--    document.getElementById('customer').addEventListener('click', function(event) {-->
-<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--          let gg = document.getElementsByClassName('nav-link active');-->
-<!--           gg[0].classList.remove("active");-->
-<!--           document.getElementById('customer').classList.add("active");-->
-<!--      fetch(' ../pages/customer.html')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--    });-->
-
-<!--      document.getElementById('services').addEventListener('click', function(event) {-->
-<!--      event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--          let gg = document.getElementsByClassName('nav-link active');-->
-<!--           gg[0].classList.remove("active");-->
-<!--           document.getElementById('services').classList.add("active");-->
-<!--      fetch('/services/services')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--        console.log(data);-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--    });-->
-<!--function ClickTheEditLink(){-->
-
-<!--event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--       event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--           document.getElementById('employee').classList.add("active");-->
-<!--      fetch(' ../pages/becomeCleanerAdmin.html')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--}-->
-
-<!--function ClickTheEditBooking(){-->
-
-<!--event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--       event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--           document.getElementById('booking').classList.add("active");-->
-<!--      fetch(' ../pages/BookingEdit.html')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--}-->
-
-
-<!--function ClickTheEditCustomer(){-->
-
-<!--event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--       event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--           document.getElementById('customer').classList.add("active");-->
-<!--      fetch(' ../pages/CustomerAdmin.html')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--}-->
-
-
-
-<!--function newService(){-->
-<!--event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--       event.preventDefault(); // Prevent the link from navigating elsewhere-->
-<!--           document.getElementById('services').classList.add("active");-->
-<!--      fetch('/services/add-service')-->
-<!--        .then(response => response.text())-->
-<!--        .then(data => {-->
-<!--          document.getElementById('divContent').innerHTML = data;-->
-<!--        })-->
-<!--        .catch(err => console.warn(err));-->
-<!--}-->
-
-<!--  </script>-->
-
-
+  <script  th:src="@{/assets/js/myScript.js}"></script>
 </footer>
 </html>

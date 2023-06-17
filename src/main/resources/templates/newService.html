@@ -1,75 +1,129 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<form  th:action="@{/saveService}" th:object="${service}" method="post">
-  <div class="main-content position-relative max-height-vh-100 h-100">
-    <div class="container-fluid py-4">
-      <div class="row">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <th:block th:include="parts/Header.html :: head"></th:block>
 
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-body">
-              <p class="text-uppercase text-sm">Activation</p>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <div class="form-check form-switch ms-auto text-end">
-                      <input class="form-check-input" type="checkbox" th:field="*{active}" id="active">
-                      <label class="form-check-label"  for="active">Active</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr class="horizontal dark">
-              <p class="text-uppercase text-sm">General Information </p>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="name" class="form-control-label" >Name</label>
-                    <input class="form-control" name="name" id="name" th:field="*{name}" type="text" placeholder="Service Name .. ">
-                  </div>
-                </div>
+</head>
 
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="hourlyRate" class="form-control-label"  >Hourly rate $</label>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">$</span>
+<body class="g-sidenav-show   bg-gray-100">
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+<th:block th:insert="parts/Aside.html :: aside"></th:block>
+<main class="main-content position-relative border-radius-lg ">
+  <!-- Navbar -->
+  <th:block th:insert="parts/Nav.html :: nav"></th:block>
+
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+
+    <div id="divContent">
+      <form  th:action="@{/services/saveService}" th:object="${service}" method="post">
+        <div class="main-content position-relative max-height-vh-100 h-100">
+          <div class="container-fluid py-4">
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <p class="text-uppercase text-sm">New Service</p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <div class="form-check form-switch ms-auto text-end">
+                            <input class="form-check-input" type="checkbox" th:field="*{active}" id="active">
+                            <label class="form-check-label"  for="active">Active</label>
+                            <span th:if="${#fields.hasErrors('active')}"
+                                  th:errors="*{active}"></span>
+                          </div>
+                        </div>
                       </div>
-                      <input type="text" class="form-control" name="hourlyRate" id="hourlyRate"  th:field="*{price}" aria-label="Dollar amount (with dot and two decimal places)">
+                    </div>
+                    <hr class="horizontal dark">
+                    <p class="text-uppercase text-sm">General Information </p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="name" class="form-control-label" >Name</label>
+                          <input class="form-control" name="name" id="name" th:field="*{name}" type="text" placeholder="Service Name .. ">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('name')}"
+                                th:errors="*{name}"></span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="hourlyRate" class="form-control-label"  >Hourly rate $</label>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control" name="hourlyRate" id="hourlyRate"  th:field="*{price}" aria-label="Dollar amount (with dot and two decimal places)">
+
+                          </div>
+                          <span  class=" badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('price')}"
+                                 th:errors="*{price}"></span>
+                        </div>
+                      </div>
+
                     </div>
 
+
+                    <hr class="horizontal dark">
+                    <p class="text-uppercase text-sm">Description</p>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                            <pre>
+                           This is formate of the description in 5 separate lines
+                            Line 1.
+                            Line 2.
+                            Line 3.
+                            Line 4.
+                            Line 5.</pre>
+                          <label for="description" class="form-control-label">Description</label>
+                          <textarea class="form-control" name="description" id="description"  th:field="*{description}" value="A beautiful Dashboard for Bootstrap 5. It is Free and Open Source."  rows="3"></textarea>
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('description')}"
+                                th:errors="*{description}"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group ms-auto text-end" >
+                          <button type="submit"  value="Submit" class="btn btn-primary">Submit</button>
+                       </div>
+                      </div>
+                    </div>
+
+
                   </div>
                 </div>
 
               </div>
 
-
-              <hr class="horizontal dark">
-              <p class="text-uppercase text-sm">Description</p>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="description" class="form-control-label">Description</label>
-                    <textarea class="form-control" name="description" id="description"  th:field="*{description}" value="A beautiful Dashboard for Bootstrap 5. It is Free and Open Source."  rows="3"></textarea>
-                  </div>
-                </div>
-              </div>
 
             </div>
           </div>
-
         </div>
-
-
-      </div>
-    </div>
-  </div>
-</form>
-<script>
+      </form>
+      <script>
 
     $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
   </script>
+
+
+    </div>
+    <th:block th:insert="parts/FooterDiv.html :: footer"></th:block>
+  </div>
+</main>
+
+<th:block th:include="parts/Footer.html :: footer"></th:block>
+
+</body>
+
 </html>

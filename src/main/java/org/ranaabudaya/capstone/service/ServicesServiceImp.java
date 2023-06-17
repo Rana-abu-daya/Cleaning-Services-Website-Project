@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ServicesServiceImp implements ServicesService {
@@ -38,5 +39,21 @@ public class ServicesServiceImp implements ServicesService {
         List<Services> list= servicesRepository.findByActiveTrue();
         return list;
 
+    }
+
+    @Override
+    public int deleteById(int id) {
+        boolean exist = servicesRepository.existsById(id);
+        if(exist){
+            servicesRepository.deleteById(id);
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+    @Override
+    public Optional<Services> getServiceById(int id){
+        Optional<Services> s = servicesRepository.findById(id);
+        return s;
     }
 }
