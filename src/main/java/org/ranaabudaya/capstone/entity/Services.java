@@ -26,6 +26,7 @@ public class Services {
         this.price = price;
         this.description = description;
         this.active = active;
+
     }
 
 }
