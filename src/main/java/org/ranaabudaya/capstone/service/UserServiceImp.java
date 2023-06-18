@@ -69,16 +69,18 @@ public class UserServiceImp implements UserService {
 
 
     @Transactional
-    public void create(UserDTO userDTO)
+    public int create(UserDTO userDTO)
     {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         User user = modelMapper.map(userDTO, User.class);
 
         user.setPassword(encoder.encode(user.getPassword()));
-        user.setRoles(Arrays.asList(roleService.findRoleByRoleName("ROLE_USER")));
+        user.setRoles(Arrays.asList(roleService.findRoleByRoleName(userDTO.getRoleName())));
 
         userRepository.save(user);
+       User User= userRepository.findUserByEmail(user.getEmail());
+       return user.getId();
     }
 
 

@@ -9,7 +9,7 @@ public interface UserService extends UserDetailsService {
 
     public UserDetails loadUserByUsername(String userName);
 
-    public void create(UserDTO userDTO);
+    public int create(UserDTO userDTO);
 
     public User findUserByEmail(String email);
 

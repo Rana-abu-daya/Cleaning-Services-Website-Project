@@ -18,21 +18,46 @@ public class UserDTO {
 
     @NotEmpty
     private String userName;
-
+    @NotEmpty(message = "Required")
     @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed")
     private String firstName;
 
+    @NotEmpty(message = "Required")
     @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed")
     private String lastName;
 
+    @NotEmpty(message = "Required")
     @Column(unique = true)
     @Email
     private String email;
-
+    @NotEmpty(message = "Required")
     private String phone;
-
+    @NotEmpty(message = "Required")
+    private String address;
+    @NotEmpty(message = "Required")
+    private String city;
+    @NotEmpty(message = "Required")
+    private String state;
+    @NotEmpty(message = "Required")
     @Pattern(regexp = "[0-9]{5}$", message = "Zip code wrong format")
-    private String zip;
+    private String zipCode;
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "userName='" + userName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", password='" + password + '\'' +
+                ", matchingPassword='" + matchingPassword + '\'' +
+                '}';
+    }
 
     @NotEmpty(message = "Required")
     private String password;
@@ -40,14 +65,20 @@ public class UserDTO {
     @NotEmpty(message = "Required")
     private String matchingPassword;
 
-    public UserDTO(@NotEmpty String userName, @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed") String firstName, @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed") String lastName, @Email String email, String phone, @Pattern(regexp = "[0-9]{5}$", message = "Zip code wrong format") String zip, @NotEmpty(message = "Required") String password, @NotEmpty(message = "Required") String matchingPassword) {
+    public UserDTO(@NotEmpty String userName, @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed") String firstName, @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed") String lastName, @Email String email, String phone, @Pattern(regexp = "[0-9]{5}$", message = "Zip code wrong format") String zip, @NotEmpty(message = "Required") String password, @NotEmpty(message = "Required") String matchingPassword, String address
+    , String city, String state) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
-        this.zip = zip;
+        this.zipCode = zip;
         this.password = password;
         this.matchingPassword = matchingPassword;
+        this.address = address;
+        this.city = city;
+        this.state=state;
     }
+    private String photo;
+    private String roleName;
 }
