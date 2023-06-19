@@ -1,5 +1,6 @@
 package org.ranaabudaya.capstone.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.repository.ServicesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class ServicesServiceImp implements ServicesService {
 
     private ServicesRepository servicesRepository;

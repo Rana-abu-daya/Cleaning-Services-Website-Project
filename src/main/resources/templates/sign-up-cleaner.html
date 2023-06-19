@@ -60,9 +60,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email" class="form-control-label">Email address</label>
-                                    <input class="form-control" name="email" id="email" type="email" th:field="*{userDTO.email}" placeholder="example@example.com">
+                                    <input class="form-control" name="email" id="email" type="text" th:field="*{userDTO.email}" placeholder="example@example.com">
                                     <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.email')}"
                                            th:errors="*{userDTO.email}"></span>
+                                    <span  class="   badge-pill badge-danger" style="color:red "th:if="${duplicateEmail}"
+                                           th:text="${duplicateEmail}"></span>
+
                                 </div>
                             </div>
 
@@ -236,7 +239,11 @@
     </div>
 </div>
 <th:block th:include="parts/Footer.html :: footer"></th:block>
-
+<script>
+       $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
 </body>
 
 </html>

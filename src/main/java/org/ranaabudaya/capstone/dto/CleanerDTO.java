@@ -1,7 +1,10 @@
 package org.ranaabudaya.capstone.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +22,20 @@ public class CleanerDTO {
     @NotNull
     @Min(value = 1, message = "number of hours must be at least {value}")
     private int hours;
+    @NotNull
+    private LocalTime startTime;
+   // @NotNull
+    private String resume;
 
+    @Valid
+    @NotEmpty(message = "Choose at least one service")
+    private Collection<Services> services;
+    //@NotNull
+    private boolean isActive;
+    @NotNull
+    private String about_me;
+    @NotNull
+    private int userId;
     @Override
     public String toString() {
         System.out.println("#123# printing Cleaner DTO:");
@@ -36,17 +52,4 @@ public class CleanerDTO {
         return s;
     }
 
-    @NotNull
-    private LocalTime startTime;
-   // @NotNull
-    private String resume;
-
-    @NotNull(message = "choose at least one service")
-    private Collection<Services> services;
-    //@NotNull
-    private boolean isActive;
-    @NotNull
-    private String about_me;
-    @NotNull
-    private int userId;
 }

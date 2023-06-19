@@ -80,6 +80,7 @@ public class UserServiceImp implements UserService {
 
         userRepository.save(user);
        User User= userRepository.findUserByEmail(user.getEmail());
+        System.out.println(user.toString());
        return user.getId();
     }
 

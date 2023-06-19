@@ -27,9 +27,9 @@ public class User {
     private String email;
 
     private String phone;
-
-    private String zip;
-
+    private String state;
+    private String zipCode;
+    private String address;
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -38,14 +38,18 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection <Role> roles;
 
-    public User(String userName, String firstName, String lastName, String email, String phone, String zip, String password ) {
+    public User(int id, String userName, String firstName, String lastName, String photo, String email, String phone, String state, String zipCode, String address, String password, Collection<Role> roles) {
+        this.id = id;
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.photo = photo;
         this.email = email;
         this.phone = phone;
-        this.zip = zip;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.address = address;
         this.password = password;
-
+        this.roles = roles;
     }
 }

@@ -25,12 +25,11 @@ public class UserDTO {
     @NotEmpty(message = "Required")
     @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed")
     private String lastName;
-
+    @Email(message = "Invalid email format. Please provide a valid email address.",regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     @NotEmpty(message = "Required")
-    @Column(unique = true)
-    @Email
     private String email;
     @NotEmpty(message = "Required")
+    @Pattern(regexp = "^\\+?[0-9\\s]+$", message = "Invalid phone number format. Please provide a valid phone number.")
     private String phone;
     @NotEmpty(message = "Required")
     private String address;
