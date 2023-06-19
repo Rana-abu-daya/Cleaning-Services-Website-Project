@@ -18,6 +18,7 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import  org.ranaabudaya.capstone.helper.FormWrapper;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -57,7 +59,7 @@ public class UserController {
         return "redirect:/login";
     }
 
-
+//Cleaner sign up
     @GetMapping("/cleaner/sign-up")
     public String signUp(Model model)
     {
@@ -71,31 +73,52 @@ public class UserController {
 
     @PostMapping("/cleaner/signup-process")
     public String signupProcess(@Valid @ModelAttribute ("formWrapper") FormWrapper formWrapper, BindingResult bindingResult
-    , @RequestParam(value = "services" , required = false) int[] services , BindingResult resultservices, Model model, RedirectAttributes redirectAttrs)
+    ,  Model model, RedirectAttributes redirectAttrs)
     {
-        if(bindingResult.hasErrors() || resultservices.hasErrors() )
+        if(bindingResult.hasErrors()  )
         {
             List<Services> list =  servicesServiceImp.getAllServices();
             model.addAttribute("servicesList",list );
+
            // log.warn("Wrong attempt");
             return "sign-up-cleaner";
         }
         System.out.println(formWrapper.getUserDTO());
         System.out.println(formWrapper.getCleanerDTO());
-        System.out.println(Arrays.toString(services));
-        CleanerDTO cleanerDTO = formWrapper.getCleanerDTO();
-        formWrapper.getUserDTO().setRoleName("ROLE_CLEANER");
-        int userId = userService.create(formWrapper.getUserDTO());
-        cleanerDTO.setUserId(userId);
-        cleanerDTO.setActive(false);
-        cleanerService.create(cleanerDTO);
-        redirectAttrs.addFlashAttribute("message", "Welcome to Homey.. ");
-        redirectAttrs.addFlashAttribute("alertType", "alert-success");
+        //System.out.println(Arrays.toString(services));
 
-        //userService.create(userDTO);
-        return "redirect:/dashboard";
+        if(userService.findUserByEmail(formWrapper.getUserDTO().getEmail()) != null)
+        {
+            model.addAttribute("duplicateEmail","Email is used in Homey" );
+            return "sign-up-cleaner";
+        }else {
+
+            CleanerDTO cleanerDTO = formWrapper.getCleanerDTO();
+            formWrapper.getUserDTO().setRoleName("ROLE_CLEANER");
+            int userId = userService.create(formWrapper.getUserDTO());
+           // System.out.println(userId + "Rana");
+            cleanerDTO.setUserId(userId);
+            cleanerDTO.setActive(false);
+            cleanerService.create(cleanerDTO);
+            redirectAttrs.addFlashAttribute("message", "Welcome to Homey.. ");
+            redirectAttrs.addFlashAttribute("alertType", "alert-success");
+
+            //userService.create(userDTO);
+            return "redirect:/dashboard";
+        }
     }
 
+//Add Admin
+@GetMapping("/admin/sign-up")
+public String addAdmin(Model model)
+{
+    model.addAttribute("formWrapper", new FormWrapper());
+    List<Services> list =  servicesServiceImp.getAllServices();
+    model.addAttribute("servicesList",list );
+//        model.addAttribute("userDto", new UserDTO());
+//        model.addAttribute("cleanerDTO", new CleanerDTO());
+    return "sign-up-cleaner";
+}
 
     @GetMapping("/login")
     public String getLoginPage()
