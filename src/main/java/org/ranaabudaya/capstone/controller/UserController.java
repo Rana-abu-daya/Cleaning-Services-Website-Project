@@ -5,14 +5,13 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.ranaabudaya.capstone.dto.AdminDTO;
 import org.ranaabudaya.capstone.dto.CleanerDTO;
 import org.ranaabudaya.capstone.dto.UserDTO;
 import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.entity.User;
-import org.ranaabudaya.capstone.service.CleanerService;
-import org.ranaabudaya.capstone.service.ServicesService;
-import org.ranaabudaya.capstone.service.ServicesServiceImp;
-import org.ranaabudaya.capstone.service.UserService;
+import org.ranaabudaya.capstone.helper.AdminformWrapper;
+import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -46,11 +45,14 @@ public class UserController {
     private UserService userService;
     private ServicesService servicesServiceImp;
     private  CleanerService cleanerService;
+    private AdminService adminService;
     @Autowired
-    public UserController(UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService) {
+    public UserController(UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService,
+                          AdminService adminService) {
         this.userService = userDetailsService;
         this.servicesServiceImp = servicesServiceImp;
         this.cleanerService = cleanerService;
+        this.adminService=  adminService;
     }
 
     @GetMapping("/")
@@ -112,13 +114,46 @@ public class UserController {
 @GetMapping("/admin/sign-up")
 public String addAdmin(Model model)
 {
-    model.addAttribute("formWrapper", new FormWrapper());
-    List<Services> list =  servicesServiceImp.getAllServices();
-    model.addAttribute("servicesList",list );
+    model.addAttribute("AdminForm", new AdminformWrapper());
 //        model.addAttribute("userDto", new UserDTO());
 //        model.addAttribute("cleanerDTO", new CleanerDTO());
-    return "sign-up-cleaner";
+    return "sign-up-admin";
 }
+
+    @PostMapping("/admin/signup-process")
+    public String signupProcessAdmin(@Valid @ModelAttribute ("AdminForm") AdminformWrapper AdminForm, BindingResult bindingResult
+            ,  Model model, RedirectAttributes redirectAttrs)
+    {
+        if(bindingResult.hasErrors()  )
+        {
+
+
+            // log.warn("Wrong attempt to add admin");
+            return "sign-up-admin";
+        }
+        System.out.println(AdminForm.getUserDTO());
+        System.out.println(AdminForm.getAdminDTO());
+
+        if(userService.findUserByEmail(AdminForm.getUserDTO().getEmail()) != null)
+        {
+            model.addAttribute("duplicateEmail","Email is used in Homey" );
+            return "sign-up-admin";
+        }else {
+
+            AdminDTO adminDTO = AdminForm.getAdminDTO() != null ? AdminForm.getAdminDTO() : new AdminDTO();
+            AdminForm.getUserDTO().setRoleName("ROLE_ADMIN");
+            int userId = userService.create(AdminForm.getUserDTO());
+            // System.out.println(userId + "Rana");
+            adminDTO.setUserId(userId);
+
+            adminService.create(adminDTO);
+            redirectAttrs.addFlashAttribute("message", "New Admin is added successfully.. ");
+            redirectAttrs.addFlashAttribute("alertType", "alert-success");
+
+            //userService.create(userDTO);
+            return "redirect:/dashboard";
+        }
+    }
 
     @GetMapping("/login")
     public String getLoginPage()
