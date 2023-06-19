@@ -82,6 +82,7 @@
                                                     </div>
                                                 </div>
 
+
                                             </div>
 
                                             <hr class="horizontal dark">
@@ -125,6 +126,12 @@
                                                         <input class="form-control" name="zipCode" id="zipCode" type="text" th:field="*{userDTO.zipCode}">
                                                         <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.zipCode')}"
                                                                th:errors="*{userDTO.zipCode}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="custom-file form-group">
+                                                        <label for="Photo" class="form-control-label">Photo</label>
+                                                        <input type="file" class="custom-file-input form-control"   name="photo "id="photo" lang="en">
                                                     </div>
                                                 </div>
                                             </div>
