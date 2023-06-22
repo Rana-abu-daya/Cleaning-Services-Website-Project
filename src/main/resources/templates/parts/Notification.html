@@ -1,8 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div class="container">
-  <div th:if="${message}" id="notification" th:class="'alert ' + ${alertType}" style="color:white;padding:10px">
+  <div th:if="${message}" class="notificationPlace" th:classappend="'alert ' + ${alertType}" style="color:white;padding:10px">
     <strong><span th:text="${message}"></span></strong>
+  </div>
+  <div th:unless="${message}" class="notificationPlace" th:classappend="'alert '" style="color:white;padding:10px">
+    <strong><span></span></strong>
   </div>
 </div>
 </html>

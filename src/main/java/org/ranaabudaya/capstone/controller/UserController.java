@@ -62,7 +62,7 @@ public class UserController {
     }
 
 //Cleaner sign up
-    @GetMapping("/cleaner/sign-up")
+    @GetMapping("/cleaners/sign-up")
     public String signUp(Model model)
     {
         model.addAttribute("formWrapper", new FormWrapper());
@@ -73,7 +73,7 @@ public class UserController {
         return "sign-up-cleaner";
     }
 
-    @PostMapping("/cleaner/signup-process")
+    @PostMapping("/cleaners/signup-process")
     public String signupProcess(@Valid @ModelAttribute ("formWrapper") FormWrapper formWrapper, BindingResult bindingResult
     ,  Model model, RedirectAttributes redirectAttrs)
     {
@@ -111,7 +111,7 @@ public class UserController {
     }
 
 //Add Admin
-@GetMapping("/admin/sign-up")
+@GetMapping("/admins/sign-up")
 public String addAdmin(Model model)
 {
     model.addAttribute("AdminForm", new AdminformWrapper());
@@ -120,7 +120,7 @@ public String addAdmin(Model model)
     return "sign-up-admin";
 }
 
-    @PostMapping("/admin/signup-process")
+    @PostMapping("/admins/signup-process")
     public String signupProcessAdmin(@Valid @ModelAttribute ("AdminForm") AdminformWrapper AdminForm, BindingResult bindingResult
             ,  Model model, RedirectAttributes redirectAttrs)
     {
@@ -151,7 +151,7 @@ public String addAdmin(Model model)
             redirectAttrs.addFlashAttribute("alertType", "alert-success");
 
             //userService.create(userDTO);
-            return "redirect:/dashboard";
+            return "redirect:/admins";
         }
     }
 
