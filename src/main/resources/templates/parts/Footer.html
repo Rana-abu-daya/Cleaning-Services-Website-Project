@@ -33,9 +33,12 @@ fetch('/dashboard/dash')
            url = window.location.pathname
            const myArray = url.split("/");
            let gg = document.getElementsByClassName('nav-link active');
-           gg[0].classList.remove("active");
+          // console.log(myArray[1]);
+         //  console.log(gg[0]);
+           for(let xx =0;xx<gg.length;xx++){
+           gg[xx].classList.remove("active");
+           }
            document.getElementById(myArray[1]).classList.add("active");
-
            document.getElementById('title_page_dash').innerHTML=myArray[1].toUpperCase();
 
       var textareas = document.getElementsByTagName("textarea");

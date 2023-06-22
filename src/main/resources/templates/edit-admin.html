@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <th:block th:include="parts/Header.html :: head"></th:block>
+
+</head>
+
+<body class="g-sidenav-show   bg-gray-100">
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+<th:block th:insert="parts/Aside.html :: aside"></th:block>
+<main class="main-content position-relative border-radius-lg ">
+    <!-- Navbar -->
+    <th:block th:insert="parts/Nav.html :: nav"></th:block>
+
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+
+        <div id="divContent">
+            <form  th:action="@{/admins/updateAdmin/}+${id}" th:object="${admin}" method="post">
+                <div class="main-content position-relative max-height-vh-100 h-100">
+                    <div class="container-fluid py-4">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                         <p class="text-uppercase text-sm">User Information</p>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="firstName" class="form-control-label">First name</label>
+                                                        <input class="form-control" name="firstName" id="firstName" type="text" th:field="*{user.firstName}">
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.firstName')}"
+                                                               th:errors="*{user.firstName}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="lastName" class="form-control-label">Last name</label>
+                                                        <input class="form-control" name="lastName" id="lastName" type="text" th:field="*{user.lastName}">
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.lastName')}"
+                                                               th:errors="*{user.lastName}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="lastName" class="form-control-label">Username</label>
+                                                        <input class="form-control" name="userName" id="userName" type="text" th:field="*{user.userName}">
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.userName')}"
+                                                               th:errors="*{user.userName}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="email" class="form-control-label">Email address</label>
+                                                        <input class="form-control" name="email" id="email" type="text" th:field="*{user.email}" placeholder="example@example.com">
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.email')}"
+                                                               th:errors="*{user.email}"></span>
+                                                        <span  class="   badge-pill badge-danger" style="color:red "th:if="${duplicateEmail}"
+                                                               th:text="${duplicateEmail}"></span>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="password" class="form-control-label">Password</label>
+                                                        <input class="form-control" name="password" id="password"  th:field="*{user.password}" type="password" >
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.   hasErrors('user.password')}"
+                                                               th:errors="*{user.password}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="matchingPassword" class="form-control-label">Matching Password</label>
+                                                        <input class="form-control" name="matchingPassword" id="matchingPassword" type="password"  th:field="*{user.matchingPassword}">
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.matchingPassword')}"
+                                                               th:errors="*{user.matchingPassword}"></span>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <hr class="horizontal dark">
+                                            <p class="text-uppercase text-sm">Contact Information</p>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="phone" class="form-control-label">Mobile</label>
+                                                        <input class="form-control" name="phone" id="phone" type="tel" th:field="*{user.phone}">
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.phone')}"
+                                                               th:errors="*{user.phone}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="address" class="form-control-label">Address</label>
+                                                        <input class="form-control" name="address" id="address" type="text" th:field="*{user.address}" >
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.address')}"
+                                                               th:errors="*{user.address}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="city" class="form-control-label">City</label>
+                                                        <input class="form-control" name="city" id="city" type="text" th:field="*{user.city}"  >
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.city')}"
+                                                               th:errors="*{user.city}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="country" class="form-control-label">State</label>
+                                                        <input class="form-control" name="country" id="country" type="text" th:field="*{user.state}">
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.state')}"
+                                                               th:errors="*{user.state}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="zipCode" class="form-control-label">Postal code</label>
+                                                        <input class="form-control" name="zipCode" id="zipCode" type="text" th:field="*{user.zipCode}">
+                                                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('user.zipCode')}"
+                                                               th:errors="*{user.zipCode}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="custom-file form-group">
+                                                        <label for="Photo" class="form-control-label">Photo</label>
+                                                        <input type="file" class="custom-file-input form-control"   name="photo "id="photo" lang="en">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                        <div class="col-md">
+                                            <div class="ms-auto text-end">
+                                                <button class="btn btn-primary btn-sm ms-auto">Submit</button>
+                                            </div>
+                                        </div>
+
+
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <script>
+
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+  </script>
+
+
+        </div>
+        <th:block th:insert="parts/FooterDiv.html :: footer"></th:block>
+    </div>
+</main>
+
+<th:block th:include="parts/Footer.html :: footer"></th:block>
+
+</body>
+
+</html>
+
+
+
+

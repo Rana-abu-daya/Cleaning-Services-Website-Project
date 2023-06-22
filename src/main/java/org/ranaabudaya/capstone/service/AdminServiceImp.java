@@ -14,6 +14,7 @@ import org.ranaabudaya.capstone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +29,21 @@ public class AdminServiceImp implements AdminService{
     }
 
 
+    public  int deleteById(int id){
+        List<Admin> list = adminRepository.findAll();
+        if(list.size()>1){
+           Optional<Admin> admin= adminRepository.findById(id);
+           adminRepository.deleteById(id);
+           User adminUser = admin.get().getUser();
+            System.out.println(adminUser);
+           return 1;
+        }else{
+            return 0;
+
+        }
+
+
+    }
 
     @Override
     public void create(AdminDTO adminDTO) {
@@ -40,8 +56,15 @@ public class AdminServiceImp implements AdminService{
     }
 
     @Override
-    public Optional<Admin> findCleanerById(int id) {
+    public Optional<Admin> findAdminById(int id) {
 
         return  adminRepository.findById(id);
+    }
+    @Override
+    public List<Admin> getAll(){
+        return adminRepository.findAll();
+    }
+    public void update(Admin admin){
+        adminRepository.save(admin);
     }
 }

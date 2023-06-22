@@ -74,14 +74,21 @@ public class ServicesController {
 
     }
 
-    @DeleteMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     @ResponseBody
-    public String deleteServicebyId(@PathVariable("id") int id) {
+    public String[] deleteServicebyId(@PathVariable("id") int id) {
        int result =  servicesServiceImp.deleteById(id);
+        String arr[] = new String[2];
        if(result>0){
-           return  "success**The service is deleted successfully";
+
+           arr[0] = "The service is deleted successfully";
+           arr[1]= "success";
+           return  arr;
        }else {
-           return  "danger**The service is deleted failed";
+           arr[0] = "The deletion of the service failed";
+           arr[1]= "danger";
+           return  arr;
+
 
        }
     }
