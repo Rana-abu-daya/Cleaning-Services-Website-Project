@@ -10,6 +10,8 @@ public interface ServicesService {
     public void saveService(Services service);
     public Services findServiceByName(String name);
     public List<Services> getAllServices();
+    public List<Services> getAllActiveServices();
+
     public List<Services> getActiveServies();
     public int deleteById(int id);
     public Optional<Services> getServiceById(int id);
