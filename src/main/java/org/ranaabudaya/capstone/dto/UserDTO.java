@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 //@FieldMatch.List( { @FieldMatch(first = "password", second = "matchingPassword", message = "The password fields must match")})
 public class UserDTO {
-
+    private int id ;
     @NotEmpty
     private String userName;
     @NotEmpty(message = "Required")

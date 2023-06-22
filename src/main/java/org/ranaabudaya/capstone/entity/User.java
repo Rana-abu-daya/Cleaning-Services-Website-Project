@@ -33,13 +33,13 @@ public class User {
     private String address;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection <Role> roles;
 
-    public User(int id, String userName, String firstName, String lastName, String photo, String email, String phone, String state, String zipCode, String address, String password, Collection<Role> roles) {
+    public User(int id, String userName, String firstName, String lastName, String photo, String email, String phone, String state, String zipCode, String address, String password, Collection<Role> roles, String matchingPassword) {
         this.id = id;
         this.userName = userName;
         this.firstName = firstName;

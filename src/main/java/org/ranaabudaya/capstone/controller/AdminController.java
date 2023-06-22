@@ -2,20 +2,28 @@ package org.ranaabudaya.capstone.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.ranaabudaya.capstone.dto.ServicesDTO;
+import org.ranaabudaya.capstone.dto.UserDTO;
 import org.ranaabudaya.capstone.entity.Admin;
 import org.ranaabudaya.capstone.entity.Services;
+import org.ranaabudaya.capstone.entity.User;
 import org.ranaabudaya.capstone.repository.AdminRepository;
 import org.ranaabudaya.capstone.repository.UserRepository;
 import org.ranaabudaya.capstone.service.AdminService;
+import org.ranaabudaya.capstone.service.RoleService;
 import org.ranaabudaya.capstone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +34,16 @@ public class AdminController {
     AdminRepository adminRepository;
     UserService userService;
     AdminService adminService;
-
+    private BCryptPasswordEncoder encoder;
+    private RoleService roleService;
 
     @Autowired
-    public AdminController(AdminRepository adminRepository, UserService userService, AdminService adminService){
+    public AdminController(RoleService roleService,AdminRepository adminRepository, UserService userService, AdminService adminService, @Lazy BCryptPasswordEncoder encoder){
         this.adminRepository =adminRepository;
         this.userService=userService;
         this.adminService = adminService;
+        this.encoder=encoder;
+        this.roleService=roleService;
     }
 
     @GetMapping("/admins")
@@ -80,14 +91,23 @@ public class AdminController {
             // log.warn("Wrong attempt");
             return "edit-admin";
         }
-        if(userService.findUserByEmail(admin.getUser().getEmail()) != null) {
-            model.addAttribute("duplicateEmail", "Email is used in Homey");
-            return "edit-admin";
-        }
+
         Optional<Admin> admin1 = adminService.findAdminById(id);
         if (admin1.isPresent()) {
-            admin1.get().setUser(admin.getUser());
-            adminService.update(admin1.get());
+
+            if(userService.findUserByEmail(admin.getUser().getEmail()) != null && userService.findUserByEmail(admin.getUser().getEmail()).getId() != admin1.get().getUser().getId())
+            {
+                model.addAttribute("duplicateEmail","Email is used in Homey" );
+                return "edit-admin";
+            }
+         ModelMapper modelMapper = new ModelMapper();
+
+            UserDTO userDTO = modelMapper.map(admin.getUser(), UserDTO.class);
+            userDTO.setRoleName("ROLE_ADMIN");
+            userDTO.setId(admin1.get().getUser().getId());
+           int idUser =  userService.create(userDTO);
+            admin.setUser(userService.findById(idUser).get());
+            adminRepository.save(admin);
             redirectAttrs.addFlashAttribute("message", "Admin is updated successfully");
             redirectAttrs.addFlashAttribute("alertType", "alert-success");
         }else{

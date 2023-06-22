@@ -23,6 +23,7 @@ import javax.sound.midi.SysexMessage;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -83,8 +84,17 @@ public class UserServiceImp implements UserService {
         System.out.println(user.toString());
        return user.getId();
     }
+    public Optional<User> findById(int id){
+        return userRepository.findById(id);
+    }
+    public User update(User newUser){
 
+        userRepository.save(newUser);
+        User user= userRepository.findUserByEmail(newUser.getEmail());
+        System.out.println(newUser.toString());
+        return user;
 
+    }
     public User findUserByEmail(String email)
     {
         return userRepository.findUserByEmail(email);

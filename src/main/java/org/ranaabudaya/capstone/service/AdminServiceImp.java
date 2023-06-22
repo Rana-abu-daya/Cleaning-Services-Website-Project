@@ -65,6 +65,7 @@ public class AdminServiceImp implements AdminService{
         return adminRepository.findAll();
     }
     public void update(Admin admin){
+
         adminRepository.save(admin);
     }
 }

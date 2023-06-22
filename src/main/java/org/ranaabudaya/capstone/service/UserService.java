@@ -5,6 +5,8 @@ import org.ranaabudaya.capstone.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.Optional;
+
 public interface UserService extends UserDetailsService {
 
     public UserDetails loadUserByUsername(String userName);
@@ -14,5 +16,6 @@ public interface UserService extends UserDetailsService {
     public User findUserByEmail(String email);
 
     public User findUserByName(String name);
-
+    public Optional<User> findById(int id);
+    public User update(User newUser);
 }
