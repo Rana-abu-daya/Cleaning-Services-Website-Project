@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.ranaabudaya.capstone.dto.CleanerDTO;
+import org.ranaabudaya.capstone.entity.Admin;
 import org.ranaabudaya.capstone.entity.Cleaner;
 import org.ranaabudaya.capstone.entity.User;
 import org.ranaabudaya.capstone.repository.CleanerRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 @Service
 @Slf4j
@@ -37,5 +39,21 @@ public class CleanerServiceImp implements CleanerService{
     public Optional<Cleaner> findCleanerById(int id) {
 
         return  cleanerRepository.findById(id);
+    }
+    public List<Cleaner> getAll(){
+       return cleanerRepository.findAll();
+    }
+
+    public  int deleteById(int id){
+       if(cleanerRepository.findById(id).isPresent()) {
+           cleanerRepository.deleteById(id);
+           return 1;
+       }
+       else{
+           return 0;
+        }
+
+
+
     }
 }

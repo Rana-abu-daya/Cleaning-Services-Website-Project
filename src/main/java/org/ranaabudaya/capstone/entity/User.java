@@ -1,6 +1,9 @@
 package org.ranaabudaya.capstone.entity;
 
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -17,20 +20,31 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
+    @NotEmpty
     private String userName;
-
+    @NotEmpty(message = "Required")
+    @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed")
     private String firstName;
-
+    @NotEmpty(message = "Required")
+    @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed")
     private String lastName;
     private String photo;
+    @Email(message = "Invalid email format. Please provide a valid email address.",regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    @NotEmpty(message = "Required")
     private String email;
-
+    @NotEmpty(message = "Required")
+    @Pattern(regexp = "^\\+?[0-9\\s]+$", message = "Invalid phone number format. Please provide a valid phone number.")
     private String phone;
+    @NotEmpty(message = "Required")
     private String state;
+    @NotEmpty(message = "Required")
     private String city;
+    @NotEmpty(message = "Required")
+    @Pattern(regexp = "[0-9]{5}$", message = "Zip code wrong format")
     private String zipCode;
+    @NotEmpty(message = "Required")
     private String address;
+
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

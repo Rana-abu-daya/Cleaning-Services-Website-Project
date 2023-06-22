@@ -42,6 +42,10 @@ public class ServicesServiceImp implements ServicesService {
         return list;
 
     }
+    @Override
+    public List<Services> getAllActiveServices(){
+        return getActiveServies();
+    }
 
     @Override
     public int deleteById(int id) {

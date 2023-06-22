@@ -105,8 +105,10 @@ public class AdminController {
             UserDTO userDTO = modelMapper.map(admin.getUser(), UserDTO.class);
             userDTO.setRoleName("ROLE_ADMIN");
             userDTO.setId(admin1.get().getUser().getId());
-           int idUser =  userService.create(userDTO);
+            userDTO.setPassword(admin1.get().getUser().getPassword());
+           int idUser =  userService.update(userDTO);
             admin.setUser(userService.findById(idUser).get());
+
             adminRepository.save(admin);
             redirectAttrs.addFlashAttribute("message", "Admin is updated successfully");
             redirectAttrs.addFlashAttribute("alertType", "alert-success");

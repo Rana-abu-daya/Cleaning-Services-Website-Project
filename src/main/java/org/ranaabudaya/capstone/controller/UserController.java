@@ -66,7 +66,7 @@ public class UserController {
     public String signUp(Model model)
     {
         model.addAttribute("formWrapper", new FormWrapper());
-        List<Services> list =  servicesServiceImp.getAllServices();
+        List<Services> list =  servicesServiceImp.getAllActiveServices();
         model.addAttribute("servicesList",list );
 //        model.addAttribute("userDto", new UserDTO());
 //        model.addAttribute("cleanerDTO", new CleanerDTO());
@@ -79,7 +79,7 @@ public class UserController {
     {
         if(bindingResult.hasErrors()  )
         {
-            List<Services> list =  servicesServiceImp.getAllServices();
+            List<Services> list =  servicesServiceImp.getAllActiveServices();
             model.addAttribute("servicesList",list );
 
            // log.warn("Wrong attempt");
@@ -90,7 +90,8 @@ public class UserController {
         //System.out.println(Arrays.toString(services));
 
         if(userService.findUserByEmail(formWrapper.getUserDTO().getEmail()) != null)
-        {
+        {  List<Services> list =  servicesServiceImp.getAllActiveServices();
+            model.addAttribute("servicesList",list );
             model.addAttribute("duplicateEmail","Email is used in Homey" );
             return "sign-up-cleaner";
         }else {
