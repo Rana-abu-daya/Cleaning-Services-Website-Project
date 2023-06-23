@@ -4,7 +4,9 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.ranaabudaya.capstone.dto.ServicesDTO;
+import org.ranaabudaya.capstone.entity.Cleaner;
 import org.ranaabudaya.capstone.entity.Services;
+import org.ranaabudaya.capstone.repository.CleanerRepository;
 import org.ranaabudaya.capstone.service.ServicesServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -24,10 +26,14 @@ import java.util.Optional;
 public class ServicesController {
 
     ServicesServiceImp servicesServiceImp;
+    CleanerRepository cleanerRepository;
     @Autowired
-    public ServicesController(ServicesServiceImp servicesServiceImp) {
+    public ServicesController(ServicesServiceImp servicesServiceImp, CleanerRepository cleanerRepository) {
         this.servicesServiceImp = servicesServiceImp;
+        this.cleanerRepository = cleanerRepository;
     }
+
+
 
     @ModelAttribute("ServicesList")
     private List<Services> getServices(){
@@ -77,8 +83,20 @@ public class ServicesController {
     @GetMapping("/delete/{id}")
     @ResponseBody
     public String[] deleteServicebyId(@PathVariable("id") int id) {
-       int result =  servicesServiceImp.deleteById(id);
+
+        List<Cleaner>  cleaner = cleanerRepository.findAllByServicesId(id);
+        Services existService = servicesServiceImp.getServiceById(id).get();
+
+        if (cleaner != null && cleaner.size()!=0 && existService != null) {
+            for (Cleaner clean: cleaner) {
+                clean.getServices().remove(existService);
+                cleanerRepository.save(clean);
+            }
+
+        }
+        int result =  servicesServiceImp.deleteById(id);
         String arr[] = new String[2];
+    
        if(result>0){
 
            arr[0] = "The service is deleted successfully";

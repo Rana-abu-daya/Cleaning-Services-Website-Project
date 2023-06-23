@@ -90,7 +90,7 @@ public class UserServiceImp implements UserService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         User user = modelMapper.map(userDTO, User.class);
-        User exist = userRepository.findUserByEmail(user.getEmail());
+        User exist = userRepository.findById(user.getId()).get();
         user.setPassword(exist.getPassword());
         user.setRoles(Arrays.asList(roleService.findRoleByRoleName(userDTO.getRoleName())));
 
