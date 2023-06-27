@@ -19,7 +19,7 @@ public interface CleanerService {
     public Optional<Cleaner> findCleanerById(int id);
     public List<Cleaner> getAll();
     public  int deleteById(int id);
-
+public List<Cleaner> findAllCleaner();
 
 
 }

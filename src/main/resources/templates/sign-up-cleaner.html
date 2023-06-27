@@ -12,15 +12,14 @@
     <th:block th:include="parts/Header.html :: head"></th:block>
     <style th:inline="text">
     .background{
-        background: url{[[@{/assets/images/profile-layout-header.jpg}]]}
-                    no-repeat center center fixed;
+       background-size: cover;
         background-position-y: 50%;
     }
 </style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-<div class="position-absolute w-100 min-height-300 top-0 background">
+<div class="position-absolute w-100 min-height-300 top-0 background" th:style="'background-image: url(' + @{/assets/images/profile-layout-header.jpg} + ');'">
     <span class="mask bg-primary opacity-6"></span>
 </div>
 <div class="main-content position-relative max-height-vh-100 h-100">

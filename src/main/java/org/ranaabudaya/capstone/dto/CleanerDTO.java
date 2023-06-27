@@ -23,7 +23,7 @@ public class CleanerDTO {
     @Min(value = 1, message = "number of hours must be at least {value}")
     private int hours;
     @NotNull
-    private LocalTime startTime;
+    private String startTime;
    // @NotNull
     private String resume;
 
@@ -32,6 +32,7 @@ public class CleanerDTO {
     private Collection<Services> services;
     //@NotNull
     private boolean isActive;
+    private boolean isNew;
     @NotNull
     private String about_me;
     @NotNull

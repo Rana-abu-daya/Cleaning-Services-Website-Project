@@ -28,6 +28,18 @@
                                 <div class="card">
                                     <div class="card-body">
                                        <p class="text-uppercase text-sm">User Information</p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="form-check form-switch ms-auto text-end">
+                                                        <input class="form-check-input" type="checkbox" th:field="*{active}" id="active">
+                                                        <label class="form-check-label"  for="active">Active</label>
+                                                        <span th:if="${#fields.hasErrors('active')}"
+                                                              th:errors="*{active}"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -190,7 +202,7 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="example-time-input" class="form-control-label">Start Time</label>
-                                                            <input class="form-control" type="time" value="10:30:00" id="example-time-input"  th:field="*{startTime}">
+                                                            <input class="form-control" type="time"  id="example-time-input"   th:field="*{startTime}"  >
                                                             <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('startTime')}"
                                                                    th:errors="*{startTime}"></span>
                                                         </div>
@@ -220,12 +232,7 @@
                     </div>
                 </div>
             </form>
-            <script>
 
-    $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-  </script>
 
 
         </div>

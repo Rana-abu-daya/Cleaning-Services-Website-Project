@@ -44,9 +44,16 @@ public class CleanerServiceImp implements CleanerService{
        return cleanerRepository.findAll();
     }
 
+    @Override
+    public List<Cleaner> findAllCleaner() {
+        return cleanerRepository.findCleanerByIsNew(false);
+    }
+
     public  int deleteById(int id){
        if(cleanerRepository.findById(id).isPresent()) {
-           cleanerRepository.deleteById(id);
+         //userRepository.deleteById(cleanerRepository.findById(id).get().getUser().getId());
+         cleanerRepository.deleteById(id);
+
            return 1;
        }
        else{

@@ -1,4 +1,32 @@
+function deleteCleaner(linkElement) {
+ var parentElement = linkElement.parentElement;
+ event.preventDefault(); // Prevent the link from navigating elsewhere
+        event.preventDefault(); // Prevent the link from navigating elsewhere
+        var idCleanerInput = parentElement.querySelector('input[type="hidden"]');
 
+         var idCleaner = idCleanerInput.value;
+        var urlDeletion =" /cleaners/delete/"+idCleaner;
+       fetch(urlDeletion)
+       .then(response => response.json())
+       .then(data => {
+
+       let  notification = document.getElementsByClassName('notificationPlace');
+               let modal  = document.getElementById("exampleModal"+idCleaner);
+                        modal.classList.remove("show");
+        //  console.log(notification);
+             notification[0].querySelector(('span')).innerHTML=data[0];
+           notification[0].classList.add('alert-'+data[1]);
+           if(data[1]!='danger'){
+         var cleanerDiv = document.getElementById("cleanerDiv"+idCleaner);
+               cleanerDiv.parentNode.removeChild(cleanerDiv);
+         }
+
+  document.body.classList.remove("modal-open");
+  var modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
+  modalBackdrop.parentNode.removeChild(modalBackdrop);
+         })
+         .catch(err => console.warn(err));
+}
 function deleteAdmin(linkElement) {
  var parentElement = linkElement.parentElement;
  event.preventDefault(); // Prevent the link from navigating elsewhere

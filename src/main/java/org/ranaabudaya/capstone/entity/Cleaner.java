@@ -28,19 +28,21 @@ public class Cleaner {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @NotEmpty(message = "Choose at least one service")
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "cleaner_services",
             joinColumns = @JoinColumn(name = "cleaner_id"),
             inverseJoinColumns = @JoinColumn(name = "service_id"))
     private Collection<Services> services;
     private boolean isActive;
+    private boolean isNew;
     @NotNull
     private String about_me;
     @NotNull
     @Min(value = 1, message = "number of hours must be at least {value}")
     private int hours;
     @NotNull
-    private LocalTime startTime;
+    private String startTime;
+
 
     private String resume;
 

@@ -18,7 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.ranaabudaya.capstone.entity.Cleaner;
 
+import java.sql.Time;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -39,7 +44,7 @@ public class CleanersController {
     @GetMapping("/cleaners")
     private String AllCleaners(Model model)
     {
-        List<Cleaner> cleanersList = cleanerService.getAll();
+        List<Cleaner> cleanersList = cleanerService.findAllCleaner();
         model.addAttribute("cleanersList", cleanersList);
         return "cleaners";
     }
@@ -47,6 +52,8 @@ public class CleanersController {
     @GetMapping("/cleaners/delete/{id}")
     @ResponseBody
     public String[] deleteCleanerbyId(@PathVariable("id") int id, Model model) {
+//delete services from cleaner_services
+        // cleanerRepository.deleteCleanerServicesByCleanerId(id);
         int result =  cleanerService.deleteById(id);
         String arr[] = new String[2];
         if(result>0){

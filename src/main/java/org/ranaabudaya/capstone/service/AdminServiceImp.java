@@ -32,10 +32,10 @@ public class AdminServiceImp implements AdminService{
     public  int deleteById(int id){
         List<Admin> list = adminRepository.findAll();
         if(list.size()>1){
-           Optional<Admin> admin= adminRepository.findById(id);
+         //  Optional<Admin> admin= adminRepository.findById(id);
            adminRepository.deleteById(id);
-           User adminUser = admin.get().getUser();
-            System.out.println(adminUser);
+//           User adminUser = admin.get().getUser();
+//            System.out.println(adminUser);
            return 1;
         }else{
             return 0;

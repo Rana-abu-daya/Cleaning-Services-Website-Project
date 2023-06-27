@@ -102,6 +102,7 @@ public class UserController {
            // System.out.println(userId + "Rana");
             cleanerDTO.setUserId(userId);
             cleanerDTO.setActive(false);
+            cleanerDTO.setNew(true);
             cleanerService.create(cleanerDTO);
             redirectAttrs.addFlashAttribute("message", "Welcome to Homey.. ");
             redirectAttrs.addFlashAttribute("alertType", "alert-success");
