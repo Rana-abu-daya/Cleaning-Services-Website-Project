@@ -3,29 +3,24 @@ package org.ranaabudaya.capstone.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.ranaabudaya.capstone.dto.AdminDTO;
 import org.ranaabudaya.capstone.dto.CleanerDTO;
-import org.ranaabudaya.capstone.dto.UserDTO;
+import org.ranaabudaya.capstone.dto.CustomerDTO;
 import org.ranaabudaya.capstone.entity.Services;
-import org.ranaabudaya.capstone.entity.User;
 import org.ranaabudaya.capstone.helper.AdminformWrapper;
+import org.ranaabudaya.capstone.helper.CustomerformWrapper;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import  org.ranaabudaya.capstone.helper.FormWrapper;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -46,13 +41,15 @@ public class UserController {
     private ServicesService servicesServiceImp;
     private  CleanerService cleanerService;
     private AdminService adminService;
+    private CustomerService customerService;
     @Autowired
     public UserController(UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService,
-                          AdminService adminService) {
+                          AdminService adminService,CustomerService customerService) {
         this.userService = userDetailsService;
         this.servicesServiceImp = servicesServiceImp;
         this.cleanerService = cleanerService;
         this.adminService=  adminService;
+        this.customerService  = customerService;
     }
 
     @GetMapping("/")
@@ -157,6 +154,43 @@ public String addAdmin(Model model)
         }
     }
 
+    //Add Client
+    @GetMapping("/customers/sign-up")
+    public String addCustomer(Model model)
+    {
+        model.addAttribute("Customerform", new CustomerformWrapper());
+
+        return "sign-up-customer";
+    }
+    @PostMapping("/customers/signup-process")
+    public String signupProcessCustomer(@Valid @ModelAttribute ("Customerform") CustomerformWrapper Customerform, BindingResult bindingResult
+            , Model model, RedirectAttributes redirectAttrs)
+    {
+        if(bindingResult.hasErrors()  )
+        {
+            // log.warn("Wrong attempt to add admin");
+            return "sign-up-customer";
+        }
+        System.out.println(Customerform.getUserDTO());
+        System.out.println(Customerform.getCustomerDTO());
+
+        if(userService.findUserByEmail(Customerform.getUserDTO().getEmail()) != null)
+        {
+            model.addAttribute("duplicateEmail","Email is used in Homey" );
+            return "sign-up-customer";
+        }else {
+
+            CustomerDTO customerDTO = Customerform.getCustomerDTO() != null ? Customerform.getCustomerDTO() : new CustomerDTO();
+            Customerform.getUserDTO().setRoleName("ROLE_CLIENT");
+            int userId = userService.create(Customerform.getUserDTO());
+            customerDTO.setUserId(userId);
+
+            customerService.create(customerDTO);
+            redirectAttrs.addFlashAttribute("message", "Welcome to Homey.. Enjoy our services ");
+            redirectAttrs.addFlashAttribute("alertType", "alert-success");
+            return "redirect:/customers";
+        }
+    }
     @GetMapping("/login")
     public String getLoginPage()
     {
