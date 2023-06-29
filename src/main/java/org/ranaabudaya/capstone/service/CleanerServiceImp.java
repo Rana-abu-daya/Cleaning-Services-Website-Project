@@ -12,6 +12,8 @@ import org.ranaabudaya.capstone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -59,8 +61,13 @@ public class CleanerServiceImp implements CleanerService{
        else{
            return 0;
         }
-
-
-
     }
+    public List<Cleaner> getCleanersByServiceId(int id){
+       return cleanerRepository.findAllActiveByServicesId(id);
+    }
+    public List<Cleaner>  findAvailableCleanersForServiceAndTime(String startTime, int hours, LocalDate bookingDate, int serviceId){
+       return cleanerRepository.findAvailableCleanersForServiceAndTime(startTime,hours,bookingDate,serviceId);
+    }
+
+
 }

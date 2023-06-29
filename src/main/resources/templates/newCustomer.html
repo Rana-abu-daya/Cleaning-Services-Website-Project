@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <th:block th:include="parts/Header.html :: head"></th:block>
+
+</head>
+
+<body class="g-sidenav-show   bg-gray-100">
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+<th:block th:insert="parts/Aside.html :: aside"></th:block>
+<main class="main-content position-relative border-radius-lg ">
+  <!-- Navbar -->
+  <th:block th:insert="parts/Nav.html :: nav"></th:block>
+
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+
+    <div id="divContent">
+      <form  th:action="@{/customers/admin/signup-process}" th:object="${Customerform}" method="post">
+        <div class="main-content position-relative max-height-vh-100 h-100">
+          <div class="container-fluid py-4">
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <p class="text-uppercase text-sm">User Information</p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="firstName" class="form-control-label">First name</label>
+                          <input class="form-control" name="firstName" id="firstName" type="text" th:field="*{userDTO.firstName}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.firstName')}"
+                                 th:errors="*{userDTO.firstName}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="lastName" class="form-control-label">Last name</label>
+                          <input class="form-control" name="lastName" id="lastName" type="text" th:field="*{userDTO.lastName}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.lastName')}"
+                                 th:errors="*{userDTO.lastName}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="lastName" class="form-control-label">Username</label>
+                          <input class="form-control" name="userName" id="userName" type="text" th:field="*{userDTO.userName}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.userName')}"
+                                 th:errors="*{userDTO.userName}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="email" class="form-control-label">Email address</label>
+                          <input class="form-control" name="email" id="email" type="text" th:field="*{userDTO.email}" placeholder="example@example.com">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.email')}"
+                                 th:errors="*{userDTO.email}"></span>
+                          <span  class="   badge-pill badge-danger" style="color:red "th:if="${duplicateEmail}"
+                                 th:text="${duplicateEmail}"></span>
+
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="password" class="form-control-label">Password</label>
+                          <input class="form-control" name="password" id="password"  th:field="*{userDTO.password}" type="password" >
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.   hasErrors('userDTO.password')}"
+                                 th:errors="*{userDTO.password}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="matchingPassword" class="form-control-label">Matching Password</label>
+                          <input class="form-control" name="matchingPassword" id="matchingPassword" type="password"  th:field="*{userDTO.matchingPassword}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.matchingPassword')}"
+                                 th:errors="*{userDTO.matchingPassword}"></span>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+                    <hr class="horizontal dark">
+                    <p class="text-uppercase text-sm">Contact Information</p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="phone" class="form-control-label">Mobile</label>
+                          <input class="form-control" name="phone" id="phone" type="tel" th:field="*{userDTO.phone}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.phone')}"
+                                 th:errors="*{userDTO.phone}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="address" class="form-control-label">Address</label>
+                          <input class="form-control" name="address" id="address" type="text" th:field="*{userDTO.address}" >
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.address')}"
+                                 th:errors="*{userDTO.address}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="city" class="form-control-label">City</label>
+                          <input class="form-control" name="city" id="city" type="text" th:field="*{userDTO.city}"  >
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.city')}"
+                                 th:errors="*{userDTO.city}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="country" class="form-control-label">State</label>
+                          <input class="form-control" name="country" id="country" type="text" th:field="*{userDTO.state}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.state')}"
+                                 th:errors="*{userDTO.state}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="zipCode" class="form-control-label">Postal code</label>
+                          <input class="form-control" name="zipCode" id="zipCode" type="text" th:field="*{userDTO.zipCode}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('userDTO.zipCode')}"
+                                 th:errors="*{userDTO.zipCode}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="custom-file form-group">
+                          <label for="Photo" class="form-control-label">Photo</label>
+                          <input type="file" class="custom-file-input form-control"   name="photo "id="photo" lang="en">
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    <div class="col-md">
+                      <div class="ms-auto text-end">
+                        <button class="btn btn-primary btn-sm ms-auto">Submit</button>
+                      </div>
+                    </div>
+
+
+
+
+
+                  </div>
+                </div>
+
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+    <th:block th:insert="parts/FooterDiv.html :: footer"></th:block>
+  </div>
+</main>
+
+<th:block th:include="parts/Footer.html :: footer"></th:block>
+
+</body>
+
+</html>
+
+
+
+

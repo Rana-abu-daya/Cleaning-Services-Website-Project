@@ -6,6 +6,11 @@
   </div>
   <div th:unless="${message}" class="notificationPlace" th:classappend="'alert '" style="color:white;padding:10px">
     <strong><span></span></strong>
+
   </div>
+  <div th:if="${savedBooking}" class="notificationPlace" th:classappend="'alert ' + ${savedBookingalertType}" style="color:white;padding:10px">
+    <strong><span th:text="${savedBooking}"></span></strong>
+  </div>
+
 </div>
 </html>

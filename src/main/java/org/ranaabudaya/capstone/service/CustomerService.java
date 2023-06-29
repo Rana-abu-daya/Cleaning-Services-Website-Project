@@ -13,4 +13,5 @@ public interface CustomerService {
     public Optional<Customer> findCustomerById(int id);
     public List<Customer> getAll();
     public void update(Customer customer);
+    public Customer findCustomerByUserId(int id);
 }

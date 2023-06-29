@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div th:if="${cleanersList.empty}">
+  <!-- Display a message or perform actions when the list is empty -->
+  <p>There is no cleaner available in this day/time .</p>
+  <input type="hidden" value="0" id="noCleaner">
+</div>
+<div th:unless="${cleanersList.empty}" class="col-md-12" style="overflow-x: auto;">
+  <input type="hidden" value="1" id="noCleaner">
+
+<table class="table ">
+  <thead>
+  <tr>
+    <th scope="col">Select Cleaner</th>
+    <th scope="col">Name</th>
+    <th scope="col">Reviews/Photo </th>
+    <th scope="col">Profile </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="cleaner : ${cleanersList}">
+    <td>
+     <input type="radio" class="" name="cleanerId"  th:id="${cleaner.id}"  th:value="${cleaner.id}"/>
+    </td>
+    <td>
+      <label class="" th:for="${cleaner.id}" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}"></label>
+    </td>
+    <td style="display: inline-grid;">
+      <img th:src="@{/assets/img/marie.jpg}" class="navbar-brand-img" alt="main_logo" style="  width: 80px;height:80px;border-radius: 50%;">
+
+      <span class="text-dark ">
+           5 ****
+        </span>
+    </td>
+    <td>
+      <button type="button" class="btn btn-primary" data-toggle="modal"  th:attr="data-target='#exampleModal'+${cleaner.id}">
+        Profile
+      </button>
+      <div class="modal fade"  th:id="'exampleModal'+${cleaner.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </td>
+
+
+  </tr>
+
+  </tbody>
+</table>
+
+
+</div>
+</html>

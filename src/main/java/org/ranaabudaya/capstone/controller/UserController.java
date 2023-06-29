@@ -1,17 +1,21 @@
 package org.ranaabudaya.capstone.controller;
 
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.ranaabudaya.capstone.dto.AdminDTO;
+import org.ranaabudaya.capstone.dto.BookingDTO;
 import org.ranaabudaya.capstone.dto.CleanerDTO;
 import org.ranaabudaya.capstone.dto.CustomerDTO;
 import org.ranaabudaya.capstone.entity.Services;
+import org.ranaabudaya.capstone.entity.User;
 import org.ranaabudaya.capstone.helper.AdminformWrapper;
 import org.ranaabudaya.capstone.helper.CustomerformWrapper;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,14 +46,16 @@ public class UserController {
     private  CleanerService cleanerService;
     private AdminService adminService;
     private CustomerService customerService;
+    private BookingService bookingService;
     @Autowired
-    public UserController(UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService,
+    public UserController(BookingService bookingService,UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService,
                           AdminService adminService,CustomerService customerService) {
         this.userService = userDetailsService;
         this.servicesServiceImp = servicesServiceImp;
         this.cleanerService = cleanerService;
         this.adminService=  adminService;
         this.customerService  = customerService;
+        this.bookingService=bookingService;
     }
 
     @GetMapping("/")
@@ -162,9 +168,46 @@ public String addAdmin(Model model)
 
         return "sign-up-customer";
     }
+    @GetMapping("/customers/admin/sign-up")
+    public String addCustomerAdmin(Model model)
+    {
+        model.addAttribute("Customerform", new CustomerformWrapper());
+
+        return "newCustomer";
+    }
+    @PostMapping("/customers/admin/signup-process")
+    public String signupProcessCustomerByAdmin(@Valid @ModelAttribute ("Customerform") CustomerformWrapper Customerform, BindingResult bindingResult
+            , Model model, RedirectAttributes redirectAttrs)
+    {
+        if(bindingResult.hasErrors()  )
+        {
+            // log.warn("Wrong attempt to add admin");
+            return "newCustomer";
+        }
+        System.out.println(Customerform.getUserDTO());
+        System.out.println(Customerform.getCustomerDTO());
+
+        if(userService.findUserByEmail(Customerform.getUserDTO().getEmail()) != null)
+        {
+            model.addAttribute("duplicateEmail","Email is used in Homey" );
+            return "newCustomer";
+        }else {
+
+            CustomerDTO customerDTO = Customerform.getCustomerDTO() != null ? Customerform.getCustomerDTO() : new CustomerDTO();
+            Customerform.getUserDTO().setRoleName("ROLE_CLIENT");
+            int userId = userService.create(Customerform.getUserDTO());
+            customerDTO.setUserId(userId);
+
+            customerService.create(customerDTO);
+            redirectAttrs.addFlashAttribute("message", "Welcome to Homey.. Enjoy our services ");
+            redirectAttrs.addFlashAttribute("alertType", "alert-success");
+            return "redirect:/customers";
+        }
+    }
+
     @PostMapping("/customers/signup-process")
     public String signupProcessCustomer(@Valid @ModelAttribute ("Customerform") CustomerformWrapper Customerform, BindingResult bindingResult
-            , Model model, RedirectAttributes redirectAttrs)
+            , Model model, RedirectAttributes redirectAttrs, HttpSession session)
     {
         if(bindingResult.hasErrors()  )
         {
@@ -188,7 +231,19 @@ public String addAdmin(Model model)
             customerService.create(customerDTO);
             redirectAttrs.addFlashAttribute("message", "Welcome to Homey.. Enjoy our services ");
             redirectAttrs.addFlashAttribute("alertType", "alert-success");
-            return "redirect:/customers";
+
+            BookingDTO pendingBooking = (BookingDTO) session.getAttribute("pendingBooking");
+            if (pendingBooking != null) {
+
+                pendingBooking.setCustomerId(userId);
+
+                bookingService.create(pendingBooking);
+                session.removeAttribute("pendingBooking");
+                session.setAttribute("savedBooking", "Booking is saved successfully");
+                session.setAttribute("savedBookingalertType", "alert-success");
+
+            }
+            return "redirect:/dashboard";
         }
     }
     @GetMapping("/login")
@@ -199,11 +254,6 @@ public String addAdmin(Model model)
     }
 
 
-    @RequestMapping("/home")
-    public String getHome()
-    {
-        log.info("home page displayed");
-        return "home";
-    }
+
 
 }

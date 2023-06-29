@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="#">
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css" th:href="@{/assets/css/bootstrap.min.css}">
+
+  <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.css" th:href="@{/assets/css/font-awesome.css}">
+  <link rel="stylesheet" href="../assets/css/templatemo-softy-pinko.css" th:href="@{/assets/css/templatemo-softy-pinko.css}">
+  <link rel="stylesheet" href="../assets/css/progress.css"  th:href="@{/assets/css/progress.css}">
+  <link rel="stylesheet" href="../assets/css/nucleo-icons.css"  th:href="@{/assets/css/nucleo-icons.css}">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" th:href="@{/assets/css/argon-dashboard.css?v=2.0.4}" rel="stylesheet" />
+<!--date picker  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker3.min.css">
+
+  <style>
+  .fa {
+    position: absolute;
+    right: 25px;
+    top: 11px;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+#msform fieldset{
+    padding: 20px 20px;
+}
+#example-time-input, #example-date-input ,email{
+
+border-radius: 0.5em;
+    }
+label{
+text-align:left;}
+</style>
+  <title>Book your service</title>
+</head>
+
+<body>
+
+<!-- ***** Preloader Start ***** -->
+<div id="preloader">
+  <div class="jumper">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<!-- ***** Preloader End ***** -->
+<!-- ***** Header Area Start ***** -->
+<header class="header-area header-sticky" style="top:0px">
+  <div class="container">
+    <a href="#" class="logo">
+      <img src="../assets/images/Homey-Color.svg" th:src="@{/assets/images/Homey-Color.svg}" alt="Homey" style="width:20%"/>
+    </a>
+  </div>
+</header>
+<!-- ***** Header Area End ***** -->
+
+<main class="main-content  mt-0">
+  <section>
+    <div class="page-header min-vh-100">
+      <div class="container" style="    margin-top: 80px;">
+
+          <!-- MultiStep Form -->
+          <div class="row">
+            <div class="col-md-6 col-md-offset-3 col-sm-12" style="box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);">
+
+                <form id="msform" th:action="@{/bookings/add-booking}" th:object="${Booking}" method="post">
+
+                <!-- progressbar -->
+                <ul class="classList" id="progressbar">
+                  <li class="active">Pick a Date/Check Availability</li>
+                  <li>Book a Cleaning</li>
+                  <li>Contact Information</li>
+                </ul>
+                <!-- fieldsets -->
+
+                <fieldset>
+                  <h2 class="fs-title">Pick your date </h2>
+                  <h3 class="fs-subtitle"></h3>
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                      <div class="form-group" style="display:flex; align-items: center; ">
+                        <label for="serviceId" class="form-control-label col-4" style="margin-right: 10px;">Select your Service<span style="color:red;">*</span></label>
+                        <select class="form-control form-select col-8" id="serviceId" name="serviceId" >
+                          <option th:each="service : ${myServicesList}" th:value="${service.id}" th:text="${service.name}"></option>
+
+<!--                          <option>regular cleaning</option>-->
+<!--                          <option>deep cleaning</option>-->
+<!--                          <option>window cleaning</option>-->
+
+                        </select>
+                      </div>
+
+
+                    </div>
+                  <div class="col-md-12 col-sm-12 ">
+                  <div class="form-group" style="display:flex; align-items: center;">
+                    <label for="bookingDate" class="form-control-label col-4 " style="margin-right: 10px;   ">Date<span style="color:red;">*</span></label>
+                    <input class="form-control col-8" type="date"  id="bookingDate" style="border-radius: 0.5em;"  th:field="*{date}">
+                    <span  class="   badge-pill " style="color:red " th:if="${#fields.hasErrors('date')}"
+                           th:errors="*{date}"></span>
+                  </div>
+                  </div>
+                  <div class="col-md-12 ">
+                  <div class="form-group  " style="display:flex; align-items: center;">
+                    <label for="bookingTime" class="form-control-label col-4"  style="margin-right: 10px;">Time<span style="color:red;">*</span></label>
+                    <input class="form-control col-8 time-input" type="time" value="10:30:00" id="bookingTime" data-mdb-with-icon="true" style="    border-radius: 0.5em;" th:field="*{StartTime}">
+                    <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('StartTime')}"
+                           th:errors="*{StartTime}"></span>
+
+                  </div>
+                  </div>
+
+
+                    <div class="col-md-12">
+
+                      <div class="form-group" style="display: inline-flex;align-items: center;float:left">
+                        <label   class="form-control-label col-4"  for="num_hours_value" style="margin-right: 10px;">Hours<span style="color:red;">*</span></label>
+<div class="col-8" style="    width: 100%;display: flex;">
+                        <span class="input-group-btn ">
+                      <button class="btn btn-icon btn-primary " id="plus" type="button">
+                        <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+                      </button>
+                        </span>
+
+                        <input type="hidden" name="num_hours" class="form-control num_hours" >
+                        <input type="text" name="num_hours_value" class="form-control num_hours_value"  style="width: 50%;height: 100%;
+    border-radius: 0.5em;    ;background-color:#fff; border-color: #5f72e4;border-left:none; border-right:none;"id="num_hours_value" readonly="" value="3"  th:field="*{hours}">
+                        <span class="input-group-btn">
+                      <button class="btn btn-icon btn-primary " id="minus" type="button">
+                        <span class="btn-inner--icon"><i class="ni ni-fat-delete"></i></span>
+                      </button>
+                        </span>
+</div>
+                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('hours')}"
+                               th:errors="*{hours}"></span>
+
+                      </div>
+                    </div>
+
+
+<!--                    <div class="col-md-12 ">-->
+<!--                      <div class="form-group " style="display:flex; align-items: center;">-->
+<!--                        <label for="email" class="form-control-label col-4"  style="margin-right: 10px; ">Email</label>-->
+<!--                        <input class="form-control col-8" type="email" name="email" placeholder="examle@gg.com" pattern="^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$" id="email" style="    border-radius: 0.5em;">-->
+<!--                      </div>-->
+<!--                    </div>-->
+                    <div class="col-md-12 ">
+                      <div class="form-group " style="display:flex; align-items: center;">
+                        <label for="zipcode" class="form-control-label col-4"  style="margin-right: 10px;">Zipcode<span style="color:red;">*</span></label>
+                        <input class="form-control col-8" type="tel" name="zipcode" placeholder="00000"  id="zipCode" style="    border-radius: 0.5em;" th:field="*{zipCode}">
+                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('zipCode')}"
+                               th:errors="*{zipCode}"></span>
+
+                      </div>
+                    </div>
+                  </div>
+                  <input type="button" name="next" class="next action-button" value="Next"/>
+                </fieldset>
+                <fieldset>
+                  <h2 class="fs-title">Choose your cleaner</h2>
+                  <h3 class="fs-subtitle"></h3>
+                  <div class="row " id="cleaners" style=" box-sizing: border-box;">
+                  </div>
+                  <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                  <input type="button" name="next" class="next action-button" value="Next"/>
+                </fieldset>
+                <fieldset>
+                  <h2 class="fs-title">Contact Information</h2>
+                  <h3 class="fs-subtitle"></h3>
+                    <div class="form-group " style="display:flex; align-items: center;">
+                    <label for="fullName" class="form-control-label col-4"  style="margin-right: 10px;">Host Name<span style="color:red;">*</span></label>
+                    <input type="text" name="fullName"maxlength="200" id="fullName" required placeholder="Full name" style=" height: 100%;   border-radius: 0.5em;" th:field="*{fullName}"/>
+                    <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('fullName')}"
+                           th:errors="*{fullName}"></span>
+            </div>
+
+                    <div class="form-group " style="display:flex; align-items: center;">
+                        <label for="address" class="form-control-label col-4"  style="margin-right: 10px;">Host Address<span style="color:red;">*</span></label>
+                        <input type="text" id="address" name="address" required placeholder="Address inclue apt number" style=" height: 100%;;   border-radius: 0.5em;" th:field="*{address}"/>
+                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('address')}"
+                               th:errors="*{address}"></span>
+                    </div>
+                    <div class="form-group " style="display:flex; align-items: center;">
+                        <label for="phone" class="form-control-label col-4"  style="margin-right: 10px;">Host Mobile<span style="color:red;">*</span></label>
+                        <input type="tel" id="phone" name="phone" required placeholder="000-0000-000" style=" height: 100%;;   border-radius: 0.5em;" th:field="*{phone}"/>
+                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('phone')}"
+                               th:errors="*{phone}"></span>
+                    </div>
+
+                  <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                  <input type="submit" name="submit" class="submit action-button" id="submit" value="Submit"/>
+                </fieldset>
+              </form>
+
+            </div>
+          </div>
+          <!-- /.MultiStep Form -->
+          <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column col-sm-0">
+            <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('../assets/images/Booking2.jpg');background-size: cover;">
+              <span class="mask bg-gradient-primary opacity-6"></span>
+
+            </div>
+          </div>
+        </div>
+
+    </div>
+  </section>
+</main>
+
+
+
+<!-- jQuery -->
+<script src="../assets/js/jquery-2.1.0.min.js" th:src="@{/assets/js/jquery-2.1.0.min.js}"></script>
+<script src="../assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<!-- Plugins -->
+<script src="../assets/js/scrollreveal.min.js" th:src="@{/assets/js/scrollreveal.min.js}"></script>
+<script src="../assets/js/script.js" th:src="@{/assets/js/script.js}"></script>
+<!-- Global Init -->
+<script src="../assets/js/custom.js" th:src="@{/assets/js/custom.js}"></script>
+<script th:src="@{/assets/js/CheckAvailability.js}"></script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+<script>
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+  $('.datepicker').datepicker({
+  inline: true,
+    startDate: new Date(),
+    minDate: tomorrow,
+
+});
+
+
+</script>
+<script>
+const input1 = document.getElementById('num_hours_value');
+const input2 = document.getElementById('bookingDate');
+const input3 = document.getElementById('bookingTime');
+const input4 = document.getElementById('zipCode');
+const divCleaner = document.getElementById('cleaners');
+var noCleanerInput = document.getElementById("noCleaner");
+
+input1.addEventListener('input', function() {
+  // Clear the content of the div
+  divCleaner.textContent = '';
+  if (noCleanerInput ) {
+  document.getElementById("noCleaner").value=2;
+}
+});
+
+input2.addEventListener('input', function() {
+  // Clear the content of the div
+  divCleaner.textContent = '';
+   if (noCleanerInput ) {
+  document.getElementById("noCleaner").value=2;
+}
+
+});
+input3.addEventListener('input', function() {
+  // Clear the content of the div
+  divCleaner.textContent = '';
+   if (noCleanerInput ) {
+  document.getElementById("noCleaner").value=2;
+}
+});
+input4.addEventListener('input', function() {
+  // Clear the content of the div
+  divCleaner.textContent = '';
+   if (noCleanerInput ) {
+  document.getElementById("noCleaner").value=2;
+}
+});
+const selectService = document.getElementById("serviceId");
+selectService.addEventListener('change', function() {
+  // Clear the content of the div
+  divCleaner.textContent = '';
+   if (noCleanerInput ) {
+  document.getElementById("noCleaner").value=2;
+}
+});
+
+if(document.getElementById("num_hours_value").value==0){
+document.getElementById("num_hours_value").value = 3;
+}
+//jQuery time
+var current_fs, next_fs, previous_fs; //fieldsets
+var left, opacity, scale; //fieldset properties which we will animate
+var animating; //flag to prevent quick multi-click glitches
+
+$(".next").click(function(){
+  if ( document.getElementById('cleaners').textContent.trim() === '' ){
+  var selectElement = document.getElementById("serviceId");
+    var selectedOption = selectElement.value;
+
+    var bookingDate = document.getElementById("bookingDate");
+    var bookingDateValue = bookingDate.value;
+ var bookingTime = document.getElementById("bookingTime");
+    var bookingTimeValue = bookingTime.value;
+     var zipCode = document.getElementById("zipCode");
+    var zipCodeValue = zipCode.value;
+    console.log(bookingDateValue);
+     console.log(bookingTimeValue);
+     console.log(zipCodeValue);
+if( !bookingTimeValue || !bookingDateValue || !zipCodeValue || zipCodeValue == 0  ){
+  alert("Please Fill In All Required Fields");
+      return false;
+}
+if(!isDateInFuture(bookingDateValue)){
+ alert("Please choose future date");
+      return false;
+}
+if(!isValidZipCode(zipCodeValue)){
+alert("Invalid zipCode Formate");
+      return false;
+}
+
+
+checkZipCode(zipCodeValue)
+  .then((result) => {
+  console.log(result);
+    if(result){
+
+var hours = document.getElementById("num_hours_value").value;
+    var urlCleaners = '/booking/cleaners/'+selectedOption+'/'+bookingTimeValue+'/'+hours+'/'+bookingDateValue;
+createCleanerDiv(urlCleaners);
+
+
+    }else{
+    document.getElementById('cleaners').innerHTML = "<h4>We Apologize Our Great Service Is Not Available In Your Area</h4><p>you can change the zipCode as we serve within 50miles from Seattle area</p>";
+   document.getElementById("zipCode").value=0;
+    }
+  })
+  .catch((error) => {
+    console.log(error); // Handle the error here
+        document.getElementById('cleaners').innerHTML = "<h4>We Apologize Our Great Service Is Not Available In Your Area</h4><p>you can change the zipCode as we serve within 50miles from Seattle area</p>";
+ document.getElementById("zipCode").value=0;
+  });
+
+}
+if( document.getElementById("zipCode").value== 0){
+alert("We Apologize Our Great Service Is Not Available In Your Area, please change zip code");
+      return false;
+
+}
+
+var noCleanerInput = document.getElementById("noCleaner");
+if (noCleanerInput && (noCleanerInput.value == "0")) {
+
+ alert("There is no cleaner available change the day or time");
+      return false;
+}
+if (noCleanerInput && (noCleanerInput.value == 1)) {
+var radioButton = document.querySelector('input[name="cleanerId"]');
+if (radioButton && radioButton.checked) {
+}else{
+alert("choose one cleaner");
+      return false;
+}
+
+}
+	if(animating) return false;
+	animating = true;
+
+	current_fs = $(this).parent();
+	next_fs = $(this).parent().next();
+	//activate next step on progressbar using the index of next_fs
+	$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+	//show the next fieldset
+	next_fs.show();
+	//hide the current fieldset with style
+	current_fs.animate({opacity: 0}, {
+		step: function(now, mx) {
+			//as the opacity of current_fs reduces to 0 - stored in "now"
+			//1. scale current_fs down to 80%
+			scale = 1 - (1 - now) * 0.2;
+			//2. bring next_fs from the right(50%)
+			left = (now * 50)+"%";
+			//3. increase opacity of next_fs to 1 as it moves in
+			opacity = 1 - now;
+			current_fs.css({
+        'transform': 'scale('+scale+')',
+        'position': 'absolute'
+
+      });
+			next_fs.css({'left': left, 'opacity': opacity, 'position': 'relative'});
+		},
+		duration: 800,
+		complete: function(){
+			current_fs.hide();
+			animating = false;
+		},
+		//this comes from the custom easing plugin
+
+	});
+});
+
+$(".previous").click(function(){
+
+	if(animating) return false;
+	animating = true;
+
+	current_fs = $(this).parent();
+	previous_fs = $(this).parent().prev();
+
+	//de-activate current step on progressbar
+	$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+	//show the previous fieldset
+	previous_fs.show();
+	//hide the current fieldset with style
+	current_fs.animate({opacity: 0}, {
+		step: function(now, mx) {
+			//as the opacity of current_fs reduces to 0 - stored in "now"
+			//1. scale previous_fs from 80% to 100%
+			scale = 0.8 + (1 - now) * 0.2;
+			//2. take current_fs to the right(50%) - from 0%
+			left = ((1-now) * 50)+"%";
+			//3. increase opacity of previous_fs to 1 as it moves in
+			opacity = 1 - now;
+			current_fs.css({'left': left,'position': 'absolute'});
+			previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity,'position': 'relative' });
+		},
+		duration: 800,
+		complete: function(){
+			current_fs.hide();
+			animating = false;
+		},
+		//this comes from the custom easing plugin
+
+	});
+});
+$('#myform').on('submit', function() {
+  // Prevent the default form submission
+  event.preventDefault();
+
+  // Perform your check before submitting the form
+       var address = document.getElementById("address");
+    var addressValue = address.value;
+  var fullName = document.getElementById("fullName");
+    var fullNameValue = fullName.value;
+      var phone = document.getElementById("phone");
+    var phoneValue = phone.value;
+    console.log(fullNameValue + " "+ phoneValue +" "+addressValue);
+if( !phoneValue || !fullNameValue || !addressValue ){
+  alert("Please Fill In All Required Fields");
+      return false;
+}
+ return true;
+
+});
+</script>
+
+<script>
+
+
+document.getElementById("plus").addEventListener("click", incrementValue);
+document.getElementById("minus").addEventListener("click", decrementValue);
+
+function incrementValue() {
+     var num= parseInt(document.getElementById("num_hours_value").value);
+      document.getElementById("num_hours_value").value = num+1;
+      var noCleanerInput = document.getElementById("noCleaner");
+ if (noCleanerInput ) {
+  document.getElementById("noCleaner").value=2;
+}
+    }
+
+    function decrementValue() {
+        var num= parseInt(document.getElementById("num_hours_value").value);
+        var noCleanerInput = document.getElementById("noCleaner");
+ if (noCleanerInput ) {
+  document.getElementById("noCleaner").value=2;
+}
+        if(num<=1){
+          document.getElementById("num_hours_value").value = 1;
+        }else{
+         document.getElementById("num_hours_value").value = num-1;
+        }
+
+    }
+
+
+</script>
+</body>
+</html>

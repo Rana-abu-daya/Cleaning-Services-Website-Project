@@ -7,6 +7,8 @@ import org.ranaabudaya.capstone.entity.Cleaner;
 import org.ranaabudaya.capstone.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +22,8 @@ public interface CleanerService {
     public List<Cleaner> getAll();
     public  int deleteById(int id);
 public List<Cleaner> findAllCleaner();
+public List<Cleaner> getCleanersByServiceId(int id);
+public List<Cleaner>  findAvailableCleanersForServiceAndTime(String startTime, int hours, LocalDate bookingDate, int serviceId);
 
 
 }

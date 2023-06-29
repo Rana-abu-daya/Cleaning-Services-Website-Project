@@ -42,7 +42,10 @@ public class CustomerServiceImp implements CustomerService{
 
 
     }
+    public Customer findCustomerByUserId(int id){
+        return customerRepository.findCustomerByUserId(id);
 
+    }
     @Override
     public void create(CustomerDTO customerDTO) {
         ModelMapper modelMapper = new ModelMapper();

@@ -47,9 +47,9 @@ public class SecurityConfig {
                 )
                 .formLogin(
                         form -> form
-                                .loginPage("/login-user")
-                                .loginProcessingUrl("/login-user")
-                                .successForwardUrl("/dashboard")
+                                .loginPage("/login")
+                                .loginProcessingUrl("/login")
+                                .successForwardUrl("/login-process")
                                 .permitAll()
                 )
                 .logout(logout -> logout
