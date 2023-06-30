@@ -16,6 +16,9 @@ import org.ranaabudaya.capstone.service.RoleService;
 import org.ranaabudaya.capstone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,10 +50,11 @@ public class AdminController {
     }
 
     @GetMapping("/admins")
-    private String AllAdmin(Model model)
-    {
-        List<Admin> adminList = adminService.getAll();
+    private String AllAdmin(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5); // get 5 items per page
+        Page<Admin> adminList = adminService.getAllPagination(pageable);
         model.addAttribute("adminList", adminList);
+        model.addAttribute("currentPage", page);
         return "admins";
     }
 

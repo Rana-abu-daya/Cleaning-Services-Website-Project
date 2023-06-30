@@ -9,9 +9,13 @@ import org.ranaabudaya.capstone.entity.Cleaner;
 import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.repository.BookingRepository;
 import org.ranaabudaya.capstone.repository.CleanerRepository;
+import org.ranaabudaya.capstone.repository.ServicesRepository;
 import org.ranaabudaya.capstone.service.ServicesServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,18 +35,20 @@ public class ServicesController {
     ServicesServiceImp servicesServiceImp;
     CleanerRepository cleanerRepository;
     BookingRepository bookingRepository;
+    ServicesRepository servicesRepository;
     @Autowired
-    public ServicesController(BookingRepository bookingRepository,ServicesServiceImp servicesServiceImp, CleanerRepository cleanerRepository) {
+    public ServicesController(  ServicesRepository servicesRepository,BookingRepository bookingRepository,ServicesServiceImp servicesServiceImp, CleanerRepository cleanerRepository) {
         this.servicesServiceImp = servicesServiceImp;
         this.cleanerRepository = cleanerRepository;
         this.bookingRepository =bookingRepository;
+        this.servicesRepository=servicesRepository;
     }
 
 
 
     @ModelAttribute("ServicesList")
     private List<Services> getServices(){
-        List<Services> list =  servicesServiceImp.getAllServices();
+        List<Services> list =  servicesServiceImp.getAllServicesWithoutPage();
         return list;
     }
     @InitBinder
@@ -52,7 +58,12 @@ public class ServicesController {
     }
 
     @GetMapping("/services")
-    public String servicesListView(){
+    public String servicesListView(Model model, @RequestParam(defaultValue = "0") int page) {
+            Pageable pageable = PageRequest.of(page, 1); // get 5 items per page
+            Page<Services> itemPage = servicesServiceImp.getAllServices(pageable);
+
+            model.addAttribute("data", itemPage);
+            model.addAttribute("currentPage", page);
         return "services";
     }
 

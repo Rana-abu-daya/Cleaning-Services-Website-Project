@@ -12,6 +12,8 @@ import org.ranaabudaya.capstone.repository.AdminRepository;
 import org.ranaabudaya.capstone.repository.CleanerRepository;
 import org.ranaabudaya.capstone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,6 +65,9 @@ public class AdminServiceImp implements AdminService{
     @Override
     public List<Admin> getAll(){
         return adminRepository.findAll();
+    }
+    public Page<Admin> getAllPagination(Pageable pageable){
+        return adminRepository.findAll(pageable);
     }
     public void update(Admin admin){
 

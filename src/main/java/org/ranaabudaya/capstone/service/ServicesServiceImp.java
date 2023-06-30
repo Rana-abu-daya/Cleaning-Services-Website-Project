@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.repository.ServicesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +34,16 @@ public class ServicesServiceImp implements ServicesService {
     }
 
     @Override
-    public List<Services> getAllServices() {
-        List<Services> list= servicesRepository.findAll();
+    public Page<Services> getAllServices(Pageable page) {
+        Page<Services>  list= servicesRepository.findAll(page);
         return list;
     }
+    @Override
+    public List<Services> getAllServicesWithoutPage() {
+        List<Services>  list= servicesRepository.findAll();
+        return list;
+    }
+
     @Override
     public List<Services> getActiveServies(){
         List<Services> list= servicesRepository.findByActiveTrue();

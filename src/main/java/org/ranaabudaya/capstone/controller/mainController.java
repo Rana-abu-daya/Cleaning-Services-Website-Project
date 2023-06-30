@@ -70,14 +70,23 @@ public class mainController {
     }
     @GetMapping(value = {"/dashboard"})
     public  String  dashboard(HttpSession session,Model model){
-       String savedBooking =  (String) session.getAttribute("savedBooking");
-        String savedBookingalertType =  (String) session.getAttribute("savedBookingalertType");
-        if(savedBooking != null && savedBookingalertType!=null ) {
+       String savedBooking1 =  (String) session.getAttribute("savedBooking");
+        String savedBookingalertType2 =  (String) session.getAttribute("savedBookingalertType");
+        System.out.println(savedBooking1 + savedBookingalertType2);
+        if(savedBooking1 != null && savedBookingalertType2!=null ) {
             session.removeAttribute("savedBooking");
             session.removeAttribute("savedBookingalertType");
-            model.addAttribute("savedBooking", savedBooking);
-            model.addAttribute("savedBookingalertType", savedBookingalertType);
+            model.addAttribute("savedBooking", savedBooking1);
+            model.addAttribute("savedBookingalertType", savedBookingalertType2);
         }
+        String activation =  (String) session.getAttribute("activation");
+        System.out.println(activation);
+        if(activation != null){
+            session.removeAttribute("activation");
+            model.addAttribute("activation", activation);
+        }
+
+
         return "dashboard";
     }
 
@@ -124,20 +133,25 @@ public class mainController {
             // User is logged in
             //bookingService.saveBooking(booking);
            // return "booking-success";
+            boolean saved = false;
             for (GrantedAuthority authority : authentication.getAuthorities()) {
                 if (authority.getAuthority().equals("ROLE_CLIENT") ) {
                     System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
                     String email = ((UserDetails) authentication.getPrincipal()).getUsername();
                     User user = userService.findUserByEmail(email);
-                    Booking.setCustomerId(user.getId()); // Assuming UserDetails has getId() method
+                    Booking.setCustomerId(user.getId());
                     bookingService.create(Booking);
-                    model.addAttribute("savedBooking", "Booking is saved successfully");
-                    model.addAttribute("savedBookingalertType", "alert-success");
-                }else{
-                    model.addAttribute("savedBooking", "Booking is not created, you are not customer");
-                    model.addAttribute("savedBookingalertType", "alert-warning");
-
+                    saved=true;
+                    session.setAttribute("savedBooking", "Booking is saved successfully");
+                    session.setAttribute("savedBookingalertType", "alert-success");
                 }
+            }
+
+            if(!saved){
+                System.out.println(saved+"saaaved");
+                session.setAttribute("savedBooking", "Booking is not created, you are not customer");
+                session.setAttribute("savedBookingalertType", "alert-warning");
+
             }
             System.out.println("user is  login");
         }else {
@@ -147,7 +161,7 @@ public class mainController {
             return "redirect:/login";
         }
 
-       return "dashboard";
+       return "redirect:/dashboard";
     }
 
 
@@ -158,6 +172,7 @@ public class mainController {
     @RequestMapping("/login-process")
     public String handleSuccessfulLogin(HttpSession session,Authentication authentication) {
         System.out.println(authentication);
+
         // Retrieve the pending booking from session or cookie
         if (authentication != null) {
             for (GrantedAuthority authority : authentication.getAuthorities()) {
@@ -173,6 +188,17 @@ public class mainController {
                         session.setAttribute("savedBooking", "Booking is saved successfully");
                         session.setAttribute("savedBookingalertType", "alert-success");
 
+                    }
+
+                }
+            }
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                if (authority.getAuthority().equals("ROLE_CLEANER")) {
+                    String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+                    User user =userService.findUserByEmail(email);
+                    Cleaner cleaner = cleanerService.findByUserId(user.getId());
+                    if(!cleaner.isActive()){
+                    session.setAttribute("activation", "You still inactive");
                     }
 
                 }
