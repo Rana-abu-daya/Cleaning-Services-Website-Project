@@ -199,7 +199,7 @@ public String addAdmin(Model model)
             customerDTO.setUserId(userId);
 
             customerService.create(customerDTO);
-            redirectAttrs.addFlashAttribute("message", "Welcome to Homey.. Enjoy our services ");
+            redirectAttrs.addFlashAttribute("message", "New Customer is Added successfully ");
             redirectAttrs.addFlashAttribute("alertType", "alert-success");
             return "redirect:/customers";
         }

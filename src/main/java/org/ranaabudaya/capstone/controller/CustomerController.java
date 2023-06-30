@@ -5,11 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.ranaabudaya.capstone.dto.UserDTO;
 import org.ranaabudaya.capstone.entity.Admin;
+import org.ranaabudaya.capstone.entity.Booking;
 import org.ranaabudaya.capstone.entity.Customer;
+import org.ranaabudaya.capstone.repository.BookingRepository;
 import org.ranaabudaya.capstone.repository.CustomerRepository;
+import org.ranaabudaya.capstone.service.BookingService;
 import org.ranaabudaya.capstone.service.CustomerService;
 import org.ranaabudaya.capstone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,25 +33,76 @@ public class CustomerController {
     CustomerRepository customerRepository;
     CustomerService customerService;
     UserService userService;
+    BookingRepository bookingRepository;
+    BookingService bookingService;
 
     @Autowired
-    public CustomerController(CustomerRepository customerRepository,CustomerService customerService, UserService userService){
+    public CustomerController(BookingService bookingService, BookingRepository bookingRepository,CustomerRepository customerRepository,CustomerService customerService, UserService userService){
         this.customerRepository = customerRepository;
         this.customerService = customerService;
         this.userService=userService;
+        this.bookingRepository=bookingRepository;
+        this.bookingService =bookingService;
     }
 
     @GetMapping("/customers")
-    private String AllAdmin(Model model)
-    {
-        List<Customer> customerList = customerService.getAll();
+    private String AllCustomer(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5); // get 5 items per page
+        Page<Customer> customerList = customerService.getAllActivePagination(pageable);
+
         model.addAttribute("customerList", customerList);
+        model.addAttribute("currentPage", page);
+
         return "customers";
     }
+    @GetMapping("/customers/deletedCustomer")
+    private String AllDeletedCustomer(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5); // get 5 items per page
+        Page<Customer> DeletedCustomers = customerService.getAllDeleted(pageable);
 
+        model.addAttribute("DeletedCustomers", DeletedCustomers);
+        model.addAttribute("currentPage", page);
+
+        return "DeletedCustomers";
+    }
+
+    @GetMapping("/customers/deletedCustomer/activate/{id}")
+    @ResponseBody
+    public String[] activateCustomerById(@PathVariable("id") int id, Model model) {
+
+        String arr[] = new String[2];
+    if(customerService.findCustomerById(id).isPresent()){
+         customerService.activateById(id);
+            arr[0] = "The customer is activated successfully";
+            arr[1]= "success";
+            return  arr;
+
+        } else {
+            arr[0] = "The customer's activation failed.";
+            arr[1]= "danger";
+            return  arr;
+
+        }
+
+    }
     @GetMapping("/customers/delete/{id}")
     @ResponseBody
-    public String[] deleteAdminbyId(@PathVariable("id") int id, Model model) {
+    public String[] deleteCustomerById(@PathVariable("id") int id, Model model) {
+
+
+        List<Booking> bookings  = bookingRepository.findByCustomerIdAndStatus(id, Booking.BookingStatus.IN_PROGRESS);
+        if(!bookings.isEmpty()){
+            String arr[] = new String[2];
+            arr[0] = "The customer's deletion failed. There are bookings in progress";
+            arr[1]= "danger";
+            return  arr;
+        }
+        List<Booking> newBookings  = bookingRepository.findByCustomerIdAndStatus(id, Booking.BookingStatus.NEW);
+        for (Booking booking: newBookings) {
+            booking.setStatus(Booking.BookingStatus.CANCELLED);
+            bookingService.update(booking);
+        }
+
         int result =  customerService.deleteById(id);
         String arr[] = new String[2];
         if(result>0){

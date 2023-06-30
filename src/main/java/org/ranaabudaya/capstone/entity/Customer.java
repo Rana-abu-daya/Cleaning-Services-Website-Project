@@ -22,4 +22,6 @@ public class Customer {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    @Column(name = "is_deleted")
+    private  boolean isDeleted =false;
 }

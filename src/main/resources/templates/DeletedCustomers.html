@@ -29,18 +29,15 @@
               <div class="card">
                 <div class="card-header pb-0 px-3" style="display: flex;">
                   <div class="d-flex flex-column">
-                    <h6 class="mb-0">Customers Information</h6>
+                    <h6 class="mb-0">Deleted Customers Information</h6>
                   </div>
                   <div class="ms-auto text-end">
-                    <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/customers/deletedCustomer}" style="color:#1d64dc !important;;"><i class="fas fa-tag me-2" aria-hidden="true" ></i>Deleted Customer</a>
-                    <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/customers/admin/sign-up}" style="color:#1d64dc !important;;"><i class="fas fa-plus me-2" aria-hidden="true" ></i>New Customer</a>
-
+                    <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/customers}" style="color:#1d64dc !important;;"><i class="fas fa-check-bold me-2" aria-hidden="true" ></i>Active Customer</a>
                   </div>
-
                 </div>
                 <div class="card-body pt-4 p-3">
                   <ul class="list-group">
-                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"  th:each="customer : ${customerList.content}" th:id="'customerDiv'+${customer.id}">
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"  th:each="customer : ${DeletedCustomers.content}" th:id="'customerDiv'+${customer.id}">
                       <div class="d-flex flex-column">
 
                         <h6 class="mb-3 text-sm" th:text="${#strings.capitalize(customer.user.firstName)}+' '+ ${#strings.capitalize(customer.user.lastName)}"></h6>
@@ -58,26 +55,25 @@
 
                       <div class="ms-auto text-end">
 
-                        <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="#" data-bs-toggle="modal"  th:attr="data-bs-target='#exampleModal'+${customer.id}" ><i class="far fa-trash-alt me-2"></i>Delete</a>
-                        <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" th:href="@{/customers/edit-customer/}+${customer.id}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
+                        <a class="btn btn-link text-success text-gradient px-3 mb-0" href="#" data-bs-toggle="modal"  th:attr="data-bs-target='#exampleModal'+${customer.id}" ><i class="fa fa-send me-2"></i>Activate</a>
 
                         <!-- Modal href="javascript:void(0);" onclick="deleteService(this)" -->
                         <div class="modal fade" th:id="'exampleModal'+${customer.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Activate Customer</h5>
                                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <span style="float: left;" th:text="'Are you sure? Delete: '+ ${customer.user.userName} + ' from customers list'"></span>
+                                <span style="float: left;" th:text="'Are you sure? Activate : '+ ${customer.user.userName}"></span>
                               </div>
                               <div class="modal-footer">
                                 <input type="hidden"  name="id" th:value="${customer.id}" class="idCustomer">
                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
-                                <button type="button"  class="btn btn-danger" onclick="deleteCustomer(this)">Yes</button>
+                                <button type="button"  class="btn btn-danger" onclick="activateCustomer(this)">Yes</button>
                               </div>
                             </div>
                           </div>
@@ -93,16 +89,16 @@
                   <nav class="btn-group pull-right">
                     <ul class="pagination">
                       <li class="page-item" th:classappend="${currentPage == 0} ? disabled">
-                        <a class="page-link" th:href="@{/customers(page=${currentPage - 1})}" aria-label="Previous">
+                        <a class="page-link" th:href="@{/customers/deletedCustomer(page=${currentPage - 1})}" aria-label="Previous">
                           <span aria-hidden="true">&laquo;</span>
                           <span class="sr-only">Previous</span>
                         </a>
                       </li>
-                      <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, customerList.totalPages - 1)}" th:classappend="${pageNumber == currentPage} ? active">
-                        <a class="page-link" th:href="@{/customers(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                      <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0,  DeletedCustomers.totalPages - 1)}" th:classappend="${pageNumber == currentPage} ? active">
+                        <a class="page-link" th:href="@{/customers/deletedCustomer(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
                       </li>
-                      <li class="page-item" th:classappend="${currentPage + 1 >= customerList.totalPages} ? disabled">
-                        <a class="page-link" th:href="@{/customers(page=${currentPage + 1})}" aria-label="Next">
+                      <li class="page-item" th:classappend="${currentPage + 1 >=  DeletedCustomers.totalPages} ? disabled">
+                        <a class="page-link" th:href="@{/customers/deletedCustomer(page=${currentPage + 1})}" aria-label="Next">
                           <span aria-hidden="true">&raquo;</span>
                           <span class="sr-only">Next</span>
                         </a>

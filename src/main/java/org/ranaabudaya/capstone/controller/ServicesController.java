@@ -59,7 +59,7 @@ public class ServicesController {
 
     @GetMapping("/services")
     public String servicesListView(Model model, @RequestParam(defaultValue = "0") int page) {
-            Pageable pageable = PageRequest.of(page, 1); // get 5 items per page
+            Pageable pageable = PageRequest.of(page, 5); // get 5 items per page
             Page<Services> itemPage = servicesServiceImp.getAllServices(pageable);
 
             model.addAttribute("data", itemPage);

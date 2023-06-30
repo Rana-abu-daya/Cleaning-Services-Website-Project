@@ -1,4 +1,34 @@
 
+function activateCustomer(linkElement) {
+ var parentElement = linkElement.parentElement;
+ event.preventDefault(); // Prevent the link from navigating elsewhere
+        event.preventDefault(); // Prevent the link from navigating elsewhere
+        var idCustomerInput = parentElement.querySelector('input[type="hidden"]');
+
+         var idCustomer = idCustomerInput.value;
+        var urlDeletion =" /customers/deletedCustomer/activate/"+idCustomer;
+       fetch(urlDeletion)
+       .then(response => response.json())
+       .then(data => {
+
+       let  notification = document.getElementsByClassName('notificationPlace');
+               let modal  = document.getElementById("exampleModal"+idCustomer);
+                        modal.classList.remove("show");
+        //  console.log(notification);
+             notification[0].querySelector(('span')).innerHTML=data[0];
+           notification[0].classList.add('alert-'+data[1]);
+           if(data[1]!='danger'){
+         var customerDiv = document.getElementById("customerDiv"+idCustomer);
+               customerDiv.parentNode.removeChild(customerDiv);
+         }
+
+  document.body.classList.remove("modal-open");
+  var modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
+  modalBackdrop.parentNode.removeChild(modalBackdrop);
+    document.body.style.overflow = 'auto'; // 'auto' or 'scroll'
+         })
+         .catch(err => console.warn(err));
+}
 function deleteBooking(linkElement) {
  var parentElement = linkElement.parentElement;
  event.preventDefault(); // Prevent the link from navigating elsewhere
@@ -25,6 +55,7 @@ function deleteBooking(linkElement) {
   document.body.classList.remove("modal-open");
   var modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
   modalBackdrop.parentNode.removeChild(modalBackdrop);
+    document.body.style.overflow = 'auto'; // 'auto' or 'scroll'
          })
          .catch(err => console.warn(err));
 }
@@ -54,6 +85,7 @@ function deleteCleaner(linkElement) {
   document.body.classList.remove("modal-open");
   var modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
   modalBackdrop.parentNode.removeChild(modalBackdrop);
+    document.body.style.overflow = 'auto'; // 'auto' or 'scroll'
          })
          .catch(err => console.warn(err));
 }
@@ -87,6 +119,7 @@ function deleteAdmin(linkElement) {
   var modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
   modalBackdrop.parentNode.removeChild(modalBackdrop);
         //   document.getElementById('divContent').innerHTML = data;
+          document.body.style.overflow = 'auto'; // 'auto' or 'scroll'
          })
          .catch(err => console.warn(err));
 }
@@ -121,6 +154,7 @@ function deleteService(linkElement) {
   document.body.classList.remove("modal-open");
   var modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
   modalBackdrop.parentNode.removeChild(modalBackdrop);
+    document.body.style.overflow = 'auto'; // 'auto' or 'scroll'
          })
          .catch(err => console.warn(err));
 }
@@ -150,8 +184,11 @@ function deleteCustomer(linkElement) {
   document.body.classList.remove("modal-open");
   var modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
   modalBackdrop.parentNode.removeChild(modalBackdrop);
+  document.body.style.overflow = 'auto'; // 'auto' or 'scroll'
+console.log(window.getComputedStyle(document.body).overflow);
          })
          .catch(err => console.warn(err));
+
 }
 //
 //      document.getElementById('services').addEventListener('click', function(event) {

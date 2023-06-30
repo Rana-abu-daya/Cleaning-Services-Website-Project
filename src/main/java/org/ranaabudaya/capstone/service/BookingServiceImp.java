@@ -73,6 +73,7 @@ public class BookingServiceImp implements BookingService{
 
     @Override
     public void update(Booking booking) {
+        bookingRepository.save(booking);
 
     }
 
