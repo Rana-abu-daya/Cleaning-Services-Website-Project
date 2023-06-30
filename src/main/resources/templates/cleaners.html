@@ -37,7 +37,7 @@
                 </div>
                 <div class="card-body pt-4 p-3">
                   <ul class="list-group">
-                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"  th:each="cleaner : ${cleanersList}" th:id="'cleanerDiv'+${cleaner.id}">
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"  th:each="cleaner : ${cleanersList.content}" th:id="'cleanerDiv'+${cleaner.id}">
                       <div class="d-flex flex-column">
 
                         <h6 class="mb-3 text-sm" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}"></h6>
@@ -97,6 +97,27 @@
                       </div>
                     </li>
                   </ul>
+                </div>
+                <div class=" card-footer ms-auto text-end">
+                  <nav class="btn-group pull-right">
+                    <ul class="pagination">
+                      <li class="page-item" th:classappend="${currentPage == 0} ? disabled">
+                        <a class="page-link" th:href="@{/cleaners(page=${currentPage - 1})}" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                      </li>
+                      <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, cleanersList.totalPages - 1)}" th:classappend="${pageNumber == currentPage} ? active">
+                        <a class="page-link" th:href="@{/cleaners(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                      </li>
+                      <li class="page-item" th:classappend="${currentPage + 1 >= cleanersList.totalPages} ? disabled">
+                        <a class="page-link" th:href="@{/cleaners(page=${currentPage + 1})}" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
                 </div>
               </div>
             </div>

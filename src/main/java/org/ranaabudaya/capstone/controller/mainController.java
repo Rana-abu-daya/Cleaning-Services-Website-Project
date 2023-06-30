@@ -5,10 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.ranaabudaya.capstone.dto.BookingDTO;
 import org.ranaabudaya.capstone.dto.CustomerDTO;
-import org.ranaabudaya.capstone.entity.Booking;
-import org.ranaabudaya.capstone.entity.Cleaner;
-import org.ranaabudaya.capstone.entity.Services;
-import org.ranaabudaya.capstone.entity.User;
+import org.ranaabudaya.capstone.entity.*;
 import org.ranaabudaya.capstone.helper.CustomerformWrapper;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +32,15 @@ public class mainController {
     CleanerService cleanerService;
     UserService userService;
     BookingService bookingService;
+    CustomerService customerService;
     @Autowired
-    public mainController(ServicesServiceImp servicesServiceImp,CleanerService cleanerService,
+    public mainController(CustomerService customerService,ServicesServiceImp servicesServiceImp,CleanerService cleanerService,
                           UserService userService,BookingService bookingService) {
         this.servicesServiceImp = servicesServiceImp;
         this.cleanerService=cleanerService;
         this.userService=userService;
         this.bookingService=bookingService;
+        this.customerService =customerService;
     }
 //this list of list for slider view at home page ,, separate them each in one list
     @ModelAttribute("ServicesList")
@@ -140,10 +139,17 @@ public class mainController {
                     String email = ((UserDetails) authentication.getPrincipal()).getUsername();
                     User user = userService.findUserByEmail(email);
                     Booking.setCustomerId(user.getId());
-                    bookingService.create(Booking);
-                    saved=true;
-                    session.setAttribute("savedBooking", "Booking is saved successfully");
-                    session.setAttribute("savedBookingalertType", "alert-success");
+                    Customer customer = customerService.findCustomerByUserId(user.getId());
+                    if(customer.isDeleted()){
+                        session.setAttribute("savedBooking", "Booking is not created, you are inactive");
+                        session.setAttribute("savedBookingalertType", "alert-warning");
+                        return "redirect:/dashboard";
+                    }else {
+                        bookingService.create(Booking);
+                        saved = true;
+                        session.setAttribute("savedBooking", "Booking is saved successfully");
+                        session.setAttribute("savedBookingalertType", "alert-success");
+                    }
                 }
             }
 
@@ -182,7 +188,12 @@ public class mainController {
                         String email = ((UserDetails) authentication.getPrincipal()).getUsername();
                         User user =userService.findUserByEmail(email);
                         pendingBooking.setCustomerId(user.getId());
-
+                        Customer customer = customerService.findCustomerByUserId(user.getId());
+                        if(customer.isDeleted()){
+                            session.setAttribute("savedBooking", "Booking can not be created, you are inactive");
+                            session.setAttribute("savedBookingalertType", "alert-warning");
+                            return "redirect:/dashboard";
+                        }
                         bookingService.create(pendingBooking);
                         session.removeAttribute("pendingBooking");
                         session.setAttribute("savedBooking", "Booking is saved successfully");
@@ -201,6 +212,13 @@ public class mainController {
                     session.setAttribute("activation", "You still inactive");
                     }
 
+                }else if(authority.getAuthority().equals("ROLE_CLIENT")){
+                    String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+                    User user =userService.findUserByEmail(email);
+                    Customer customer = customerService.findCustomerByUserId(user.getId());
+                    if(customer.isDeleted()){
+                        session.setAttribute("activation", "You still inactive");
+                    }
                 }
             }
         }

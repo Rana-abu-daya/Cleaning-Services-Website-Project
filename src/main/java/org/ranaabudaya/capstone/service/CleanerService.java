@@ -6,6 +6,8 @@ import org.ranaabudaya.capstone.entity.Admin;
 import org.ranaabudaya.capstone.entity.Cleaner;
 import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
@@ -24,7 +26,7 @@ public interface CleanerService {
     public List<Cleaner> getAll();
     public Cleaner findByUserId(int id);
     public  int deleteById(int id);
-public List<Cleaner> findAllCleaner();
+public Page<Cleaner> findAllCleanerPagination(Pageable pageable);
 public List<Cleaner> getCleanersByServiceId(int id);
 public List<Cleaner>  findAvailableCleanersForServiceAndTime(String startTime,int hours, LocalDate bookingDate, int serviceId);
 public List<Integer> checkUpdatedServices(int id,  Collection<Services> services);

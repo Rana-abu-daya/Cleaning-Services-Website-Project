@@ -10,6 +10,9 @@ import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.repository.CleanerRepository;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,10 +43,11 @@ public class CleanersController {
     }
 
     @GetMapping("/cleaners")
-    private String AllCleaners(Model model)
-    {
-        List<Cleaner> cleanersList = cleanerService.findAllCleaner();
+    private String AllCleaners(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Cleaner> cleanersList = cleanerService.findAllCleanerPagination( pageable);
         model.addAttribute("cleanersList", cleanersList);
+        model.addAttribute("currentPage", page);
         return "cleaners";
     }
 
@@ -57,7 +61,7 @@ public class CleanersController {
         List<Booking> bookings = bookingService.findByStatusInAndCleanerId(statusList,id);
         if(!bookings.isEmpty()){
             String arr[] = new String[2];
-            arr[0] = "can't delete this cleaner, he/she has booking";
+            arr[0] = "can't delete this cleaner, he/she has booking In progress/New";
             arr[1]= "danger";
             return  arr;
         }else{

@@ -51,6 +51,7 @@ public class BookingController {
         if(user.hasRole("ROLE_CLIENT")){
             System.out.println("here Client"+principal.toString());
             Customer customer=customerService.findCustomerByUserId(user.getId());
+            model.addAttribute("deletedCustomer", customer.isDeleted());
             bookings = bookingService.findBookingByCustomerId(customer.getId());
 
         }else if(user.hasRole("ROLE_CLEANER")){
