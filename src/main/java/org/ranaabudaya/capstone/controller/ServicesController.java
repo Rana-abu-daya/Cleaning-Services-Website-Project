@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.ranaabudaya.capstone.dto.ServicesDTO;
+import org.ranaabudaya.capstone.entity.Booking;
 import org.ranaabudaya.capstone.entity.Cleaner;
 import org.ranaabudaya.capstone.entity.Services;
+import org.ranaabudaya.capstone.repository.BookingRepository;
 import org.ranaabudaya.capstone.repository.CleanerRepository;
 import org.ranaabudaya.capstone.service.ServicesServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,10 +30,12 @@ public class ServicesController {
 
     ServicesServiceImp servicesServiceImp;
     CleanerRepository cleanerRepository;
+    BookingRepository bookingRepository;
     @Autowired
-    public ServicesController(ServicesServiceImp servicesServiceImp, CleanerRepository cleanerRepository) {
+    public ServicesController(BookingRepository bookingRepository,ServicesServiceImp servicesServiceImp, CleanerRepository cleanerRepository) {
         this.servicesServiceImp = servicesServiceImp;
         this.cleanerRepository = cleanerRepository;
+        this.bookingRepository =bookingRepository;
     }
 
 
@@ -83,7 +88,13 @@ public class ServicesController {
     @GetMapping("/delete/{id}")
     @ResponseBody
     public String[] deleteServicebyId(@PathVariable("id") int id) {
-
+        List<Booking>bookings = bookingRepository.findBookingByServiceId(id);
+        if(!bookings.isEmpty()){
+            String arr[] = new String[2];
+            arr[0] = "The deletion of the service failed. There are bookings assiociated to this service";
+            arr[1]= "danger";
+            return  arr;
+        }
         List<Cleaner>  cleaner = cleanerRepository.findAllByServicesId(id);
         Services existService = servicesServiceImp.getServiceById(id).get();
 
@@ -136,6 +147,15 @@ public class ServicesController {
             Services updatedService = serv.get();
             updatedService.setName(serviceDTO.getName());
             updatedService.setDescription(serviceDTO.getDescription());
+            if(!serviceDTO.isActive()){
+                List<Booking.BookingStatus> statusList = Arrays.asList(Booking.BookingStatus.NEW, Booking.BookingStatus.IN_PROGRESS);
+                List<Booking>bookings = bookingRepository.findByStatusInAndServiceId(statusList,serv.get().getId());
+                if(!bookings.isEmpty()) {
+                serviceDTO.setActive(true);
+                redirectAttrs.addFlashAttribute("activation", "The service can't be deactivated, there are bookings associated with it");
+
+                }
+            }
             updatedService.setActive(serviceDTO.isActive());
             updatedService.setPrice(serviceDTO.getPrice());
             servicesServiceImp.saveService(updatedService);

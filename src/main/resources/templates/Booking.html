@@ -116,7 +116,7 @@ text-align:left;}
                   <div class="form-group  " style="display:flex; align-items: center;">
                     <label for="bookingTime" class="form-control-label col-4"  style="margin-right: 10px;">Time<span style="color:red;">*</span></label>
                     <input class="form-control col-8 time-input" type="time" value="10:30:00" id="bookingTime" data-mdb-with-icon="true" style="    border-radius: 0.5em;" th:field="*{StartTime}">
-                    <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('StartTime')}"
+                    <span  class="   badge-pill  " style="color:red " th:if="${#fields.hasErrors('StartTime')}"
                            th:errors="*{StartTime}"></span>
 
                   </div>
@@ -143,7 +143,7 @@ text-align:left;}
                       </button>
                         </span>
 </div>
-                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('hours')}"
+                        <span  class="   badge-pill  " style="color:red " th:if="${#fields.hasErrors('hours')}"
                                th:errors="*{hours}"></span>
 
                       </div>
@@ -160,7 +160,7 @@ text-align:left;}
                       <div class="form-group " style="display:flex; align-items: center;">
                         <label for="zipcode" class="form-control-label col-4"  style="margin-right: 10px;">Zipcode<span style="color:red;">*</span></label>
                         <input class="form-control col-8" type="tel" name="zipcode" placeholder="00000"  id="zipCode" style="    border-radius: 0.5em;" th:field="*{zipCode}">
-                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('zipCode')}"
+                        <span  class="   badge-pill  " style="color:red " th:if="${#fields.hasErrors('zipCode')}"
                                th:errors="*{zipCode}"></span>
 
                       </div>
@@ -182,20 +182,20 @@ text-align:left;}
                     <div class="form-group " style="display:flex; align-items: center;">
                     <label for="fullName" class="form-control-label col-4"  style="margin-right: 10px;">Host Name<span style="color:red;">*</span></label>
                     <input type="text" name="fullName"maxlength="200" id="fullName" required placeholder="Full name" style=" height: 100%;   border-radius: 0.5em;" th:field="*{fullName}"/>
-                    <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('fullName')}"
+                    <span  class="   badge-pill  " style="color:red " th:if="${#fields.hasErrors('fullName')}"
                            th:errors="*{fullName}"></span>
             </div>
 
                     <div class="form-group " style="display:flex; align-items: center;">
                         <label for="address" class="form-control-label col-4"  style="margin-right: 10px;">Host Address<span style="color:red;">*</span></label>
                         <input type="text" id="address" name="address" required placeholder="Address inclue apt number" style=" height: 100%;;   border-radius: 0.5em;" th:field="*{address}"/>
-                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('address')}"
+                        <span  class="   badge-pill  " style="color:red " th:if="${#fields.hasErrors('address')}"
                                th:errors="*{address}"></span>
                     </div>
                     <div class="form-group " style="display:flex; align-items: center;">
                         <label for="phone" class="form-control-label col-4"  style="margin-right: 10px;">Host Mobile<span style="color:red;">*</span></label>
                         <input type="tel" id="phone" name="phone" required placeholder="000-0000-000" style=" height: 100%;;   border-radius: 0.5em;" th:field="*{phone}"/>
-                        <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('phone')}"
+                        <span  class="   badge-pill  " style="color:red " th:if="${#fields.hasErrors('phone')}"
                                th:errors="*{phone}"></span>
                     </div>
 

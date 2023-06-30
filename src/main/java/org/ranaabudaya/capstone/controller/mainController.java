@@ -14,15 +14,13 @@ import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -74,10 +72,12 @@ public class mainController {
     public  String  dashboard(HttpSession session,Model model){
        String savedBooking =  (String) session.getAttribute("savedBooking");
         String savedBookingalertType =  (String) session.getAttribute("savedBookingalertType");
-        session.removeAttribute("savedBooking");
-        session.removeAttribute("savedBookingalertType");
-        model.addAttribute("savedBooking",savedBooking);
-        model.addAttribute("savedBookingalertType", savedBookingalertType);
+        if(savedBooking != null && savedBookingalertType!=null ) {
+            session.removeAttribute("savedBooking");
+            session.removeAttribute("savedBookingalertType");
+            model.addAttribute("savedBooking", savedBooking);
+            model.addAttribute("savedBookingalertType", savedBookingalertType);
+        }
         return "dashboard";
     }
 
@@ -117,17 +117,28 @@ public class mainController {
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        if (authentication != null && authentication.isAuthenticated()
+                && !authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ANONYMOUS"))) {
 
-        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
             // User is logged in
             //bookingService.saveBooking(booking);
            // return "booking-success";
-            System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-            String email = ((UserDetails) authentication.getPrincipal()).getUsername();
-            User user =userService.findUserByEmail(email);
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                if (authority.getAuthority().equals("ROLE_CLIENT") ) {
+                    System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+                    String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+                    User user = userService.findUserByEmail(email);
+                    Booking.setCustomerId(user.getId()); // Assuming UserDetails has getId() method
+                    bookingService.create(Booking);
+                    model.addAttribute("savedBooking", "Booking is saved successfully");
+                    model.addAttribute("savedBookingalertType", "alert-success");
+                }else{
+                    model.addAttribute("savedBooking", "Booking is not created, you are not customer");
+                    model.addAttribute("savedBookingalertType", "alert-warning");
 
-            Booking.setCustomerId(user.getId()); // Assuming UserDetails has getId() method
-
+                }
+            }
             System.out.println("user is  login");
         }else {
             // User is not logged in
@@ -141,21 +152,33 @@ public class mainController {
 
 
 
-    @PostMapping("/login-process")
+
+
+
+    @RequestMapping("/login-process")
     public String handleSuccessfulLogin(HttpSession session,Authentication authentication) {
+        System.out.println(authentication);
         // Retrieve the pending booking from session or cookie
-        BookingDTO pendingBooking = (BookingDTO) session.getAttribute("pendingBooking");
-        if (pendingBooking != null) {
-            String email = ((UserDetails) authentication.getPrincipal()).getUsername();
-            User user =userService.findUserByEmail(email);
-            pendingBooking.setCustomerId(user.getId());
+        if (authentication != null) {
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                if (authority.getAuthority().equals("ROLE_CLIENT")) {
+                    BookingDTO pendingBooking = (BookingDTO) session.getAttribute("pendingBooking");
+                    if (pendingBooking != null) {
+                        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+                        User user =userService.findUserByEmail(email);
+                        pendingBooking.setCustomerId(user.getId());
 
-            bookingService.create(pendingBooking);
-            session.removeAttribute("pendingBooking");
-            session.setAttribute("savedBooking", "Booking is saved successfully");
-            session.setAttribute("alertType", "alert-success");
+                        bookingService.create(pendingBooking);
+                        session.removeAttribute("pendingBooking");
+                        session.setAttribute("savedBooking", "Booking is saved successfully");
+                        session.setAttribute("savedBookingalertType", "alert-success");
 
+                    }
+
+                }
+            }
         }
+
 
         return  "redirect:/dashboard";
 

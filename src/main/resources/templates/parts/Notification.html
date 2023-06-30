@@ -11,6 +11,15 @@
   <div th:if="${savedBooking}" class="notificationPlace" th:classappend="'alert ' + ${savedBookingalertType}" style="color:white;padding:10px">
     <strong><span th:text="${savedBooking}"></span></strong>
   </div>
+  <div th:if="${droppedServices}"  class="alert alert-warning" style="color:white;padding:10px">
+    <strong><span th:text="${droppedServices}"></span></strong>
+  </div>
+  <div th:if="${changeTimeAndHours}"  class="alert alert-warning" style="color:white;padding:10px">
+    <strong><span th:text="${changeTimeAndHours}"></span></strong>
+  </div>
+  <div th:if="${activation}"  class="alert alert-warning" style="color:white;padding:10px">
+    <strong><span th:text="${activation}"></span></strong>
+  </div>
 
 </div>
 </html>

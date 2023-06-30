@@ -247,8 +247,11 @@ public String addAdmin(Model model)
         }
     }
     @GetMapping("/login")
-    public String getLoginPage()
-    {
+    public String getLoginPage(@RequestParam(value = "error", required = false) String error,
+    Model model) {
+        if (error != null) {
+            model.addAttribute("errorMessage", "Invalid username or password");
+        }
         log.info("Login page displayed");
         return "login";
     }

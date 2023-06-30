@@ -21,7 +21,7 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Valid
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     @JoinColumn(name = "service_id", referencedColumnName = "id")
     private Services service;
     @NotNull
@@ -41,7 +41,7 @@ public class Booking {
     private Customer customer;
     @NotEmpty(message = "Required")
     @Pattern(regexp = "[0-9]{5}$", message = "Zip code wrong format")
-    private int zipCode;
+    private String zipCode;
     @NotNull
     private String address;
     @NotNull

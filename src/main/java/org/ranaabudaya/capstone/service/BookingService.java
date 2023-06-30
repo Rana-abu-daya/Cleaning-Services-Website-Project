@@ -16,4 +16,8 @@ public interface BookingService {
     public Optional<Booking> findBookingById(int id);
     public List<Booking> getAll();
     public void update(Booking booking);
+    public List<Booking> findBookingByCustomerId(int id);
+    public List<Booking> findBookingByCleanerId(int id);
+    public List<Booking> findByStatusInAndCleanerId(List<Booking.BookingStatus> statuses, int id);
+
 }

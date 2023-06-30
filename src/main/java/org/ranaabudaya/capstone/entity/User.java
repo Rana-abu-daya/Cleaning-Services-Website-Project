@@ -67,4 +67,12 @@ public class User {
         this.password = password;
         this.roles = roles;
     }
+    public boolean hasRole(String roleName) {
+        for (Role role : roles) {
+            if (role.getName().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

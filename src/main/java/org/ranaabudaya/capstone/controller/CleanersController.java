@@ -5,11 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.ranaabudaya.capstone.dto.UserDTO;
 import org.ranaabudaya.capstone.entity.Admin;
+import org.ranaabudaya.capstone.entity.Booking;
 import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.repository.CleanerRepository;
-import org.ranaabudaya.capstone.service.CleanerService;
-import org.ranaabudaya.capstone.service.ServicesService;
-import org.ranaabudaya.capstone.service.UserService;
+import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,10 +20,7 @@ import org.ranaabudaya.capstone.entity.Cleaner;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -32,13 +28,15 @@ public class CleanersController {
     CleanerRepository cleanerRepository;
     CleanerService cleanerService;
     ServicesService servicesServiceImp;
+    BookingService bookingService;
     UserService userService;
     @Autowired
-    public CleanersController(   CleanerRepository cleanerRepository,CleanerService cleanerService,    ServicesService servicesServiceImp, UserService userService) {
+    public CleanersController( BookingService bookingService,  CleanerRepository cleanerRepository,CleanerService cleanerService,    ServicesService servicesServiceImp, UserService userService) {
         this.cleanerService = cleanerService;
         this.servicesServiceImp = servicesServiceImp;
         this.userService=userService;
         this.cleanerRepository = cleanerRepository;
+        this.bookingService=bookingService;
     }
 
     @GetMapping("/cleaners")
@@ -53,7 +51,16 @@ public class CleanersController {
     @ResponseBody
     public String[] deleteCleanerbyId(@PathVariable("id") int id, Model model) {
 //delete services from cleaner_services
+        List<Booking.BookingStatus> statusList = Arrays.asList(Booking.BookingStatus.NEW, Booking.BookingStatus.IN_PROGRESS);
+
         // cleanerRepository.deleteCleanerServicesByCleanerId(id);
+        List<Booking> bookings = bookingService.findByStatusInAndCleanerId(statusList,id);
+        if(!bookings.isEmpty()){
+            String arr[] = new String[2];
+            arr[0] = "can't delete this cleaner, he/she has booking";
+            arr[1]= "danger";
+            return  arr;
+        }else{
         int result =  cleanerService.deleteById(id);
         String arr[] = new String[2];
         if(result>0){
@@ -66,6 +73,7 @@ public class CleanersController {
             arr[1]= "danger";
             return  arr;
 
+        }
         }
 
     }
@@ -104,6 +112,7 @@ public class CleanersController {
                 return "edit-cleaner";
             }
             ModelMapper modelMapper = new ModelMapper();
+            List<Booking.BookingStatus> statusList = Arrays.asList(Booking.BookingStatus.NEW, Booking.BookingStatus.IN_PROGRESS);
 
             UserDTO userDTO = modelMapper.map(cleaner.getUser(), UserDTO.class);
             userDTO.setRoleName("ROLE_CLEANER");
@@ -111,6 +120,32 @@ public class CleanersController {
             userDTO.setPassword(existCleaner.get().getUser().getPassword());
             int idUser =  userService.update(userDTO);
             cleaner.setUser(userService.findById(idUser).get());
+            List<Integer> canChangeService = cleanerService.checkUpdatedServices(id,  cleaner.getServices());
+            if(!canChangeService.isEmpty()){
+                Collection<Services> newServices =  cleaner.getServices();
+                for (int oldSerivceId:canChangeService) {
+                    newServices.add(servicesServiceImp.getServiceById(oldSerivceId).get());
+                }
+                cleaner.setServices(newServices);
+                redirectAttrs.addFlashAttribute("droppedServices", "Service/s that associated with currentBooking will not dropped");
+
+            }
+            boolean canChangeTime = cleanerService.updateCleanerSchedule(id ,cleaner.getStartTime(), cleaner.getHours());
+            if(!canChangeTime){
+                cleaner.setStartTime(existCleaner.get().getStartTime());
+                cleaner.setHours(existCleaner.get().getHours());
+                redirectAttrs.addFlashAttribute("changeTimeAndHours", "Cannot change schedule as there are bookings associated with this cleaner during the new working hours.");
+
+            }
+            if(!cleaner.isActive()){
+                if(!(bookingService.findByStatusInAndCleanerId(statusList,id).isEmpty())){
+                    cleaner.setActive(true);
+                    redirectAttrs.addFlashAttribute("message", "Cleaner is updated and still active, he/she has bookings");
+                    redirectAttrs.addFlashAttribute("alertType", "alert-warning");
+                    cleanerRepository.save(cleaner);
+                    return "redirect:/cleaners";
+                }
+            }
             cleanerRepository.save(cleaner);
             redirectAttrs.addFlashAttribute("message", "Cleaner is updated successfully");
             redirectAttrs.addFlashAttribute("alertType", "alert-success");

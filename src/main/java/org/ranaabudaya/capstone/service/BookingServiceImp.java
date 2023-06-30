@@ -6,10 +6,11 @@ import org.ranaabudaya.capstone.dto.BookingDTO;
 import org.ranaabudaya.capstone.entity.*;
 import org.ranaabudaya.capstone.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class BookingServiceImp implements BookingService{
 
     BookingRepository bookingRepository;
@@ -27,13 +28,20 @@ public class BookingServiceImp implements BookingService{
     @Override
     public int deleteById(int id) {
         if(bookingRepository.findById(id).isPresent()) {
-            bookingRepository.deleteById(id);
-
-            return 1;
+            Booking booking = bookingRepository.findById(id).get();
+            if(booking.getStatus().equals(Booking.BookingStatus.NEW)){
+                bookingRepository.deleteById(id);
+                return 1;
+            }else{
+                return 0;
+            }
         }
         else{
             return 0;
         }
+    }
+    public List<Booking> findByStatusInAndCleanerId(List<Booking.BookingStatus> statuses, int id){
+        return bookingRepository.findByStatusInAndCleanerId(statuses,id);
     }
 
     @Override
@@ -48,7 +56,7 @@ public class BookingServiceImp implements BookingService{
         Customer customer= customerService.findCustomerByUserId(bookingDTO.getCustomerId());
         newBooking.setCustomer(customer);
         newBooking.setStatus(Booking.BookingStatus.NEW);
-
+        System.out.println(newBooking);
         bookingRepository.save(newBooking);
 
     }
@@ -66,5 +74,12 @@ public class BookingServiceImp implements BookingService{
     @Override
     public void update(Booking booking) {
 
+    }
+
+    public List<Booking> findBookingByCustomerId(int id){
+        return bookingRepository.findBookingByCustomerId(id);
+    }
+    public List<Booking> findBookingByCleanerId(int id){
+        return bookingRepository.findBookingByCleanerId(id);
     }
 }

@@ -55,7 +55,7 @@ public class UserServiceImp implements UserService {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
                 mapRolesToAuthorities(user.getRoles()));
 
 

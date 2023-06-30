@@ -50,6 +50,7 @@ public class SecurityConfig {
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .successForwardUrl("/login-process")
+                                .failureUrl("/login?error=true")
                                 .permitAll()
                 )
                 .logout(logout -> logout
