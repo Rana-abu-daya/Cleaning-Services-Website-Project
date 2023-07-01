@@ -111,7 +111,7 @@ public class UserController {
             redirectAttrs.addFlashAttribute("alertType", "alert-success");
 
             //userService.create(userDTO);
-            return "redirect:/dashboard";
+            return "redirect:/login";
         }
     }
 
@@ -243,7 +243,7 @@ public String addAdmin(Model model)
                 session.setAttribute("savedBookingalertType", "alert-success");
 
             }
-            return "redirect:/dashboard";
+            return "redirect:/login";
         }
     }
     @GetMapping("/login")

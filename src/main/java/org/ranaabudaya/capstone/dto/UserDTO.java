@@ -1,6 +1,6 @@
 package org.ranaabudaya.capstone.dto;
 
-//import com.learning.demo.validation.FieldMatch;
+import org.ranaabudaya.capstone.validation.FieldMatch;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-//@FieldMatch.List( { @FieldMatch(first = "password", second = "matchingPassword", message = "The password fields must match")})
+@FieldMatch.List( { @FieldMatch(first = "password", second = "matchingPassword", message = "The password fields must match")})
 public class UserDTO {
     private int id ;
     @NotEmpty
