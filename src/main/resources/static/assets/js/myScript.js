@@ -190,7 +190,11 @@ function deleteCleaner(linkElement) {
         //  console.log(notification);
              notification[0].querySelector(('span')).innerHTML=data[0];
            notification[0].classList.add('alert-'+data[1]);
-           if(data[1]!='danger'){
+           if(data[1] == 'info'){
+            document.getElementById('active'+idCleaner).innerHTML="inactive";
+             document.getElementById('active'+idCleaner).classList.add('alert-warning');
+
+           }else if(data[1]!='danger'){
          var cleanerDiv = document.getElementById("cleanerDiv"+idCleaner);
                cleanerDiv.parentNode.removeChild(cleanerDiv);
          }

@@ -59,8 +59,36 @@
                                     <p>No bookings found.</p>
                                 </div>
                                 <div class="card-body pt-4 p-3">
+                                    <form action="#" th:action="@{/bookings}" method="get">
+                                        <div class="row">
+
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <input type="date" th:name="date" class="form-control"></div></div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                        <select class="form-control form-select" th:name="status">
+                                            <option value="">select Status</option>
+                                            <option th:each="status : ${T(org.ranaabudaya.capstone.entity.Booking.BookingStatus).values()}" th:value="${status}" th:text="${status}"></option>
+                                        </select>
+                                                    </div></div>
+                                                <div sec:authorize="!hasRole('ROLE_CLEANER')" class="col-md-3">
+                                                    <div class="form-group">
+                                        <select class="form-control form-select" th:name="cleanerId">
+                                            <option value="">select Cleaner</option>
+                                            <option th:each="cleaner : ${cleaners}" th:value="${cleaner.id}" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}"></option>
+                                        </select>
+                                                </div>  </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary btn-sm ms-auto">Filter</button>
+                                                        <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/bookings}" style="color:#1d64dc !important;;"><i class="fas fa-list me-2" aria-hidden="true" ></i>All Bookings</a>
+
+                                                    </div>  </div>
+                                        </div>
+                                    </form>
                                     <ul class="list-group">
-                                        <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"  th:each="booking : ${bookings}" th:id="'bookingDiv'+${booking.id}">
+                                        <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"  th:each="booking : ${bookings.content}" th:id="'bookingDiv'+${booking.id}">
                                             <div class="d-flex flex-column">
 
                                                 <h6 class="mb-3 text-sm" th:text="'booking#'+${booking.id}"></h6>
@@ -110,6 +138,27 @@
                                             </div>
                                         </li>
                                     </ul>
+                                </div>
+                                <div class=" card-footer ms-auto text-end">
+                                    <nav class="btn-group pull-right">
+                                        <ul class="pagination">
+                                            <li class="page-item" th:classappend="${currentPage == 0} ? disabled">
+                                                <a class="page-link" th:href="@{/bookings(page=${currentPage - 1})}" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, bookings.totalPages - 1)}" th:classappend="${pageNumber == currentPage} ? active">
+                                                <a class="page-link" th:href="@{/bookings(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                                            </li>
+                                            <li class="page-item" th:classappend="${currentPage + 1 >= bookings.totalPages} ? disabled">
+                                                <a class="page-link" th:href="@{/bookings(page=${currentPage + 1})}" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
                         </div>

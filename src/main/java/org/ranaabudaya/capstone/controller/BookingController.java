@@ -6,8 +6,13 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.ranaabudaya.capstone.dto.ServicesDTO;
 import org.ranaabudaya.capstone.entity.*;
+import org.ranaabudaya.capstone.repository.BookingRepository;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +24,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -31,25 +37,30 @@ public class BookingController {
     CleanerService cleanerService;
     CustomerService customerService;
     ServicesService servicesService;
+    BookingRepository bookingRepo;
 
   @Autowired
-  public BookingController(ServicesService servicesService,CustomerService customerService,CleanerService cleanerService,BookingService bookingService,   UserService userService){
+  public BookingController(BookingRepository bookingRepo,ServicesService servicesService,CustomerService customerService,CleanerService cleanerService,BookingService bookingService,   UserService userService){
       this.bookingService= bookingService;
       this.userService=userService;
       this.cleanerService=cleanerService;
       this.customerService=customerService;
       this.servicesService=servicesService;
+      this.bookingRepo =bookingRepo;
   }
 
 
 
     @GetMapping("/bookings")
-    public String bookingList(Model model, Principal principal) {
+    public String bookingList(Model model, Principal principal , @RequestParam(defaultValue = "0") int page,@RequestParam(required = false) String date, @RequestParam(required = false) Booking.BookingStatus status, @RequestParam(required = false) Integer cleanerId) {
         // Get the logged-in user's username (which is the user ID)
         if(principal == null){
 
             return "redirect:/login";
         }
+
+        List<Cleaner> cleaners = cleanerService.findByIsActiveAndIsNew(true,false);
+        model.addAttribute("cleaners", cleaners);
         String username = principal.getName();
         List<Booking> bookings;
         User user = userService.findUserByEmail(username);
@@ -59,6 +70,7 @@ public class BookingController {
             Customer customer=customerService.findCustomerByUserId(user.getId());
             model.addAttribute("deletedCustomer", customer.isDeleted());
             bookings = bookingService.findBookingByCustomerId(customer.getId());
+
 
         }else if(user.hasRole("ROLE_CLEANER")){
             System.out.println("here ROLE_CLEANER"+principal.toString());
@@ -71,8 +83,38 @@ public class BookingController {
             bookings = bookingService.getAll();
         }
 
+
+        List<Booking> result = bookings.isEmpty()? null : bookings;
+        if(result == null){
+
+        }else {
+            if (status != null) {
+                List<Booking> statusResults = bookingService.findBookingByStatus(status);
+                result.retainAll(statusResults);
+            }
+            if (date != null && !date.isEmpty()) {
+                List<Booking> dateResults = bookingService.findBookingByDate(LocalDate.parse(date));
+                result.retainAll(dateResults);
+            }
+            if (cleanerId != null && cleanerId != 0) {
+                List<Booking> cleanerResults = bookingService.findBookingByCleanerId(cleanerId);
+                result.retainAll(cleanerResults);
+            }
+        }
+        if(result == null) {
+            result = new ArrayList<>();
+        }
+        Pageable pageable = PageRequest.of(page, 5);
+        int start = (int)pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), result.size());
+        if(page != 0 && page>=start && page<=end){
+            model.addAttribute("currentPage", page);
+        }else{
+            model.addAttribute("currentPage", 0);
+        }
+        Page<Booking> list= new PageImpl<>(result.subList(start, end), pageable, result.size());;
         // Add the bookings to the model
-      model.addAttribute("bookings", bookings);
+      model.addAttribute("bookings", list);
 
 
         return "bookings";
@@ -213,7 +255,7 @@ public class BookingController {
                         ZonedDateTime zdt2 = instant2.atZone(ZoneId.systemDefault());
                         LocalDate localDate2 = zdt2.toLocalDate();
 
-                        List<Cleaner> cleaners = cleanerService.findAvailableCleanersForServiceAndTime(oldBooking.getStartTime(),oldBooking.getHours(),localDate2,oldBooking.getService().getId());
+                        List<Cleaner> cleaners = cleanerService.findAvailableCleanersForServiceAndTime(oldBooking.getStartTime(), oldBooking.getHours(), localDate2, oldBooking.getService().getId());
                         cleaners.add(booking.getCleaner());
                         redirectAttrs.addFlashAttribute("cleaners", cleaners);
                         List<Services> services = servicesService.getAllActiveServices();
@@ -221,11 +263,16 @@ public class BookingController {
                         redirectAttrs.addFlashAttribute("booking", oldBooking);
                         redirectAttrs.addFlashAttribute("message", "The selected cleaner is not available at the requested time.");
                         redirectAttrs.addFlashAttribute("alertType", "alert-danger");
-                        return "redirect:/bookings/edit-booking/"+booking.getId();
+                        return "redirect:/bookings/edit-booking/" + booking.getId();
                     }
 
                     // If cleaner is the same as old cleaner, check if they would still be available for new time and service
-                    if (oldBooking.getCleaner().equals(booking.getCleaner())) {
+                    if (oldBooking.getCleaner().equals(booking.getCleaner()) &&
+                            oldBooking.getStartTime().equals(booking.getStartTime()) && oldBooking.getDate().equals(booking.getDate()) &&
+                            (oldBooking.getHours() == (booking.getHours()))){
+
+                        //do nothing
+                }else if (oldBooking.getCleaner().equals(booking.getCleaner())) {
                         List<Cleaner> availableCleanersForOld = cleanerService.findAvailableCleanersForServiceAndTime(booking.getStartTime(), booking.getHours(), localDate, booking.getService().getId());
                         if (!availableCleanersForOld.contains(booking.getCleaner())) {
                             Instant instant2 = oldBooking.getDate().toInstant();

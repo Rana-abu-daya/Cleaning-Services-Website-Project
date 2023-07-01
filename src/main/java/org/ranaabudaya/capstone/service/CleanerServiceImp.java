@@ -54,11 +54,19 @@ public class CleanerServiceImp implements CleanerService{
     public List<Cleaner> getAll(){
        return cleanerRepository.findAll();
     }
-
+    public List<Cleaner> findByIsActiveAndIsNew(boolean active, boolean newF){
+       return cleanerRepository.findByIsActiveAndIsNew(active,newF);
+    }
+    public Page<Cleaner> findAllCleanerPaginationActive(boolean active, Pageable pageable){
+       return cleanerRepository.findByIsActive(active, pageable);
+    }
     @Override
     public Page<Cleaner> findAllCleanerPagination(Pageable pageable) {
 
        return cleanerRepository.findByIsNew(false,pageable);
+    }
+    public Page<Cleaner> findAllNewCleanerPagination(Pageable pageable){
+       return cleanerRepository.findByIsNew(true,pageable);
     }
 
     public  int deleteById(int id){

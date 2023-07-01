@@ -27,6 +27,9 @@ public interface CleanerService {
     public Cleaner findByUserId(int id);
     public  int deleteById(int id);
 public Page<Cleaner> findAllCleanerPagination(Pageable pageable);
+public List<Cleaner> findByIsActiveAndIsNew(boolean active, boolean newF);
+    public Page<Cleaner> findAllCleanerPaginationActive(boolean active, Pageable pageable);
+    public Page<Cleaner> findAllNewCleanerPagination(Pageable pageable);
 public List<Cleaner> getCleanersByServiceId(int id);
 public List<Cleaner>  findAvailableCleanersForServiceAndTime(String startTime,int hours, LocalDate bookingDate, int serviceId);
 public List<Integer> checkUpdatedServices(int id,  Collection<Services> services);

@@ -67,11 +67,14 @@ public interface CleanerRepository extends JpaRepository<Cleaner,Integer> {
 
     List<Cleaner> findCleanerByIsNew(boolean isNew);
     Page<Cleaner> findByIsNew(boolean isNew, Pageable pageable);
+    Page<Cleaner> findByIsActive(boolean isActive, Pageable pageable);
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM cleaner_services WHERE cleaner_id = :cleanerId", nativeQuery = true)
     void deleteCleanerServicesByCleanerId(int cleanerId);
 
     Cleaner findCleanerByUserId(int id);
+    List<Cleaner> findByIsActiveAndIsNew(boolean isActive, boolean isNew);
+
 
 }

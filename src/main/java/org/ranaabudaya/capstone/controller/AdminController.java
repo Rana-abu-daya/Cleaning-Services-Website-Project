@@ -26,6 +26,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,17 @@ public class AdminController {
 
     @GetMapping("/admins/delete/{id}")
     @ResponseBody
-    public String[] deleteAdminbyId(@PathVariable("id") int id, Model model) {
+    public String[] deleteAdminbyId(@PathVariable("id") int id, Model model, Principal principal) {
+
+        String email = principal.getName();
+        User user = userService.findUserByEmail(email);
+        Admin admin= adminRepository.findByUserId(user.getId());
+        if(admin.getId() == id){
+            String arr[] = new String[2];
+            arr[0] = "You can't delete yourself. the logged admin";
+            arr[1]= "danger";
+            return  arr;
+        }
         int result =  adminService.deleteById(id);
         String arr[] = new String[2];
         if(result>0){

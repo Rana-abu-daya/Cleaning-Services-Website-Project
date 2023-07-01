@@ -32,30 +32,10 @@
                     <h6 class="mb-0">Cleaners Information</h6>
                   </div>
                   <div class="ms-auto text-end">
-                    <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/cleaners/newCleaners}" style="color:#1d64dc !important;;"><i class="fas fa-tag me-2" aria-hidden="true" ></i>Approve new Cleaners</a>
-
-                    <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/cleaners/sign-up}" style="color:#1d64dc !important;;"><i class="fas fa-plus me-2" aria-hidden="true" ></i>New Cleaner</a>
+                    <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/cleaners}" style="color:#1d64dc !important;;"><i class="fas fa-check-bold me-2" aria-hidden="true" ></i>Approved Cleaner</a>
                   </div>
                 </div>
                 <div class="card-body pt-4 p-3">
-                  <form action="#" th:action="@{/cleaners}" method="get">
-                    <div class="row" style="border: #b6b5b5 solid; padding:10px">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <select class="form-control form-select" id="active" name="active">
-                            <option value="">Select Status</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                          </select>
-                        </div></div>
-                      <div class="col-md-6 ms-auto text-end">
-                        <div class="form-group">
-                          <label  class="form-control-label"></label>
-                          <button type="submit" class="btn btn-primary px-3 mb-0">Filter</button>
-                          <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/cleaners}" style="color:#1d64dc !important;;"><i class="fas fa-list me-2" aria-hidden="true" ></i>All cleaners</a>
-                        </div>  </div>
-                    </div>
-                  </form>
                   <ul class="list-group">
                     <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"  th:each="cleaner : ${cleanersList.content}" th:id="'cleanerDiv'+${cleaner.id}">
                       <div class="d-flex flex-column">
@@ -86,7 +66,7 @@
                       </div>
 
                       <div class="ms-auto text-end">
-                        <span  class="badge "  th:id="'active'+${cleaner.id}" th:classappend="${cleaner.isActive} ? alert-success: alert-warning"  th:text="${cleaner.isActive} ? Active: Inactive"role="alert"></span>
+                        <span  class="badge " th:classappend="${cleaner.isActive} ? alert-success: alert-warning"  th:text="${cleaner.isActive} ? Active: Inactive"role="alert"></span>
                         <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="#" data-bs-toggle="modal"  th:attr="data-bs-target='#exampleModal'+${cleaner.id}" ><i class="far fa-trash-alt me-2"></i>Delete</a>
                         <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" th:href="@{/cleaners/edit-cleaner/}+${cleaner.id}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
 

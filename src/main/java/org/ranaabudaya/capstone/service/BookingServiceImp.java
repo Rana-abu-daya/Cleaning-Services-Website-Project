@@ -8,6 +8,7 @@ import org.ranaabudaya.capstone.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -77,10 +78,18 @@ public class BookingServiceImp implements BookingService{
         bookingRepository.save(booking);
 
     }
-
+    public List<Booking>findBookingByStatus(Booking.BookingStatus status){
+        return bookingRepository.findByStatus(status);
+    }
+    public List<Booking>findBookingByDate(LocalDate date){
+        java.sql.Date sqlDate = java.sql.Date.valueOf(date);
+        return bookingRepository.findByDate(sqlDate);
+    }
+    @Override
     public List<Booking> findBookingByCustomerId(int id){
         return bookingRepository.findBookingByCustomerId(id);
     }
+    @Override
     public List<Booking> findBookingByCleanerId(int id){
         return bookingRepository.findBookingByCleanerId(id);
     }

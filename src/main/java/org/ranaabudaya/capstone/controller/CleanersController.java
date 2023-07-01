@@ -41,14 +41,32 @@ public class CleanersController {
         this.cleanerRepository = cleanerRepository;
         this.bookingService=bookingService;
     }
-
+    Page<Cleaner> cleanersList ;
     @GetMapping("/cleaners")
-    private String AllCleaners(Model model, @RequestParam(defaultValue = "0") int page) {
+    private String AllCleaners(Model model, @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "0") String active) {
         Pageable pageable = PageRequest.of(page, 5);
-        Page<Cleaner> cleanersList = cleanerService.findAllCleanerPagination( pageable);
+        if(active!=null && active.equals("active")){
+
+            cleanersList = cleanerService.findAllCleanerPaginationActive(true, pageable);
+        }else if(active!=null && active.equals("inactive")){
+            cleanersList = cleanerService.findAllCleanerPaginationActive(false, pageable);
+
+        }else{
+            cleanersList = cleanerService.findAllCleanerPagination( pageable);
+        }
+
         model.addAttribute("cleanersList", cleanersList);
         model.addAttribute("currentPage", page);
         return "cleaners";
+    }
+
+    @GetMapping("/cleaners/newCleaners")
+    private String newCleaners(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Cleaner> cleanersList = cleanerService.findAllNewCleanerPagination( pageable);
+        model.addAttribute("cleanersList", cleanersList);
+        model.addAttribute("currentPage", page);
+        return "newCleaners";
     }
 
     @GetMapping("/cleaners/delete/{id}")
@@ -64,6 +82,15 @@ public class CleanersController {
             arr[0] = "can't delete this cleaner, he/she has booking In progress/New";
             arr[1]= "danger";
             return  arr;
+        }else if(!bookingService.findBookingByCleanerId(id).isEmpty()){
+            Cleaner cleaner = cleanerService.findCleanerById(id).get();
+            cleaner.setActive(false);
+            cleanerRepository.save(cleaner);
+            String arr[] = new String[2];
+            arr[0] = "The cleaner is deactivate successfully, this cleaner has cancelled/done booking can't be deleted";
+            arr[1]= "info";
+            return  arr;
+
         }else{
         int result =  cleanerService.deleteById(id);
         String arr[] = new String[2];
