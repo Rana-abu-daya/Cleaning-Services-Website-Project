@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div class="form-group">
+  <label for="cleaner" class="form-control-label">Cleaner:</label>
+  <select id="cleaner" class="form-control form-select" name="cleaner">
+    <option th:each="clen : ${cleaners}"
+            th:value="${clen.id}"
+            th:text="${#strings.capitalize(clen.user.firstName)}+' '+ ${#strings.capitalize(clen.user.lastName)}">
+    </option>
+  </select>
+</div>
+</html>

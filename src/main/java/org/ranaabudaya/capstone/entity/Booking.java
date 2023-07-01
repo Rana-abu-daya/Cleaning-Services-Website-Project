@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -24,8 +25,9 @@ public class Booking {
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     @JoinColumn(name = "service_id", referencedColumnName = "id")
     private Services service;
-    @NotNull
+    @NotNull(message = "Required")
     @Future(message = "Please select a date in the future")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
     @NotNull
     @Min(value = 1, message = "Price must be at least {value}")
@@ -50,7 +52,7 @@ public class Booking {
     @Pattern(regexp = "^\\+?[0-9\\s]+$", message = "Invalid phone number format. Please provide a valid phone number.")
     private String phone;
     private BookingStatus status;
-
+    private double price;
 
     public enum BookingStatus {
         NEW,

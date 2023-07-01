@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <th:block th:include="parts/Header.html :: head"></th:block>
+
+</head>
+
+<body class="g-sidenav-show   bg-gray-100">
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+<th:block th:insert="parts/Aside.html :: aside"></th:block>
+<main class="main-content position-relative border-radius-lg ">
+  <!-- Navbar -->
+  <th:block th:insert="parts/Nav.html :: nav"></th:block>
+
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+    <th:block th:insert="parts/Notification.html :: div"></th:block>
+
+    <div id="divContent">
+      <form  th:action="@{/bookings/updateBooking/}+${id}" th:object="${booking}" method="post">
+        <div class="main-content position-relative max-height-vh-100 h-100">
+          <div class="container-fluid py-4">
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <p class="text-uppercase text-sm">Booking Information</p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="service" class="form-control-label">Service:</label>
+                          <select class="form-control form-select" id="service" name="service" th:field="*{service}">
+                            <option th:each="service1 : ${services}"
+                                    th:value="${service1.id}"
+                                    th:text="${service1.name}"
+                                    th:selected="${service1.id == booking.service.id}">
+                            </option>
+                          </select>
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('service')}"
+                                 th:errors="*{service}"></span>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="bookingDate" class="form-control-label">Date:</label>
+                          <input class="form-control col-8" type="date"  id="bookingDate" style="border-radius: 0.5em;"  th:field="*{date}" th:value="${#dates.format(booking.date, 'yyyy-MM-dd')}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('date')}"
+                                 th:errors="*{date}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="bookingTime" class="form-control-label">Time:</label>
+                          <input class="form-control col-8 time-input"  type="time"  id="bookingTime" data-mdb-with-icon="true" style="    border-radius: 0.5em;" th:field="*{StartTime}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('StartTime')}"
+                                 th:errors="*{StartTime}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="hours" class="form-control-label">Hours:</label>
+                          <input class="form-control col-8" type="number" name="hours" id="hours" style="    border-radius: 0.5em;" th:field="*{hours}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('hours')}"
+                                 th:errors="*{hours}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="ZipCode" class="form-control-label">ZipCode:</label>
+                          <input class="form-control col-8" type="tel" name="zipcode" placeholder="00000"  id="zipCode" style="    border-radius: 0.5em;" th:field="*{zipCode}">
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('zipCode')}"
+                                 th:errors="*{zipCode}"></span>
+                        </div>
+                      </div>
+                      <div sec:authorize="hasRole('ROLE_ADMIN')" class="col-md-6">
+                        <div class="form-group">
+                          <label for="Customer" class="form-control-label">Customer:</label>
+                          <input class="form-control col-8" type="text" disabled  id="Customer"  style="    border-radius: 0.5em;"th:value="${#strings.capitalize(booking.customer.user.firstName)}+' '+ ${#strings.capitalize(booking.customer.user.lastName)}"/>
+                        </div>
+                      </div>
+                      <div class="col-md-6" id="cleanerDiv">
+                        <div class="form-group">
+                          <label for="cleaner" class="form-control-label">Cleaner:</label>
+                      <select id="cleaner" class="form-control form-select" th:field="*{cleaner}">
+                        <option th:each="clen : ${cleaners}"
+                                th:value="${clen.id}"
+                                th:text="${#strings.capitalize(clen.user.firstName)}+' '+ ${#strings.capitalize(clen.user.lastName)}"
+                                th:selected="${clen.id == booking.cleaner.id}">
+                        </option>
+                      </select>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <hr class="horizontal dark">
+                    <p class="text-uppercase text-sm">Contact Information</p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="fullName" class="form-control-label">Host Name</label>
+                          <input type="text" class="form-control col-8" name="fullName"maxlength="200" id="fullName" required placeholder="Full name" style=" height: 100%;   border-radius: 0.5em;" th:field="*{fullName}"/>
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('fullName')}"
+                                 th:errors="*{fullName}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="address" class="form-control-label">Host Address</label>
+                          <input type="text" class="form-control col-8" id="address" name="address" required placeholder="Address inclue apt number" style=" height: 100%;;   border-radius: 0.5em;" th:field="*{address}"/>
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('address')}"
+                                 th:errors="*{address}"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="address" class="form-control-label">Host Mobile</label>
+                          <input type="tel"  class="form-control col-8"id="phone" name="phone" required placeholder="000-0000-000" style=" height: 100%;;   border-radius: 0.5em;" th:field="*{phone}"/>
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('phone')}"
+                                 th:errors="*{phone}"></span>
+                        </div>
+                      </div>
+
+
+
+
+                    <div class="col-md">
+                      <div class="ms-auto text-end">
+                        <button class="btn btn-primary btn-sm ms-auto">Submit</button>
+                      </div>
+                    </div>
+
+
+
+
+
+                  </div>
+                </div>
+
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </form>
+
+
+
+    </div>
+    <th:block th:insert="parts/FooterDiv.html :: footer"></th:block>
+  </div>
+</main>
+
+<th:block th:include="parts/Footer.html :: footer"></th:block>
+
+
+
+
+</body>
+
+</html>
+
+
+
+

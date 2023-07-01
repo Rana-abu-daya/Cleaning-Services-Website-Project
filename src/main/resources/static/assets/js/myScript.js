@@ -29,6 +29,102 @@ function activateCustomer(linkElement) {
          })
          .catch(err => console.warn(err));
 }
+function startBooking(linkElement) {
+ var parentElement = linkElement.parentElement;
+ event.preventDefault(); // Prevent the link from navigating elsewhere
+        event.preventDefault(); // Prevent the link from navigating elsewhere
+        var idBookingInput = parentElement.querySelector('input[type="hidden"]');
+
+         var idBooking = idBookingInput.value;
+        var urlstart =" /bookings/start/"+idBooking;
+        console.log(urlstart)
+       fetch(urlstart)
+       .then(response => response.json())
+       .then(data => {
+
+       let  notification = document.getElementsByClassName('notificationPlace');
+               let modal  = document.getElementById("exampleModal"+idBooking);
+                        modal.classList.remove("show");
+        //  console.log(notification);
+             notification[0].querySelector(('span')).innerHTML=data[0];
+           notification[0].classList.add('alert-'+data[1]);
+           if(data[1]!='danger'){
+//         var bookingDiv = document.getElementById("bookingDiv"+idBooking);
+//               bookingDiv.parentNode.removeChild(bookingDiv);
+                var statusDiv =  document.getElementById("status"+idBooking);
+                statusDiv.classList.add("alert-in_progress");
+                statusDiv.textContent = "IN_PROGRESS";
+                 var startBTN = document.getElementById("start"+idBooking);
+                  if(startBTN ){
+                  startBTN.parentNode.removeChild(startBTN);
+                                                     }
+                  var cancelBTN = document.getElementById("cancel"+idBooking);
+                    if(cancelBTN ){
+                  cancelBTN.parentNode.removeChild(cancelBTN);
+                                                                       }
+                    var doneBTN = document.getElementById("done"+idBooking);
+                        if(doneBTN ){
+                                       doneBTN.classList.remove("none");
+                                        }
+var editBTN = document.getElementById("edit"+idBooking);
+                    if(editBTN ){
+                  editBTN.parentNode.removeChild(editBTN);
+                                                                       }
+
+
+         }
+
+  document.body.classList.remove("modal-open");
+  var modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
+  modalBackdrop.parentNode.removeChild(modalBackdrop);
+    document.body.style.overflow = 'auto'; // 'auto' or 'scroll'
+         })
+         .catch(err => console.warn(err));
+}
+function doneBooking(linkElement) {
+ var parentElement = linkElement.parentElement;
+ event.preventDefault(); // Prevent the link from navigating elsewhere
+        event.preventDefault(); // Prevent the link from navigating elsewhere
+        var idBookingInput = parentElement.querySelector('input[type="hidden"]');
+
+         var idBooking = idBookingInput.value;
+        var urlDone =" /bookings/done/"+idBooking;
+        console.log(urlDone)
+       fetch(urlDone)
+       .then(response => response.json())
+       .then(data => {
+
+       let  notification = document.getElementsByClassName('notificationPlace');
+               let modal  = document.getElementById("exampleModal"+idBooking);
+                        modal.classList.remove("show");
+        //  console.log(notification);
+             notification[0].querySelector(('span')).innerHTML=data[0];
+           notification[0].classList.add('alert-'+data[1]);
+           if(data[1]!='danger'){
+//         var bookingDiv = document.getElementById("bookingDiv"+idBooking);
+//               bookingDiv.parentNode.removeChild(bookingDiv);
+                var statusDiv =  document.getElementById("status"+idBooking);
+                statusDiv.classList.add("alert-success");
+                statusDiv.textContent = "SUCCESS";
+                 var doneBTN = document.getElementById("done"+idBooking);
+                  if(doneBTN ){
+doneBTN.parentNode.removeChild(doneBTN);
+                                    }
+                var editBTN = document.getElementById("edit"+idBooking);
+                                    if(editBTN ){
+                                  editBTN.parentNode.removeChild(editBTN);
+                                                                                       }
+
+
+         }
+
+  document.body.classList.remove("modal-open");
+  var modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
+  modalBackdrop.parentNode.removeChild(modalBackdrop);
+    document.body.style.overflow = 'auto'; // 'auto' or 'scroll'
+         })
+         .catch(err => console.warn(err));
+}
 function deleteBooking(linkElement) {
  var parentElement = linkElement.parentElement;
  event.preventDefault(); // Prevent the link from navigating elsewhere
@@ -48,8 +144,25 @@ function deleteBooking(linkElement) {
              notification[0].querySelector(('span')).innerHTML=data[0];
            notification[0].classList.add('alert-'+data[1]);
            if(data[1]!='danger'){
-         var bookingDiv = document.getElementById("bookingDiv"+idBooking);
-               bookingDiv.parentNode.removeChild(bookingDiv);
+//         var bookingDiv = document.getElementById("bookingDiv"+idBooking);
+//               bookingDiv.parentNode.removeChild(bookingDiv);
+                var statusDiv =  document.getElementById("status"+idBooking);
+                statusDiv.classList.add("alert-cancelled");
+                statusDiv.textContent = "CANCELLED";
+                 var cancelBTN = document.getElementById("cancel"+idBooking);
+                  if(cancelBTN ){
+                        cancelBTN.parentNode.removeChild(cancelBTN);
+                   }
+
+                  var startBTN = document.getElementById("start"+idBooking);
+                  if(startBTN ){
+                                    startBTN.parentNode.removeChild(startBTN);
+                                    }
+                var editBTN = document.getElementById("edit"+idBooking);
+                                    if(editBTN ){
+                                  editBTN.parentNode.removeChild(editBTN);
+                                                                                       }
+
          }
 
   document.body.classList.remove("modal-open");

@@ -56,6 +56,7 @@ public class BookingServiceImp implements BookingService{
         Customer customer= customerService.findCustomerByUserId(bookingDTO.getCustomerId());
         newBooking.setCustomer(customer);
         newBooking.setStatus(Booking.BookingStatus.NEW);
+        newBooking.setPrice(service.getPrice());
         System.out.println(newBooking);
         bookingRepository.save(newBooking);
 

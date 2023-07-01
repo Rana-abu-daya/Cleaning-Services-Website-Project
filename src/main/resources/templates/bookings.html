@@ -22,6 +22,9 @@
     .alert-success {
         background-color: green;
     }
+    .none{
+    display:none;
+    }
 </style>
 </head>
 
@@ -48,7 +51,7 @@
                                     <div class="d-flex flex-column">
                                         <h6 class="mb-0">Bookings Information</h6>
                                     </div>
-                                    <div  th:unless="${deletedCustomer}"class="ms-auto text-end">
+                                    <div sec:authorize="hasRole('ROLE_CLIENT')"  th:unless="${deletedCustomer}"class="ms-auto text-end">
                                         <a class="btn btn-link text-dark px-3 mb-0" th:href="@{/booking}" style="color:#1d64dc !important;;"><i class="fas fa-plus me-2" aria-hidden="true" ></i>New Booking</a>
                                     </div>
                                 </div>
@@ -62,7 +65,7 @@
 
                                                 <h6 class="mb-3 text-sm" th:text="'booking#'+${booking.id}"></h6>
 
-                                                <span class="mb-2 text-xs">Price: $ <span class="text-dark font-weight-bold ms-sm-2" th:text="${booking.service.price * booking.hours}"></span></span>
+                                                <span class="mb-2 text-xs">Price: $ <span class="text-dark font-weight-bold ms-sm-2" th:text="${booking.price * booking.hours}"></span></span>
                                                 <span class=" mb-2 text-xs">Cleaner name : <span class="text-dark ms-sm-2 font-weight-bold" th:text="${#strings.capitalize(booking.cleaner.user.firstName)}+' '+ ${#strings.capitalize(booking.cleaner.user.lastName)}"></span></span>
                                                 <span class="mb-2 text-xs">Date:  <span class="text-dark font-weight-bold ms-sm-2" th:text="${#dates.format(booking.date, 'yyyy-MM-dd')}"></span></span>
                                                 <span class="mb-2 text-xs">Start At: <span class="text-dark font-weight-bold ms-sm-2" th:text="${booking.startTime}"></span></span>
@@ -72,22 +75,26 @@
                                             </div>
 
                                             <div class="ms-auto text-end">
+                                                <input type="hidden"  name="id" th:value="${booking.id}" class="idBooking">
+                                                <span  class="badge " th:classappend="'alert-'+${#strings.toLowerCase(booking.status)}"  th:text="${booking.status}" role="alert" th:id="'status'+${booking.id}" ></span>
+                                                <a th:id="'cancel'+${booking.id}" th:if="${#strings.toLowerCase(booking.status)} == 'new'" class="btn btn-link text-danger text-gradient px-3 mb-0" href="#" data-bs-toggle="modal"  th:attr="data-bs-target='#exampleModal'+${booking.id}" ><i class="far fa-trash-alt me-2"></i>Cancel</a>
+                                                <a sec:authorize="hasRole('ROLE_CLEANER')" th:id="'start'+${booking.id}" th:if="${#strings.toLowerCase(booking.status)} == 'new'" class="btn btn-link text-success text-gradient px-3 mb-0" href="#" onclick="startBooking(this)" ><i class="ni ni-button-power me-2"></i>Start</a>
+                                                <a sec:authorize="hasRole('ROLE_CLEANER')" th:id="'done'+${booking.id}" th:if="${#strings.toLowerCase(booking.status)} == 'in_progress'" class="btn btn-link text-info text-gradient px-3 mb-0" href="#"  onclick="doneBooking(this)" ><i class="ni ni-check-bold me-2"></i>done</a>
+                                                <a sec:authorize="hasRole('ROLE_CLEANER')" th:id="'done'+${booking.id}" th:if="${#strings.toLowerCase(booking.status)} == 'new'" class="btn btn-link text-info text-gradient px-3 mb-0 none" href="#"  onclick="doneBooking(this)"  ><i class="ni ni-check-bold me-2"></i>done</a>
 
-                                                <span  class="badge " th:classappend="'alert-'+${#strings.toLowerCase(booking.status)}"  th:text="${booking.status}" role="alert"></span>
-                                                <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="#" data-bs-toggle="modal"  th:attr="data-bs-target='#exampleModal'+${booking.id}" ><i class="far fa-trash-alt me-2"></i>Delete</a>
-                                                <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" th:href="@{/bookings/edit-booking/}+${booking.id}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
+                                                <a sec:authorize="!hasRole('ROLE_CLEANER')"  th:id="'edit'+${booking.id}" th:if="${#strings.toLowerCase(booking.status)} == 'new'" class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" th:href="@{/bookings/edit-booking/}+${booking.id}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
 
                                                 <div class="modal fade" th:id="'exampleModal'+${booking.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                                <h5 class="modal-title" id="exampleModalLabel">Cancel Booking</h5>
                                                                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <span style="float: left;" th:text="'Are you sure? Delete this booking '"></span>
+                                                                <span style="float: left;" th:text="'Are you sure? cancel this booking '"></span>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <input type="hidden"  name="id" th:value="${booking.id}" class="idBooking">

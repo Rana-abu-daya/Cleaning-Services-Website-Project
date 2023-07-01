@@ -10,6 +10,7 @@ import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.repository.BookingRepository;
 import org.ranaabudaya.capstone.repository.CleanerRepository;
 import org.ranaabudaya.capstone.repository.ServicesRepository;
+import org.ranaabudaya.capstone.service.ServicesService;
 import org.ranaabudaya.capstone.service.ServicesServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -32,12 +33,12 @@ import java.util.Optional;
 @RequestMapping("/services")
 public class ServicesController {
 
-    ServicesServiceImp servicesServiceImp;
+    ServicesService servicesServiceImp;
     CleanerRepository cleanerRepository;
     BookingRepository bookingRepository;
     ServicesRepository servicesRepository;
     @Autowired
-    public ServicesController(  ServicesRepository servicesRepository,BookingRepository bookingRepository,ServicesServiceImp servicesServiceImp, CleanerRepository cleanerRepository) {
+    public ServicesController(ServicesRepository servicesRepository, BookingRepository bookingRepository, ServicesService servicesServiceImp, CleanerRepository cleanerRepository) {
         this.servicesServiceImp = servicesServiceImp;
         this.cleanerRepository = cleanerRepository;
         this.bookingRepository =bookingRepository;
