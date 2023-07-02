@@ -52,7 +52,9 @@
 
                       </div>
                       <div class="ms-auto text-center">
-                        <img th:src="@{/assets/img/marie.jpg}" class="navbar-brand-img" alt="main_logo" style="  width: 100px;height: 100px;border-radius: 50%;">
+<!--                        <img th:src="@{/assets/img/marie.jpg}" class="navbar-brand-img" alt="main_logo" style="  width: 100px;height: 100px;border-radius: 50%;">-->
+                        <img th:src="${admin.user.photo != null} ? '/assets/uploads/'+${admin.user.photo} : '/assets/images/empty-photo.png'" alt="User Photo"  class="navbar-brand-img" style="  width: 100px;height: 100px;border-radius: 50%;">
+
 
                       </div>
 

@@ -153,8 +153,8 @@ public String addAdmin(Model model)
             System.out.println(AdminForm.getUserDTO().getFile().isEmpty());
             if(AdminForm.getUserDTO().getFile() != null && !AdminForm.getUserDTO().getFile().isEmpty()) {
                 System.out.println(AdminForm.getUserDTO().getFile().getName());
-//                fileService.uploadFile(AdminForm.getUserDTO().getFile());
-//                AdminForm.getUserDTO().setPhoto(AdminForm.getUserDTO().getFile().getOriginalFilename());
+                fileService.uploadFile(AdminForm.getUserDTO().getFile());
+                AdminForm.getUserDTO().setPhoto(AdminForm.getUserDTO().getFile().getOriginalFilename());
             }
             int userId = userService.create(AdminForm.getUserDTO());
             // System.out.println(userId + "Rana");
