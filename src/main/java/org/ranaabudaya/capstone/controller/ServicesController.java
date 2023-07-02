@@ -75,7 +75,7 @@ public class ServicesController {
     }
 
     @PostMapping("/saveService")
-    public String saveService(@Valid @ModelAttribute ("service") ServicesDTO serviceDTO, BindingResult bindingResult, RedirectAttributes redirectAttrs){
+    public String saveService(@Valid @ModelAttribute ("service") ServicesDTO serviceDTO, BindingResult bindingResult, RedirectAttributes redirectAttrs,Model model){
         System.out.println(serviceDTO);
 
         if(bindingResult.hasErrors())
@@ -83,7 +83,12 @@ public class ServicesController {
            // log.warn("Wrong attempt");
             return "newService";
         }
+        Services services = servicesServiceImp.getServiceByName(serviceDTO.getName());
+        if(services != null ){
+            model.addAttribute("ServiceName", "Service name is used");
 
+            return "newService";
+        }
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         serviceDTO.setDescription(serviceDTO.getDescription().replace("\n", "**"));
@@ -157,6 +162,12 @@ public class ServicesController {
         serviceDTO.setDescription(serviceDTO.getDescription().replace("\n", "**"));
         if (serv.isPresent()) {
             Services updatedService = serv.get();
+            Services services = servicesServiceImp.getServiceByName(serviceDTO.getName());
+            if(services != null && services.getId() != id ){
+                model.addAttribute("ServiceName", "Service name is used");
+                return "edit-service";
+            }
+
             updatedService.setName(serviceDTO.getName());
             updatedService.setDescription(serviceDTO.getDescription());
             if(!serviceDTO.isActive()){

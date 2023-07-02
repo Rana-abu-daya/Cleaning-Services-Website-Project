@@ -150,8 +150,11 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="custom-file form-group">
-                                    <label for="resume" class="form-control-label">Resume</label>
-                                    <input type="file" class="custom-file-input form-control"   name="resume "id="resume" lang="en">
+
+                                    <label for="cv" class="form-control-label">Resume</label> <pre>We accept PDF only, of size 10MB maximum</pre>
+                                    <input type="file" class="custom-file-input form-control"   name="cv "id="cv" th:field="*{cleanerDTO.cv}" lang="en">
+                                    <span  class="   badge-pill badge-danger" style="color:red " th:if="${resume}"
+                                           th:text="${resume}"></span>
                                 </div>
                             </div>
                         </div>

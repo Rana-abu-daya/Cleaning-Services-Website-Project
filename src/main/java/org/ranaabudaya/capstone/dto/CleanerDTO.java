@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -25,7 +26,8 @@ public class CleanerDTO {
     @NotNull
     private String startTime;
    // @NotNull
-    private String resume;
+   private String resume;
+    private MultipartFile cv;
 
     @Valid
     @NotEmpty(message = "Choose at least one service")

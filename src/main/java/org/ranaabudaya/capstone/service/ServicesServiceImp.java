@@ -20,7 +20,9 @@ public class ServicesServiceImp implements ServicesService {
     public ServicesServiceImp(ServicesRepository serviceRepository) {
         this.servicesRepository = serviceRepository;
     }
-
+    public Services getServiceByName(String name){
+        return servicesRepository.findServicesByName(name);
+    }
     @Override
     public void saveService(Services service) {
         servicesRepository.save(service);

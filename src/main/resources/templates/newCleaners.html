@@ -67,9 +67,9 @@
                       </div>
 
                       <div class="ms-auto text-end">
-                        <span  class="badge " th:classappend="${cleaner.isActive} ? alert-success: alert-warning"  th:text="${cleaner.isActive} ? Active: Inactive"role="alert"></span>
+                        <a class="btn btn-link text-dark text-info px-3 mb-0" href="javascript:void(0);" th:href="@{/cleaners/viewPdf/}+${cleaner.id}" target="_blank"><i class="ni ni-cloud-download-95 text-dark me-2" aria-hidden="true"></i>Review Resume</a>
                         <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="#" data-bs-toggle="modal"  th:attr="data-bs-target='#exampleModal'+${cleaner.id}" ><i class="far fa-trash-alt me-2"></i>Delete</a>
-                        <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" th:href="@{/cleaners/edit-cleaner/}+${cleaner.id}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
+                        <a class="btn btn-link text-dark px-3 mb-0" href="javascript:void(0);" th:href="@{/cleaners/approve/}+${cleaner.id}"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Approve</a>
 
                         <!-- Modal href="javascript:void(0);" onclick="deleteService(this)" -->
                         <div class="modal fade" th:id="'exampleModal'+${cleaner.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

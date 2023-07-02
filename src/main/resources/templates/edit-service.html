@@ -49,6 +49,8 @@
                           <input class="form-control" name="name" id="name" th:field="*{name}" type="text" placeholder="Service Name .. ">
                           <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('name')}"
                                 th:errors="*{name}"></span>
+                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${ServiceName}"
+                                 th:text="${ServiceName}"></span>
                         </div>
                       </div>
 

@@ -18,6 +18,7 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,9 @@ import  org.ranaabudaya.capstone.helper.FormWrapper;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -81,8 +84,7 @@ public class UserController {
 
     @PostMapping("/cleaners/signup-process")
     public String signupProcess(@Valid @ModelAttribute ("formWrapper") FormWrapper formWrapper, BindingResult bindingResult
-    ,  Model model, RedirectAttributes redirectAttrs, HttpSession session)
-    {
+    ,  Model model, RedirectAttributes redirectAttrs, HttpSession session) throws IOException {
         if(bindingResult.hasErrors()  )
         {
             List<Services> list =  servicesServiceImp.getAllActiveServices();
@@ -110,11 +112,29 @@ public class UserController {
                 fileService.uploadFile(formWrapper.getUserDTO().getFile());
                 formWrapper.getUserDTO().setPhoto(formWrapper.getUserDTO().getFile().getOriginalFilename());
             }
+
             int userId = userService.create(formWrapper.getUserDTO());
            // System.out.println(userId + "Rana");
             cleanerDTO.setUserId(userId);
             cleanerDTO.setActive(false);
             cleanerDTO.setNew(true);
+
+            //upload resume
+            if (cleanerDTO.getCv().isEmpty()) {
+                List<Services> list =  servicesServiceImp.getAllActiveServices();
+                model.addAttribute("servicesList",list );
+                model.addAttribute("resume","Resume is required" );
+                return "sign-up-cleaner";
+            }
+
+            model.addAttribute(cleanerDTO.getCv());
+            // normalize the file path
+            String fileName = StringUtils.cleanPath(cleanerDTO.getCv().getOriginalFilename());
+            log.debug("File name {} " + fileName);
+           String file_name =  UUID.randomUUID().toString()+".pdf";
+            fileService.encryptPDFFile("src/main/resources/resume", fileName, cleanerDTO.getCv(), file_name);
+            cleanerDTO.setResume(file_name);
+            /////// end upload resume
             cleanerService.create(cleanerDTO);
             session.setAttribute("message", "Welcome to Homey.. ");
             session.setAttribute("alertType", "alert-success");

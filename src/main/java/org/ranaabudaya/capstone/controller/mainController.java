@@ -68,7 +68,7 @@ public class mainController {
         return "index";
     }
     @GetMapping(value = {"/dashboard"})
-    public  String  dashboard(HttpSession session,Model model){
+    public  String  dashboard(HttpSession session,Model model, Authentication authentication){
        String savedBooking1 =  (String) session.getAttribute("savedBooking");
         String savedBookingalertType2 =  (String) session.getAttribute("savedBookingalertType");
         System.out.println(savedBooking1 + savedBookingalertType2);
@@ -78,22 +78,28 @@ public class mainController {
             model.addAttribute("savedBooking", savedBooking1);
             model.addAttribute("savedBookingalertType", savedBookingalertType2);
         }
-        String activation =  (String) session.getAttribute("activation");
-        System.out.println(activation);
-        if(activation != null){
-            session.removeAttribute("activation");
-            model.addAttribute("activation", activation);
-        }
-        String message = (String) session.getAttribute("message");
-        String alertType= (String) session.getAttribute("alertType");
-        if(message != null && alertType!=null ) {
-            session.removeAttribute("message");
-            session.removeAttribute("alertType");
-            model.addAttribute("message", message);
-            model.addAttribute("alertType", alertType);
-        }
 
+        if (authentication != null) {
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                if (authority.getAuthority().equals("ROLE_CLEANER")) {
+                    String activation =  (String) session.getAttribute("activation");
+                    System.out.println(activation);
+                    if(activation != null){
+                        session.removeAttribute("activation");
+                        model.addAttribute("activation", activation);
+                    }
+                    String message = (String) session.getAttribute("message");
+                    String alertType = (String) session.getAttribute("alertType");
+                    if (message != null && alertType != null) {
+                        session.removeAttribute("message");
+                        session.removeAttribute("alertType");
+                        model.addAttribute("message", message);
+                        model.addAttribute("alertType", alertType);
+                    }
+                }
 
+            }
+        }
         return "dashboard";
     }
 

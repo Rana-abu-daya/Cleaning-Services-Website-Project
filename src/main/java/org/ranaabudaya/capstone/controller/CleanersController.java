@@ -10,9 +10,17 @@ import org.ranaabudaya.capstone.entity.Services;
 import org.ranaabudaya.capstone.repository.CleanerRepository;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +28,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.ranaabudaya.capstone.entity.Cleaner;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -117,6 +130,50 @@ public class CleanersController {
         model.addAttribute("listServices", listServices);
         return "edit-cleaner";
     }
+
+    @GetMapping("/cleaners/approve/{id}")
+    public String approveCleanerbyId(@PathVariable("id") int id, Model model) {
+        Optional<Cleaner> cleaner = cleanerService.findCleanerById(id);
+        if(cleaner.isPresent()){
+            Cleaner old = cleaner.get();
+            old.setNew(false);
+            old.setActive(true);
+            cleanerRepository.save(old);
+            model.addAttribute("message", "New cleaner is approved");
+            model.addAttribute("alertType", "alert-success");
+        }else{
+            model.addAttribute("message", "The cleaner is not approved");
+            model.addAttribute("alertType", "alert-danger");
+        }
+
+        return "forward:/cleaners";
+    }
+
+    @GetMapping("/cleaners/viewPdf/{id}")
+    public ResponseEntity<InputStreamResource> viewPdf(@PathVariable("id") int id, Model model) throws IOException
+    {
+        Optional<Cleaner> cleaner = cleanerService.findCleanerById(id);
+        if(cleaner.isPresent()) {
+            Cleaner old = cleaner.get();
+                String fileName = old.getResume(); // your file name
+
+                String directory ="src/main/resources/static/assets/resume/"; // the directory where your file is
+
+                Path path = Paths.get(directory + fileName);
+                InputStreamResource resource = new InputStreamResource(Files.newInputStream(path));
+
+                return ResponseEntity.ok()
+                        // Content-Disposition
+                        .header("Content-Disposition", "attachment; filename=" + fileName)
+                        // Content-Type
+                        .contentType(MediaType.APPLICATION_PDF)
+                        // Content-Length
+                        .contentLength(Files.size(path))
+                        .body(resource);
+            }
+
+        else return null;
+        }
     @PostMapping("/cleaners/update-cleaner/{id}")
     public String updateServices(@PathVariable("id") int id, @Valid @ModelAttribute("cleaner") Cleaner cleaner, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {
         System.out.println(cleaner.toString());

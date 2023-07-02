@@ -17,6 +17,7 @@ public interface ServicesService {
 
     public List<Services> getActiveServies();
     public int deleteById(int id);
+    public Services getServiceByName(String name);
     public Optional<Services> getServiceById(int id);
 
 }
