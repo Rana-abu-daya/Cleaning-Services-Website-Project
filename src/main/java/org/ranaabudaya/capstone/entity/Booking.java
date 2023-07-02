@@ -53,6 +53,8 @@ public class Booking {
     private String phone;
     private BookingStatus status;
     private double price;
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.MERGE)
+    private Review review;
 
     public enum BookingStatus {
         NEW,

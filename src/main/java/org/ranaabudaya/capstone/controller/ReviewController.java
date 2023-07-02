@@ -5,19 +5,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.ranaabudaya.capstone.dto.ReviewDTO;
 import org.ranaabudaya.capstone.dto.ServicesDTO;
 import org.ranaabudaya.capstone.entity.Booking;
+import org.ranaabudaya.capstone.entity.Customer;
 import org.ranaabudaya.capstone.entity.Services;
+import org.ranaabudaya.capstone.entity.User;
 import org.ranaabudaya.capstone.repository.BookingRepository;
-import org.ranaabudaya.capstone.service.BookingService;
-import org.ranaabudaya.capstone.service.CustomerService;
-import org.ranaabudaya.capstone.service.ReviewService;
-import org.ranaabudaya.capstone.service.ServicesService;
+import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.awt.print.Book;
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +34,49 @@ public class ReviewController {
 
     BookingService bookingService;
     ReviewService reviewService;
+    UserService userService;
+    CustomerService customerService;
     @Autowired
-    public ReviewController(BookingService bookingService,ReviewService reviewService){
+    public ReviewController(CustomerService customerService,UserService userService ,BookingService bookingService,ReviewService reviewService){
         this.bookingService =bookingService;
         this.reviewService=reviewService;
+        this.userService = userService;
+        this.customerService =customerService;
+    }
+    @GetMapping("/reviews")
+    public String reviews(Model model, Principal principal,@RequestParam(defaultValue = "0") int page) {
+        if(principal == null){
+
+            return "redirect:/login";
+        }
+        String username = principal.getName();
+        User user = userService.findUserByEmail(username);
+        List<Booking> bookings;
+        if(user.hasRole("ROLE_CLIENT")){
+            System.out.println("here Client"+principal.toString());
+            Customer customer=customerService.findCustomerByUserId(user.getId());
+            model.addAttribute("deletedCustomer", customer.isDeleted());
+            List<Booking.BookingStatus> statuses = new ArrayList<>();
+            statuses.add(Booking.BookingStatus.SUCCESS);
+            bookings = bookingService.findByStatusInAndCustomerId(statuses,customer.getId());
+            Pageable pageable = PageRequest.of(page, 5);
+            int start = (int)pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), bookings.size());
+            if(page != 0 && page>=start && page<=end){
+                model.addAttribute("currentPage", page);
+            }else{
+                model.addAttribute("currentPage", 0);
+            }
+            Page<Booking> list= new PageImpl<>(bookings.subList(start, end), pageable, bookings.size());;
+            // Add the bookings to the model
+            model.addAttribute("bookings", list);
+            model.addAttribute("reviewDTO", new ReviewDTO());
+
+
+        }else{
+            return "redirect:/login";
+        }
+        return "BookingReviews";
     }
 
     @GetMapping("/rating/{id}")
@@ -44,21 +89,59 @@ public class ReviewController {
     @PostMapping("/rating/add/{id}")
     @ResponseBody
     public String[] addRating(@PathVariable("id") int id, @Valid @ModelAttribute("review") ReviewDTO reviewDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {
-         if(!bookingService.findBookingById(id).get().getStatus().equals(Booking.BookingStatus.SUCCESS)) {
+         if(bookingService.findBookingById(id).get().getStatus().equals(Booking.BookingStatus.SUCCESS)) {
              if (reviewDTO.getComment() != null || reviewDTO.getComment().isEmpty()
                      || reviewDTO.getRatingValue() != 0) {
                  if (reviewService.findBookingById(id) != null) {
-                     reviewService.deleteByBookingId(id);
+                    // reviewService.deleteByBookingId(id);
+                     reviewDTO.setBookingId(id);
+                     System.out.println(reviewDTO.getRatingValue() + reviewDTO.getBookingId()+reviewDTO.getComment());
+                     reviewDTO.setBookingId(id);
+                     System.out.println(reviewDTO.getRatingValue() + reviewDTO.getBookingId()+reviewDTO.getComment());
+
                      reviewService.create(reviewDTO);
-                     String arr[] = new String[2];
+                     String arr[] = new String[4];
                      arr[0] = "Thanks for your Review, your old review was deleted";
                      arr[1] = "success";
+                     StringBuilder html = new StringBuilder();
+                     html.append("Reviews:<span class='text-dark font-weight-bold ms-sm-2'>")
+                             .append(reviewDTO.getComment())
+                             .append("</span>")
+                             .append("<div class='stars'>");
+
+                     for (int i = 1; i <= 5; i++) {
+                         html.append("<span class='fa ")
+                                 .append(reviewDTO.getRatingValue() >= i ? "fa-star" : "fa-star-o")
+                                 .append("'></span>");
+                     }
+
+                     html.append("</div>");
+                     arr[2]=html.toString();
+                     arr[3]=id+"";
+
                      return arr;
                  } else {
+                     reviewDTO.setBookingId(id);
+                     System.out.println(reviewDTO.getRatingValue() + reviewDTO.getBookingId()+reviewDTO.getComment());
                      reviewService.create(reviewDTO);
-                     String arr[] = new String[2];
+                     String arr[] = new String[4];
                      arr[0] = "Thanks for your Review";
                      arr[1] = "success";
+                     StringBuilder html = new StringBuilder();
+                     html.append("Reviews: <span class='text-dark font-weight-bold ms-sm-2'>")
+                             .append(reviewDTO.getComment())
+                             .append("</span>")
+                             .append("<div class='stars'>");
+
+                     for (int i = 1; i <= 5; i++) {
+                         html.append("<span class='fa ")
+                                 .append(reviewDTO.getRatingValue() >= i ? "fa-star" : "fa-star-o")
+                                 .append("'></span>");
+                     }
+
+                     html.append("</div>");
+                     arr[2]=html.toString();
+                     arr[3]=id+"";
                      return arr;
                  }
              } else {

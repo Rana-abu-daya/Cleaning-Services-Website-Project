@@ -32,9 +32,18 @@ public class ReviewServiceImp implements ReviewService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Review  review = modelMapper.map(reviewDTO, Review.class);
-        Booking booking = bookingService.findBookingById(reviewDTO.getBookingId()).orElse(null);
-        review.setBooking(booking);
-        reviewRepository.save(review);
+        if(this.findBookingById(reviewDTO.getBookingId()) != null){
+            Review existingReview = this.findBookingById(reviewDTO.getBookingId());
+            existingReview.setComment(reviewDTO.getComment());
+            existingReview.setRatingValue(reviewDTO.getRatingValue());
+            existingReview.setBooking(existingReview.getBooking());
+            reviewRepository.save(review);
+        }else {
+            Booking booking = bookingService.findBookingById(reviewDTO.getBookingId()).orElse(null);
+            review.setBooking(booking);
+            reviewRepository.save(review);
+        }
+
 
     }
 

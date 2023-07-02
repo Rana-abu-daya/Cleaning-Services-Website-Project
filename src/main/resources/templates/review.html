@@ -21,20 +21,27 @@
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
       <input type="hidden" id="ratingValue" name="ratingValue" th:field="*{ratingValue}">
       <label class="btn btn-primary">
-        <input type="radio" name="rating" id="one" value="1"> <span id="star1" class="fa fa-star-o"></span>
+        <input type="radio" name="rating${booking.id}" id="one${booking.id}" value="1">
+        <span id="star1${booking.id}" class="fa fa-star-o"></span>
+      </label>
+
+      <label class="btn btn-primary">
+        <input type="radio" name="rating${booking.id}" id="two${booking.id}" value="2">
+        <span id="star2${booking.id}" class="fa fa-star-o"></span>
       </label>
       <label class="btn btn-primary">
-        <input type="radio" name="rating" id="two" value="2"> <span id="star2" class="fa fa-star-o"></span>
+        <input type="radio" name="rating${booking.id}" id="three${booking.id}" value="3">
+        <span id="star3${booking.id}" class="fa fa-star-o"></span>
       </label>
       <label class="btn btn-primary">
-        <input type="radio" name="rating" id="three" value="3"> <span id="star3" class="fa fa-star-o"></span>
+        <input type="radio" name="rating${booking.id}" id="four${booking.id}" value="4">
+        <span id="star4${booking.id}" class="fa fa-star-o"></span>
       </label>
       <label class="btn btn-primary">
-        <input type="radio" name="rating" id="four" value="4"> <span id="star4" class="fa fa-star-o"></span>
+        <input type="radio" name="rating${booking.id}" id="five${booking.id}" value="5">
+        <span id="star5${booking.id}" class="fa fa-star-o"></span>
       </label>
-      <label class="btn btn-primary">
-        <input type="radio" name="rating" id="five" value="5"> <span id="star5" class="fa fa-star-o"></span>
-      </label>
+
 
     </div>
 
@@ -54,45 +61,5 @@
   <!-- A submit button -->
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
-
-<th:block th:include="parts/Footer.html :: footer"></th:block>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-
-  $(document).ready(function() {
-    $("#one").click(function (){
-        $("#star1").attr('class', 'fa fa-star');
-        $("#star2, #star3, #star4, #star5").attr('class', 'fa fa-star-o');
-        $("#ratingValue").val("1");
-    });
-    $("#two").click(function (){
-        $("#star1, #star2").attr('class', 'fa fa-star');
-        $("#star3, #star4, #star5").attr('class', 'fa fa-star-o');
-        $("#ratingValue").val("2");
-    });
-
-     $("#three").click(function (){
-        $("#star1, #star2,#star3").attr('class', 'fa fa-star');
-        $("#star4, #star5").attr('class', 'fa fa-star-o');
-        $("#ratingValue").val("3");
-    });
-
-        $("#four").click(function (){
-        $("#star1, #star2,#star3,#star4").attr('class', 'fa fa-star');
-        $("#star5").attr('class', 'fa fa-star-o');
-        $("#ratingValue").val("4");
-    });
-
-
-        $("#five").click(function (){
-        $("#star1, #star2,#star3,#star4,#star5").attr('class', 'fa fa-star');
-        $("#ratingValue").val("5");
-    });
-});
-
-
-</script>
-
 </body>
 </html>

@@ -44,6 +44,10 @@ public class BookingServiceImp implements BookingService{
     public List<Booking> findByStatusInAndCleanerId(List<Booking.BookingStatus> statuses, int id){
         return bookingRepository.findByStatusInAndCleanerId(statuses,id);
     }
+    public List<Booking> findByStatusInAndCustomerId(List<Booking.BookingStatus> statuses, int id){
+        return bookingRepository.findByStatusInAndCustomerId(statuses,id);
+    }
+
 
     @Override
     public void create(BookingDTO bookingDTO) {

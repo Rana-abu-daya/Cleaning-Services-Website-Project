@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <th:block th:include="parts/Header.html :: head"></th:block>
+    <!-- CSS styles -->
+    <style>
+    .alert-new {
+        background-color: #5d5dfb;
+    }
+
+    .alert-in_progress {
+        background-color: orange;
+    }
+
+    .alert-cancelled {
+        background-color: red;
+    }
+
+    .alert-success {
+        background-color: green;
+    }
+    .none{
+    display:none;
+    }
+     input[type="radio"] {
+    display: none;
+}
+</style>
+</head>
+
+<body class="g-sidenav-show   bg-gray-100">
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+<th:block th:insert="parts/Aside.html :: aside"></th:block>
+<main class="main-content position-relative border-radius-lg ">
+    <!-- Navbar -->
+    <th:block th:insert="parts/Nav.html :: nav"></th:block>
+
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+        <th:block th:insert="parts/Notification.html :: div"></th:block>
+
+        <div id="divContent">
+            <main class="main-content position-relative border-radius-lg ">
+                <!-- Navbar -->
+                <!-- End Navbar -->
+                <div class="container-fluid py-4">
+                    <div class="row">
+                        <div class="col-md-12 mt-4">
+                            <div class="card">
+                                <div class="card-header pb-0 px-3" style="display: flex;">
+                                    <div class="d-flex flex-column">
+                                        <h6 class="mb-0">Booking-Review Information</h6>
+                                    </div>
+
+                                </div>
+                                <div class="card-body pt-4 p-3" th:if="${#lists.isEmpty(bookings)}">
+                                    <p>No bookings found.</p>
+                                </div>
+                                <div class="card-body pt-4 p-3">
+                                    <ul class="list-group">
+                                        <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"  th:each="booking : ${bookings.content}" th:id="'bookingDiv'+${booking.id}">
+                                            <div class="d-flex flex-column">
+
+                                                <h6 class="mb-3 text-sm" th:text="'booking#'+${booking.id}"></h6>
+                                                <span class=" mb-2 text-xs">Cleaner name : <span class="text-dark ms-sm-2 font-weight-bold" th:text="${#strings.capitalize(booking.cleaner.user.firstName)}+' '+ ${#strings.capitalize(booking.cleaner.user.lastName)}"></span></span>
+                                                <span class="mb-2 text-xs">Date:  <span class="text-dark font-weight-bold ms-sm-2" th:text="${#dates.format(booking.date, 'yyyy-MM-dd')}"></span></span>
+                                               <span class="mb-2 text-xs">Service: <span class="text-dark font-weight-bold ms-sm-2" th:text="${booking.service.name}"></span></span>
+                                                <span th:id ="'reviewLine'+${booking.id}"class="mb-2 text-xs">Reviews: <span class="text-dark font-weight-bold ms-sm-2" th:if="${booking.review != null}"  th:text="${booking.review.comment}"></span>
+
+                                                    <div th:if="${booking.review != null}" class="stars">
+                                                            <span class="fa " th:classappend="${booking.review.ratingValue >= 1} ? 'fa-star' : 'fa-star-o'"></span>
+                                                            <span class="fa " th:classappend="${booking.review.ratingValue >= 2} ? 'fa-star' : 'fa-star-o'"></span>
+                                                            <span class="fa " th:classappend="${booking.review.ratingValue >= 3} ? 'fa-star' : 'fa-star-o'"></span>
+                                                            <span class="fa " th:classappend="${booking.review.ratingValue >= 4} ? 'fa-star' : 'fa-star-o'"></span>
+                                                            <span class="fa " th:classappend="${booking.review.ratingValue == 5} ? 'fa-star' : 'fa-star-o'"></span>
+                                                    </div>
+
+
+                                                </span>
+
+                                            </div>
+
+                                            <div class="ms-auto text-end">
+                                                <input type="hidden"  name="id" th:value="${booking.id}" class="idBooking">
+                                                <a sec:authorize="hasRole('ROLE_CLIENT')" th:id="'review'+${booking.id}"  class="btn btn-link text-success text-gradient px-3 mb-0" href="#" data-bs-toggle="modal"  th:attr="data-bs-target='#exampleModal'+${booking.id}" ><i class="fas fa-pencil-alt  me-2"></i>add/edit Review</a>
+
+                                                <div class="modal fade" th:id="'exampleModal'+${booking.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Reivew Booking</h5>
+                                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body" th:id="'exampleModalBody'+${booking.id}" >
+                                                                <form class="reviewForm" th:action="@{/rating/add/}+${booking.id}" th:object="${reviewDTO}" method="post">
+                                                                    <div class="row form-group">
+                                                                        <!-- The emojis go here -->
+                                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                                            <input type="hidden" th:id="'ratingValue'+${booking.id}" name="ratingValue" th:field="*{ratingValue}">
+                                                                            <input type="hidden" class="urlSubmit" name="ratingValue" th:value="'/rating/add/'+${booking.id}">
+
+                                                                            <label class="btn btn-primary">
+                                                                                <input type="radio" th:name="'rating'+${booking.id}" th:id="'one'+${booking.id}" value="1">
+                                                                                <span th:id="'star1'+${booking.id}" class="fa fa-star-o"></span>
+                                                                            </label>
+
+                                                                            <label class="btn btn-primary">
+                                                                                <input type="radio"th:name="'rating'+${booking.id}" th:id="'two'+${booking.id}" value="2">
+                                                                                <span th:id="'star2'+${booking.id}" class="fa fa-star-o"></span>
+                                                                            </label>
+                                                                            <label class="btn btn-primary">
+                                                                                <input type="radio" th:name="'rating'+${booking.id}" th:id="'three'+${booking.id}" value="3">
+                                                                                <span th:id="'star3'+${booking.id}" class="fa fa-star-o"></span>
+                                                                            </label>
+                                                                            <label class="btn btn-primary">
+                                                                                <input type="radio" th:name="'rating'+${booking.id}" th:id="'four'+${booking.id}" value="4">
+                                                                                <span th:id="'star4'+${booking.id}" class="fa fa-star-o"></span>
+                                                                            </label>
+                                                                            <label class="btn btn-primary">
+                                                                                <input type="radio" th:name="'rating'+${booking.id}" th:id="'five'+${booking.id}" value="5">
+                                                                                <span th:id="'star5'+${booking.id}" class="fa fa-star-o"></span>
+                                                                            </label>
+
+
+                                                                        </div>
+<div style="text-align:left">
+                                                                        <hr class="horizontal dark">
+                                                                        <p class="text-uppercase text-sm">Leave A comment</p>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group">
+                                                                                    <label for="comment" class="form-control-label">Comment</label>
+                                                                                    <textarea class="form-control" name="comment" id="comment"  th:field="*{comment}"></textarea>
+                                                                                    <span  class=" badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('comment')}"
+                                                                                           th:errors="*{comment}"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+</div>
+                                                                    </div>
+                                                                    <!-- A submit button -->
+                                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                                </form>
+
+
+
+
+
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class=" card-footer ms-auto text-end">
+                                    <nav class="btn-group pull-right">
+                                        <ul class="pagination">
+                                            <li class="page-item" th:classappend="${currentPage == 0} ? disabled">
+                                                <a class="page-link" th:href="@{/bookings(page=${currentPage - 1})}" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, bookings.totalPages - 1)}" th:classappend="${pageNumber == currentPage} ? active">
+                                                <a class="page-link" th:href="@{/bookings(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                                            </li>
+                                            <li class="page-item" th:classappend="${currentPage + 1 >= bookings.totalPages} ? disabled">
+                                                <a class="page-link" th:href="@{/bookings(page=${currentPage + 1})}" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </main>
+
+
+        </div>
+        <th:block th:insert="parts/FooterDiv.html :: footer"></th:block>
+    </div>
+</main>
+
+<th:block th:include="parts/Footer.html :: footer"></th:block>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+  $(document).ready(function() {
+
+    $("[id^=one]").click(function (){
+        let id = $(this).attr('id').substring(3);
+        $("#star1" + id).attr('class', 'fa fa-star');
+        $("#star2" + id + ", #star3" + id + ", #star4" + id + ", #star5" + id).attr('class', 'fa fa-star-o');
+        $("#ratingValue"+id).val("1");
+    });
+
+      $("[id^=two]").click(function (){
+        let id = $(this).attr('id').substring(3);
+        $("#star1" + id+ ",#star2" + id ).attr('class', 'fa fa-star');
+        $("#star3" + id + ", #star4" + id + ", #star5" + id).attr('class', 'fa fa-star-o');
+        $("#ratingValue"+id).val("2");
+    });
+
+      $("[id^=three]").click(function (){
+        let id = $(this).attr('id').substring(5);
+        $("#star1" + id+ ",#star2" + id +",#star3" + id).attr('class', 'fa fa-star');
+        $("#star4" + id + ", #star5" + id).attr('class', 'fa fa-star-o');
+        $("#ratingValue"+id).val("3");
+    });
+
+  $("[id^=four]").click(function (){
+        let id = $(this).attr('id').substring(4);
+        $("#star1" + id+ ",#star2" + id +",#star3" + id +", #star4" + id ).attr('class', 'fa fa-star');
+        $("#star5" + id).attr('class', 'fa fa-star-o');
+        $("#ratingValue"+id).val("4");
+    });
+
+    $("[id^=five]").click(function (){
+        let id = $(this).attr('id').substring(4);
+        $("#star1" + id+ ",#star2" + id +",#star3" + id +", #star4" + id +",#star5" + id).attr('class', 'fa fa-star');
+        $("#ratingValue"+id).val("5");
+    });
+
+
+});
+
+
+</script>
+
+
+<script>
+    $(document).ready(function() {
+    $(".reviewForm").on('submit', function(e) {
+        e.preventDefault();  // Prevent the form from submitting normally
+
+        var form = $(this);
+        var url = form.find(".urlSubmit").val();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),  // Serialize the form data
+            success: function(data) {
+                  let  notification = document.getElementsByClassName('notificationPlace');
+             notification[0].querySelector(('span')).innerHTML=data[0];
+           notification[0].classList.add('alert-'+data[1]);
+           if(data[1] !='danger'){
+           console.log(data[2])
+           console.log( form.find('#reviewLine'+data[3]));
+            $('#reviewLine'+data[3]).html(data[2]);
+
+           }
+                form.closest('.modal').modal('hide');  // Close the modal containing this form
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                // This code will run if there was an error
+                // You can show an error message, etc.
+                console.log("Error: " + errorThrown);
+            }
+        });
+    });
+});
+
+
+
+</script>
+</body>
+
+</html>

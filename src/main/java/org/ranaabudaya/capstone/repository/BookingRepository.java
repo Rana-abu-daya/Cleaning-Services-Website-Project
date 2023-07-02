@@ -26,6 +26,8 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findBookingsByCleanerIdAndTimeRange(int cleanerId,  String startTime,  String endTime);
     List<Booking> findByStatusInAndServiceId(List<Booking.BookingStatus> status, int serviceId);
     List<Booking> findByStatusInAndCleanerId(List<Booking.BookingStatus> status, int cleanerId);
+    List<Booking> findByStatusInAndCustomerId(List<Booking.BookingStatus> status, int customerId);
+
     List<Booking> findByCleanerIdAndServiceIdAndStatusIn(int cleanerId, int serviceId, List<Booking.BookingStatus> status);
     List<Booking> findByCustomerIdAndStatus(int customerId, Booking.BookingStatus status);
     Page<Booking> findByDateAndStatusAndCleanerAndCustomerId(LocalDate date, Booking.BookingStatus status, int cleaner, int customerId, Pageable pageable);
