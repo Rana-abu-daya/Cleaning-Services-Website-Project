@@ -81,7 +81,7 @@ public class UserController {
 
     @PostMapping("/cleaners/signup-process")
     public String signupProcess(@Valid @ModelAttribute ("formWrapper") FormWrapper formWrapper, BindingResult bindingResult
-    ,  Model model, RedirectAttributes redirectAttrs)
+    ,  Model model, RedirectAttributes redirectAttrs, HttpSession session)
     {
         if(bindingResult.hasErrors()  )
         {
@@ -104,14 +104,21 @@ public class UserController {
 
             CleanerDTO cleanerDTO = formWrapper.getCleanerDTO();
             formWrapper.getUserDTO().setRoleName("ROLE_CLEANER");
+            System.out.println(formWrapper.getUserDTO().getFile().isEmpty());
+            if(formWrapper.getUserDTO().getFile() != null && !formWrapper.getUserDTO().getFile().isEmpty()) {
+                System.out.println(formWrapper.getUserDTO().getFile().getName());
+                fileService.uploadFile(formWrapper.getUserDTO().getFile());
+                formWrapper.getUserDTO().setPhoto(formWrapper.getUserDTO().getFile().getOriginalFilename());
+            }
             int userId = userService.create(formWrapper.getUserDTO());
            // System.out.println(userId + "Rana");
             cleanerDTO.setUserId(userId);
             cleanerDTO.setActive(false);
             cleanerDTO.setNew(true);
             cleanerService.create(cleanerDTO);
-            redirectAttrs.addFlashAttribute("message", "Welcome to Homey.. ");
-            redirectAttrs.addFlashAttribute("alertType", "alert-success");
+            session.setAttribute("message", "Welcome to Homey.. ");
+            session.setAttribute("alertType", "alert-success");
+            session.setAttribute("activation", "You are inactive, we will review your resume soon");
 
             //userService.create(userDTO);
             return "redirect:/login";

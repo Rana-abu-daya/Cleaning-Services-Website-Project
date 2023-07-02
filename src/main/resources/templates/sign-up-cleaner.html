@@ -29,7 +29,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <form  th:action="@{/cleaners/signup-process}" th:object="${formWrapper}" method="post">
+                        <form  th:action="@{/cleaners/signup-process}" th:object="${formWrapper}" method="post" enctype="multipart/form-data">
                         <p class="text-uppercase text-sm">User Information</p>
                         <div class="row">
                             <div class="col-md-6">
@@ -144,8 +144,8 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="custom-file form-group">
-                                    <label for="Photo" class="form-control-label">Photo</label>
-                                    <input type="file" class="custom-file-input form-control"   name="photo "id="photo" lang="en">
+                                    <label for="file" class="form-control-label">Photo</label>
+                                    <input type="file" class="custom-file-input form-control"   name="file "id="file" th:field="*{userDTO.file}" lang="en">
                                 </div>
                             </div>
                             <div class="col-md-12">
