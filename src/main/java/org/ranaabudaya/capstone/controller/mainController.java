@@ -84,6 +84,14 @@ public class mainController {
             session.removeAttribute("activation");
             model.addAttribute("activation", activation);
         }
+        String message = (String) session.getAttribute("message");
+        String alertType= (String) session.getAttribute("alertType");
+        if(message != null && alertType!=null ) {
+            session.removeAttribute("message");
+            session.removeAttribute("alertType");
+            model.addAttribute("message", message);
+            model.addAttribute("alertType", alertType);
+        }
 
 
         return "dashboard";

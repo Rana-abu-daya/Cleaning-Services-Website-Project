@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Getter
@@ -79,5 +80,6 @@ public class UserDTO {
         this.state=state;
     }
     private String photo;
+    private MultipartFile file;
     private String roleName;
 }

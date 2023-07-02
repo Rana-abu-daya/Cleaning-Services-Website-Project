@@ -22,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import  org.ranaabudaya.capstone.helper.FormWrapper;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -47,8 +48,9 @@ public class UserController {
     private AdminService adminService;
     private CustomerService customerService;
     private BookingService bookingService;
+    private FileService fileService;
     @Autowired
-    public UserController(BookingService bookingService,UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService,
+    public UserController(FileService fileService,BookingService bookingService,UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService,
                           AdminService adminService,CustomerService customerService) {
         this.userService = userDetailsService;
         this.servicesServiceImp = servicesServiceImp;
@@ -56,6 +58,7 @@ public class UserController {
         this.adminService=  adminService;
         this.customerService  = customerService;
         this.bookingService=bookingService;
+        this.fileService=fileService;
     }
 
     @GetMapping("/")
@@ -147,6 +150,12 @@ public String addAdmin(Model model)
 
             AdminDTO adminDTO = AdminForm.getAdminDTO() != null ? AdminForm.getAdminDTO() : new AdminDTO();
             AdminForm.getUserDTO().setRoleName("ROLE_ADMIN");
+            System.out.println(AdminForm.getUserDTO().getFile().isEmpty());
+            if(AdminForm.getUserDTO().getFile() != null && !AdminForm.getUserDTO().getFile().isEmpty()) {
+                System.out.println(AdminForm.getUserDTO().getFile().getName());
+//                fileService.uploadFile(AdminForm.getUserDTO().getFile());
+//                AdminForm.getUserDTO().setPhoto(AdminForm.getUserDTO().getFile().getOriginalFilename());
+            }
             int userId = userService.create(AdminForm.getUserDTO());
             // System.out.println(userId + "Rana");
             adminDTO.setUserId(userId);
@@ -177,13 +186,14 @@ public String addAdmin(Model model)
     }
     @PostMapping("/customers/admin/signup-process")
     public String signupProcessCustomerByAdmin(@Valid @ModelAttribute ("Customerform") CustomerformWrapper Customerform, BindingResult bindingResult
-            , Model model, RedirectAttributes redirectAttrs)
+            , Model model, RedirectAttributes redirectAttrs) throws Exception
     {
         if(bindingResult.hasErrors()  )
         {
             // log.warn("Wrong attempt to add admin");
             return "newCustomer";
         }
+
         System.out.println(Customerform.getUserDTO());
         System.out.println(Customerform.getCustomerDTO());
 
@@ -195,6 +205,11 @@ public String addAdmin(Model model)
 
             CustomerDTO customerDTO = Customerform.getCustomerDTO() != null ? Customerform.getCustomerDTO() : new CustomerDTO();
             Customerform.getUserDTO().setRoleName("ROLE_CLIENT");
+            System.out.println(Customerform.getUserDTO().getFile().isEmpty());
+            if(Customerform.getUserDTO().getFile() != null && !Customerform.getUserDTO().getFile().isEmpty()) {
+                fileService.uploadFile(Customerform.getUserDTO().getFile());
+                Customerform.getUserDTO().setPhoto(Customerform.getUserDTO().getFile().getOriginalFilename());
+            }
             int userId = userService.create(Customerform.getUserDTO());
             customerDTO.setUserId(userId);
 
@@ -225,12 +240,20 @@ public String addAdmin(Model model)
 
             CustomerDTO customerDTO = Customerform.getCustomerDTO() != null ? Customerform.getCustomerDTO() : new CustomerDTO();
             Customerform.getUserDTO().setRoleName("ROLE_CLIENT");
+            System.out.println(Customerform.getUserDTO().getFile().isEmpty());
+            if(Customerform.getUserDTO().getFile() != null && !Customerform.getUserDTO().getFile().isEmpty()) {
+                fileService.uploadFile(Customerform.getUserDTO().getFile());
+                Customerform.getUserDTO().setPhoto(Customerform.getUserDTO().getFile().getOriginalFilename());
+            }
+
+
             int userId = userService.create(Customerform.getUserDTO());
+
             customerDTO.setUserId(userId);
 
             customerService.create(customerDTO);
-            redirectAttrs.addFlashAttribute("message", "Welcome to Homey.. Enjoy our services ");
-            redirectAttrs.addFlashAttribute("alertType", "alert-success");
+            session.setAttribute("message", "Welcome to Homey.. Enjoy our services ");
+            session.setAttribute("alertType", "alert-success");
 
             BookingDTO pendingBooking = (BookingDTO) session.getAttribute("pendingBooking");
             if (pendingBooking != null) {
