@@ -47,8 +47,13 @@ public class BookingServiceImp implements BookingService{
     public List<Booking> findByStatusInAndCustomerId(List<Booking.BookingStatus> statuses, int id){
         return bookingRepository.findByStatusInAndCustomerId(statuses,id);
     }
-
-
+    @Override
+    public double findTotalMony(Booking.BookingStatus status){
+       return bookingRepository.findTotalMoney(status);
+    }
+    public long countByServiceId(int servId){
+        return bookingRepository.countByServiceId(servId);
+    }
     @Override
     public void create(BookingDTO bookingDTO) {
         ModelMapper modelMapper = new ModelMapper();

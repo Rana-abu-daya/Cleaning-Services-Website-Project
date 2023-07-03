@@ -77,4 +77,9 @@ public interface CleanerRepository extends JpaRepository<Cleaner,Integer> {
     List<Cleaner> findByIsActiveAndIsNew(boolean isActive, boolean isNew);
 
 
+    @Query(value = "SELECT c.* FROM cleaner c WHERE c.is_active = true ORDER BY (SELECT AVG(r.rating_value) FROM review r JOIN booking b ON r.booking_id = b.id WHERE b.cleaner_id = c.id) DESC LIMIT 5", nativeQuery = true)
+    List<Cleaner> findTop5Cleaner();
+
+
+
 }

@@ -15,5 +15,6 @@ public interface CustomerRepository extends JpaRepository<Customer,Integer> {
     List<Customer> findByIsDeletedTrue();
     Page<Customer> findByIsDeletedTrue(Pageable pageable);
     Page<Customer> findByIsDeletedFalse(Pageable pageable);
+    List<Customer> findByIsDeletedFalse();
 
 }

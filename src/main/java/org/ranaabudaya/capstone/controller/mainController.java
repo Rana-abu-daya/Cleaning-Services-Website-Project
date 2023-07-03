@@ -113,7 +113,15 @@ public class mainController {
 
     @GetMapping(value = {"/dashboard/dash"})
     public  String  dash(Model model){
-        double total = bookingService.findTotalMony();
+        double total = bookingService.findTotalMony(Booking.BookingStatus.SUCCESS);
+        model.addAttribute("total", total);
+        double totalCustomer = customerService.getAllActive().size();
+        model.addAttribute("totalCustomer", totalCustomer);
+        double newCleaners = cleanerService.findByIsActiveAndIsNew(false,true).size();
+        model.addAttribute("newCleaners", newCleaners);
+        List<Cleaner> cleaners = cleanerService.findTopCleaner();
+        model.addAttribute("topCleaners", cleaners);
+
 
 
         return "dash";

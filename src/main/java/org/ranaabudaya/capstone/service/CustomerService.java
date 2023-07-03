@@ -17,8 +17,9 @@ public interface CustomerService {
     public Page<Customer> getAllActivePagination(Pageable pageable);
 
     public Page<Customer> getAllDeleted(Pageable pageable);
-
+    public List<Customer>getAllActive();
     public void update(Customer customer);
     public void activateById(int  id);
     public Customer findCustomerByUserId(int id);
+
 }

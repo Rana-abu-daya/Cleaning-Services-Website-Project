@@ -85,6 +85,9 @@ public class CustomerServiceImp implements CustomerService{
     public Page<Customer> getAllActivePagination(Pageable pageable){
         return customerRepository.findByIsDeletedFalse(pageable);
     }
+    public List<Customer>getAllActive(){
+        return customerRepository.findByIsDeletedFalse();
+    }
     public void update(Customer customer){
 
         customerRepository.save(customer);

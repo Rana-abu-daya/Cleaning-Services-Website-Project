@@ -34,5 +34,6 @@ public List<Cleaner> getCleanersByServiceId(int id);
 public List<Cleaner>  findAvailableCleanersForServiceAndTime(String startTime,int hours, LocalDate bookingDate, int serviceId);
 public List<Integer> checkUpdatedServices(int id,  Collection<Services> services);
     public boolean updateCleanerSchedule(int cleanerId, String newStartTime, int newHours);
+    public List<Cleaner> findTopCleaner();
 
 }

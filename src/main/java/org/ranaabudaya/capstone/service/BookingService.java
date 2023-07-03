@@ -24,6 +24,7 @@ public interface BookingService {
     public List<Booking> findBookingByCleanerId(int id);
     public List<Booking> findByStatusInAndCleanerId(List<Booking.BookingStatus> statuses, int id);
     public List<Booking> findByStatusInAndCustomerId(List<Booking.BookingStatus> statuses, int id);
-
+    public  double findTotalMony(Booking.BookingStatus status);
+    public long countByServiceId(int servId);
 
 }
