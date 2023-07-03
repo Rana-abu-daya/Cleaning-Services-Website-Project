@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+//these are the general message from home page,, for contact any person who has question.
 @Entity
 @Setter
 @Getter

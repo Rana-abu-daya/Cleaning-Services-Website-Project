@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import jakarta.persistence.*;
+
+//services that provided by our system
+// the booking has only one serivce
+//the cleaner can choose many services to do
 @Entity
 @Setter
 @Getter

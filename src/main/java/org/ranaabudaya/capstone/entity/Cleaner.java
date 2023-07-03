@@ -12,7 +12,8 @@ import lombok.ToString;
 
 import java.time.LocalTime;
 import java.util.Collection;
-
+//cleaner is the employee
+//first it sign in then the admin approved them so he can be take for bookings
 @Entity
 @Setter
 @Getter

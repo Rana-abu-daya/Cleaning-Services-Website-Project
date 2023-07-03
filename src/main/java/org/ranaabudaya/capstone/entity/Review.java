@@ -7,7 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+/*
+this is the review of the booking
+the customer is the only one allow to add/edit review
+every booking has one related review;
+*/
 @Setter
 @Getter
 @NoArgsConstructor

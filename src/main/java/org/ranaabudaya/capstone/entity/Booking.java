@@ -10,7 +10,10 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
+//the most important entity ,,
+//the customer also the only person who can add booking
+//for editing: Admin, customer can edit inforamtion of the booking
+//the cleaner can edit the status,, like start the booking , done the booking ...
 @Entity
 @Setter
 @Getter

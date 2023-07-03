@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+//the customer is the person who has the bookings
 @Entity
 @Setter
 @Getter

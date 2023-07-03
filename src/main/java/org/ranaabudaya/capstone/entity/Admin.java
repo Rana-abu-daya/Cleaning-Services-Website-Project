@@ -11,6 +11,9 @@ import lombok.ToString;
 
 import java.time.LocalTime;
 import java.util.Collection;
+//Admin entity is for future use,, for any aditional information we could need
+//like
+//Role/Permission Levels,ManagedBy, AssignedSections, LastActivity. AuditLogs
 
 @Entity
 @Setter
