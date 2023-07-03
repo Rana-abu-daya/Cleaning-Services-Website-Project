@@ -13,8 +13,13 @@ import java.util.Optional;
 public interface ReviewService {
 
     public int deleteById(int id);
+
     public void create(ReviewDTO reviewDTO);
 
     public Review findBookingById(int bookingId);
+
     public int deleteByBookingId(int bookingId);
+
+    public List<Review> findTop3ByOrderByRatingValueDesc();
+
 }

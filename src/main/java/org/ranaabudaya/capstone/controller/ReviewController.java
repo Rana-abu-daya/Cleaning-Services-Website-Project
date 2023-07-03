@@ -2,12 +2,10 @@ package org.ranaabudaya.capstone.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.ranaabudaya.capstone.dto.MessageDTO;
 import org.ranaabudaya.capstone.dto.ReviewDTO;
 import org.ranaabudaya.capstone.dto.ServicesDTO;
-import org.ranaabudaya.capstone.entity.Booking;
-import org.ranaabudaya.capstone.entity.Customer;
-import org.ranaabudaya.capstone.entity.Services;
-import org.ranaabudaya.capstone.entity.User;
+import org.ranaabudaya.capstone.entity.*;
 import org.ranaabudaya.capstone.repository.BookingRepository;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +34,16 @@ public class ReviewController {
     ReviewService reviewService;
     UserService userService;
     CustomerService customerService;
+    CleanerService cleanerService;
     @Autowired
-    public ReviewController(CustomerService customerService,UserService userService ,BookingService bookingService,ReviewService reviewService){
+    MessageService messageService;
+    @Autowired
+    public ReviewController(CleanerService cleanerService,CustomerService customerService,UserService userService ,BookingService bookingService,ReviewService reviewService){
         this.bookingService =bookingService;
         this.reviewService=reviewService;
         this.userService = userService;
         this.customerService =customerService;
+        this.cleanerService=cleanerService;
     }
     @GetMapping("/reviews")
     public String reviews(Model model, Principal principal,@RequestParam(defaultValue = "0") int page) {
@@ -70,12 +72,41 @@ public class ReviewController {
             Page<Booking> list= new PageImpl<>(bookings.subList(start, end), pageable, bookings.size());;
             // Add the bookings to the model
             model.addAttribute("bookings", list);
-            model.addAttribute("reviewDTO", new ReviewDTO());
 
 
+        } if(user.hasRole("ROLE_CLEANER")){
+            Cleaner cleaner=cleanerService.findByUserId(user.getId());
+            List<Booking.BookingStatus> statuses = new ArrayList<>();
+            statuses.add(Booking.BookingStatus.SUCCESS);
+            bookings = bookingService.findByStatusInAndCleanerId(statuses,cleaner.getId());
+            Pageable pageable = PageRequest.of(page, 5);
+            int start = (int)pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), bookings.size());
+            if(page != 0 && page>=start && page<=end){
+                model.addAttribute("currentPage", page);
+            }else{
+                model.addAttribute("currentPage", 0);
+            }
+            Page<Booking> list= new PageImpl<>(bookings.subList(start, end), pageable, bookings.size());;
+            // Add the bookings to the model
+            model.addAttribute("bookings", list);
         }else{
-            return "redirect:/login";
+            List<Booking.BookingStatus> statuses = new ArrayList<>();
+            bookings = bookingService.findBookingByStatus(Booking.BookingStatus.SUCCESS);
+            Pageable pageable = PageRequest.of(page, 5);
+            int start = (int)pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), bookings.size());
+            if(page != 0 && page>=start && page<=end){
+                model.addAttribute("currentPage", page);
+            }else{
+                model.addAttribute("currentPage", 0);
+            }
+            Page<Booking> list= new PageImpl<>(bookings.subList(start, end), pageable, bookings.size());;
+            // Add the bookings to the model
+            model.addAttribute("bookings", list);
         }
+        model.addAttribute("reviewDTO", new ReviewDTO());
+
         return "BookingReviews";
     }
 
@@ -85,6 +116,27 @@ public class ReviewController {
         model.addAttribute("booking", booking);
         model.addAttribute("id", id);
         return "review";
+    }
+
+
+    @PostMapping("/message/add")
+    public String messageadd(@Valid @ModelAttribute ("messageDTO") MessageDTO messageDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {
+
+        if(bindingResult.hasErrors())
+
+        {
+
+
+            // log.warn("Wrong attempt");
+            return "index";
+        }
+
+
+            messageService.create(messageDTO);
+
+
+        return "redirect:/index";
+
     }
     @PostMapping("/rating/add/{id}")
     @ResponseBody

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.ranaabudaya.capstone.dto.BookingDTO;
 import org.ranaabudaya.capstone.dto.CustomerDTO;
+import org.ranaabudaya.capstone.dto.MessageDTO;
 import org.ranaabudaya.capstone.entity.*;
 import org.ranaabudaya.capstone.helper.CustomerformWrapper;
 import org.ranaabudaya.capstone.service.*;
@@ -42,6 +43,9 @@ public class mainController {
         this.bookingService=bookingService;
         this.customerService =customerService;
     }
+
+    @Autowired
+    ReviewService reviewService ;
 //this list of list for slider view at home page ,, separate them each in one list
     @ModelAttribute("ServicesList")
     private List<List<Services>> getServices(){
@@ -63,8 +67,12 @@ public class mainController {
         List<Services> list =  servicesServiceImp.getActiveServies();
         return list;
     }
-    @GetMapping(value = {"/home", "/homey"})
-    public String home(){
+    @GetMapping(value = {"/home", "/homey","/index"})
+    public String home(Model model){
+
+        List<Review> reviews = reviewService.findTop3ByOrderByRatingValueDesc();
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("messageDTO", new MessageDTO());
         return "index";
     }
     @GetMapping(value = {"/dashboard"})
@@ -104,7 +112,9 @@ public class mainController {
     }
 
     @GetMapping(value = {"/dashboard/dash"})
-    public  String  dash(){
+    public  String  dash(Model model){
+        double total = bookingService.findTotalMony();
+
 
         return "dash";
     }

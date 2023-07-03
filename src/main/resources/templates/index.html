@@ -9,11 +9,9 @@
     <meta name="author" content="">
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,500,700,900" rel="stylesheet">
 
-    <title>Softy Pinko - Bootstrap 4.0 Theme</title>
-<!--
-SOFTY PINKO
-https://templatemo.com/tm-535-softy-pinko
--->
+    <title>Homey</title>
+      <link rel="icon" type="image/png" href="../assets/img/favicon.png"  th:href="@{/assets/images/Homey-Color.svg}">
+
 
     <!-- Additional CSS Files -->
       <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet"  type="text/css" />
@@ -54,7 +52,8 @@ https://templatemo.com/tm-535-softy-pinko
                     <div class="offset-xl-3 col-xl-6 offset-lg-2 col-lg-8 col-md-12 col-sm-12">
 
                         <h1>We provide the best <strong>Services</strong><br>Find a <strong>Five-Star Cleaner </strong> </h1>
-                        <a href="#features" class="main-button-slider" style="font-size:15px">Book your Cleaner</a>
+                        <a href="#features" th:href="@{/booking}"class="main-button-slider" style="font-size:15px">Book your Cleaner</a>
+                        <a href="#features" th:href="@{/cleaners/sign-up}" class="main-button-slider" style="font-size:15px">Become a Cleaner</a>
                     </div>
                 </div>
             </div>
@@ -208,7 +207,7 @@ https://templatemo.com/tm-535-softy-pinko
                 </div>
             </div>
         </div>
-        <div class="container pt-0 mt-2">
+        <div id="pricing-plans"class="container pt-0 mt-2">
             <div class="carousel-inner">
                 <div th:each="chunk , index : ${ServicesList}" class="carousel-item" th:classappend="${index.index == 0} ? 'active'">
                         <div class="row">
@@ -262,7 +261,36 @@ https://templatemo.com/tm-535-softy-pinko
             </div>
             <!-- ***** Section Title End ***** -->
 
-            <div class="row">
+            <div th:unless="${#lists.isEmpty(reviews)}" class="row">
+                <!-- ***** Testimonials Item Start ***** -->
+                <div  th:each="review : ${reviews}" class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="team-item">
+                        <div class="team-content">
+                            <i><img src="../assets/images/testimonial-icon.png" alt=""></i>
+
+                            <div class="stars text-center" style="color:orange">
+                                <span class="fa " th:classappend="${review.ratingValue >= 1} ? 'fa-star' : 'fa-star-o'"></span>
+                                <span class="fa " th:classappend="${review.ratingValue >= 2} ? 'fa-star' : 'fa-star-o'"></span>
+                                <span class="fa " th:classappend="${review.ratingValue >= 3} ? 'fa-star' : 'fa-star-o'"></span>
+                                <span class="fa " th:classappend="${review.ratingValue >= 4} ? 'fa-star' : 'fa-star-o'"></span>
+                                <span class="fa " th:classappend="${review.ratingValue == 5} ? 'fa-star' : 'fa-star-o'"></span>
+                            </div>
+                           <p th:text="${review.comment}"></p>
+                            <div class="user-image" style="  width: 80px;height: 80px;border-radius: 50%;">
+                                <img th:src="${review.booking.customer.user.photo != null} ? '/assets/uploads/'+${review.booking.customer.user.photo} : '../assets/images/empty-photo.png'" alt="User Photo"  class="navbar-brand-img" style="  width:80;height: 80px;"  >
+                            </div>
+                            <div class="team-info">
+                                <h3 th:text="${#strings.capitalize(review.booking.customer.user.firstName)}+' '+ ${#strings.capitalize(review.booking.customer.user.lastName)}" class="user-name"></h3>
+                                <h6 th:text="'Service: '+${review.booking.service.name}"></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ***** Testimonials Item End ***** -->
+            </div>
+
+            <div th:if="${#lists.isEmpty(reviews)}" class="row">
                 <!-- ***** Testimonials Item Start ***** -->
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="team-item">
@@ -280,7 +308,7 @@ https://templatemo.com/tm-535-softy-pinko
                     </div>
                 </div>
                 <!-- ***** Testimonials Item End ***** -->
-                
+
                 <!-- ***** Testimonials Item Start ***** -->
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="team-item">
@@ -298,7 +326,7 @@ https://templatemo.com/tm-535-softy-pinko
                     </div>
                 </div>
                 <!-- ***** Testimonials Item End ***** -->
-                
+
                 <!-- ***** Testimonials Item Start ***** -->
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="team-item">
@@ -391,21 +419,21 @@ https://templatemo.com/tm-535-softy-pinko
                 <!-- ***** Contact Form Start ***** -->
                 <div class="col-lg-8 col-md-6 col-sm-12">
                     <div class="contact-form">
-                        <form id="contact" action="" method="get">
+                        <form id="contact" th:action="@{/message/add}" th:object="${messageDTO}" method="post">
                           <div class="row">
                             <div class="col-lg-6 col-md-12 col-sm-12">
                               <fieldset>
-                                <input name="name" type="text" class="form-control" id="name" placeholder="Full Name" required="">
+                                <input name="name" type="text" class="form-control" id="name" placeholder="Full Name" th:field="*{fullname}" required="">
                               </fieldset>
                             </div>
                             <div class="col-lg-6 col-md-12 col-sm-12">
                               <fieldset>
-                                <input name="email" type="email" class="form-control" id="email" placeholder="E-Mail Address" required="">
+                                <input name="email" type="email" class="form-control" id="email" placeholder="E-Mail Address" th:field="*{email}" required="">
                               </fieldset>
                             </div>
                             <div class="col-lg-12">
                               <fieldset>
-                                <textarea name="message" rows="6" class="form-control" id="message" placeholder="Your Message" required=""></textarea>
+                                <textarea name="message" rows="6" class="form-control" id="message" placeholder="Your Message" th:field="*{message}" required=""></textarea>
                               </fieldset>
                             </div>
                             <div class="col-lg-12">
