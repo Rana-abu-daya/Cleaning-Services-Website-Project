@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface UserService extends UserDetailsService {
 
     public UserDetails loadUserByUsername(String userName);
-
+    public void changePassword(String password, User user);
     public int create(UserDTO userDTO);
 
     public User findUserByEmail(String email);

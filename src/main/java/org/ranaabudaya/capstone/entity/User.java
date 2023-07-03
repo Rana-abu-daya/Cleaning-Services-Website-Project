@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Collection;
 
 @Entity
@@ -67,6 +69,11 @@ public class User {
         this.password = password;
         this.roles = roles;
     }
+    @Transient
+    private String matchingPassword;
+    @Transient
+    private MultipartFile file;
+
     public boolean hasRole(String roleName) {
         for (Role role : roles) {
             if (role.getName().equals(roleName)) {

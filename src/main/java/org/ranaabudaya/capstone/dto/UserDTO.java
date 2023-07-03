@@ -1,5 +1,6 @@
 package org.ranaabudaya.capstone.dto;
 
+import lombok.AllArgsConstructor;
 import org.ranaabudaya.capstone.validation.FieldMatch;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldMatch.List( { @FieldMatch(first = "password", second = "matchingPassword", message = "The password fields must match")})
 public class UserDTO {
     private int id ;
@@ -62,7 +64,7 @@ public class UserDTO {
     @NotEmpty(message = "Required")
     private String password;
 
-    @NotEmpty(message = "Required")
+
     private String matchingPassword;
 
     public UserDTO(@NotEmpty String userName, @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed") String firstName, @Pattern(regexp = "[A-Za-z]+$", message = "Only alphabetic allowed") String lastName, @Email String email, String phone, @Pattern(regexp = "[0-9]{5}$", message = "Zip code wrong format") String zip, @NotEmpty(message = "Required") String password, @NotEmpty(message = "Required") String matchingPassword, String address

@@ -99,6 +99,11 @@ public class UserServiceImp implements UserService {
         System.out.println(user.toString());
         return user.getId();
     }
+
+    public void changePassword(String password, User user){
+        user.setPassword(encoder.encode(password));
+        userRepository.save(user);
+    }
     public Optional<User> findById(int id){
         return userRepository.findById(id);
     }

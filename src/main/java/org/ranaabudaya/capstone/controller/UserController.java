@@ -4,18 +4,20 @@ package org.ranaabudaya.capstone.controller;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.ranaabudaya.capstone.dto.AdminDTO;
-import org.ranaabudaya.capstone.dto.BookingDTO;
-import org.ranaabudaya.capstone.dto.CleanerDTO;
-import org.ranaabudaya.capstone.dto.CustomerDTO;
-import org.ranaabudaya.capstone.entity.Services;
-import org.ranaabudaya.capstone.entity.User;
+import org.modelmapper.ModelMapper;
+import org.ranaabudaya.capstone.dto.*;
+import org.ranaabudaya.capstone.entity.*;
 import org.ranaabudaya.capstone.helper.AdminformWrapper;
 import org.ranaabudaya.capstone.helper.CustomerformWrapper;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,7 +29,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -52,8 +57,9 @@ public class UserController {
     private CustomerService customerService;
     private BookingService bookingService;
     private FileService fileService;
+    private BCryptPasswordEncoder encoder;
     @Autowired
-    public UserController(FileService fileService,BookingService bookingService,UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService,
+    public UserController(BCryptPasswordEncoder encoder,FileService fileService,BookingService bookingService,UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService,
                           AdminService adminService,CustomerService customerService) {
         this.userService = userDetailsService;
         this.servicesServiceImp = servicesServiceImp;
@@ -62,6 +68,7 @@ public class UserController {
         this.customerService  = customerService;
         this.bookingService=bookingService;
         this.fileService=fileService;
+        this.encoder =encoder;
     }
 
     @GetMapping("/")
@@ -306,7 +313,129 @@ public String addAdmin(Model model)
         return "login";
     }
 
+    @GetMapping("/profile/changePassword")
+    private String changePassword(Model model, Principal principal){
+        if(principal == null){
+
+            return "redirect:/login";
+        }
+        User user = userService.findUserByEmail(principal.getName());
+        model.addAttribute("user",user);
+
+        return "changePassword";
+
+    }
+    @PostMapping("/profile/changePassword/update")
+    private String changePasswordUpdate(@RequestParam("oldPassword") String oldPassword,
+                                        @RequestParam("newPassword") String newPassword,@RequestParam("matchingPassword") String matchingPassword,
+                                        Principal principal,
+                                        RedirectAttributes redirectAttributes,Model model){
+        if(oldPassword != null && !oldPassword.isEmpty() && newPassword != null && !newPassword.isEmpty()
+        && matchingPassword != null && !matchingPassword.isEmpty()) {
+            String username = principal.getName();
+            if(matchingPassword.equals(newPassword)) {
+                String result = this.changePassword(username, oldPassword, newPassword);
+
+                if (result.equals("success")) {
+                    redirectAttributes.addFlashAttribute("message", "Password changed successfully!");
+                    redirectAttributes.addFlashAttribute("alertType", "alert-success");
+
+                } else {
+                    redirectAttributes.addFlashAttribute("message", result);
+                    redirectAttributes.addFlashAttribute("alertType", "alert-danger");
+                    return "redirect:/profile/changePassword";
+                }
+            }else{
+                User user = userService.findUserByEmail(principal.getName());
+                model.addAttribute("user",user);
+                model.addAttribute("newPasswordError", "The new password fields must match");
+                return "changePassword";
+
+            }
+        }else{
+            redirectAttributes.addFlashAttribute("message", "All Fields are required");
+            redirectAttributes.addFlashAttribute("alertType", "alert-danger");
+            return "redirect:/profile/changePassword";
+        }
 
 
+        return "redirect:/profile";
+
+    }
+    public String changePassword(String username, String oldPassword, String newPassword) {
+        User user = userService.findUserByEmail(username);
+        if (user == null) {
+            return "User not found";
+        }
+        if (!encoder.matches(oldPassword, user.getPassword())) {
+            return "Old password is incorrect";
+        }
+
+        userService.changePassword(newPassword,user);
+        return "success";
+    }
+@GetMapping("/profile")
+    private String getProfile(Model model, Principal principal){
+    if(principal == null){
+
+        return "redirect:/login";
+    }
+
+    String username = principal.getName();
+
+    User user = userService.findUserByEmail(username);
+    user.setPassword("1234");
+    user.setMatchingPassword("1234");
+    model.addAttribute("user",user);
+    return "profile";
+
+}
+
+    @PostMapping("/profile/update")
+    private String setProfile(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult,Principal principal ,Model model, RedirectAttributes redirectAttrs){
+        System.out.println("here1");
+        String username = principal.getName();
+        System.out.println(username);
+        System.out.println(bindingResult.hasErrors());
+        if(bindingResult.hasErrors()){
+            System.out.println("here2");
+            return "profile";
+        }
+        System.out.println("here3");
+
+
+        User existUser = userService.findUserByEmail(username);
+        if(userService.findUserByEmail(userDTO.getEmail()) != null && userService.findUserByEmail(userDTO.getEmail()).getId() != existUser.getId())
+        {
+            model.addAttribute("duplicateEmail","Email is used in Homey" );
+            return "profile";
+        }
+        if(!existUser.getEmail().equals(userDTO.getEmail())){
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            List<GrantedAuthority> authorities = new ArrayList<>(auth.getAuthorities()); // copy the authorities
+            UserDetails newUserDetails = new org.springframework.security.core.userdetails.User(userDTO.getEmail(), existUser.getPassword(), authorities); // create a new UserDetails with the new email
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(newUserDetails, null, authorities); // create a new authentication token
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        }
+        ModelMapper modelMapper = new ModelMapper();
+        UserDTO newUser = modelMapper.map(userDTO, UserDTO.class);
+        newUser.setId(existUser.getId());
+        newUser.setPassword(existUser.getPassword());
+        newUser.setMatchingPassword(existUser.getMatchingPassword());
+        if(newUser.getFile() != null && !newUser.getFile().isEmpty()) {
+            fileService.uploadFile(newUser.getFile());
+            newUser.setPhoto(newUser.getFile().getOriginalFilename());
+        }else{
+            newUser.setPhoto(existUser.getPhoto());
+        }
+        newUser.setId(existUser.getId());
+        newUser.setPassword(existUser.getPassword());
+        int idUser =  userService.update(newUser);
+        redirectAttrs.addFlashAttribute("message", "your profile is updated successfully");
+        redirectAttrs.addFlashAttribute("alertType", "alert-success");
+
+        return "redirect:/profile";
+
+    }
 
 }

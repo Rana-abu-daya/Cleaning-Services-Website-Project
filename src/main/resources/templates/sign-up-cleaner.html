@@ -19,7 +19,8 @@
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-<div class="position-absolute w-100 min-height-300 top-0 background" th:style="'background-image: url(' + @{/assets/images/profile-layout-header.jpg} + ');'">
+<div class="position-absolute w-100 min-height-300 top-0 background" th:style="'background-image: url(' + @{/assets/images/profile-layout-header.jpg} + '); background-size: cover;
+        background-position-y: 50%;'">
     <span class="mask bg-primary opacity-6"></span>
 </div>
 <div class="main-content position-relative max-height-vh-100 h-100">
@@ -173,7 +174,7 @@
                                     <div class="col-12">
                                          <span  class="   badge-pill badge-danger" style="color:red " th:if="${#fields.hasErrors('cleanerDTO.services')}"
                                                 th:errors="*{cleanerDTO.services}"></span>
-                                        <table class="table table-bordered">
+                                        <table class="table ">
                                             <thead>
                                             <tr>
                                                 <th scope="col">Select Service</th>
