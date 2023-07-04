@@ -49,6 +49,11 @@ public class BookingController {
       this.bookingRepo =bookingRepo;
   }
 
+@GetMapping("/checkAvailability")
+public String checkAvailble(Model model) {
+
+        return "CheckArea";
+    }
 
 
     @GetMapping("/bookings")

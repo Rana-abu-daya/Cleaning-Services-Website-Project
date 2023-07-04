@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,500,700,900" rel="stylesheet">
+
+  <title>Homey</title>
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png"  th:href="@{/assets/images/Homey-Color.svg}">
+
+
+  <!-- Additional CSS Files -->
+  <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet"  type="text/css" />
+  <link th:href="@{/assets/css/font-awesome.css}" rel="stylesheet"  type="text/css" />
+  <link th:href="@{/assets/css/templatemo-softy-pinko.css}" rel="stylesheet"  type="text/css" />
+  <!--    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css">-->
+
+  <!--    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.css">-->
+
+  <!--    <link rel="stylesheet" href="../assets/css/templatemo-softy-pinko.css">-->
+
+</head>
+
+<body>
+
+<!-- ***** Preloader Start ***** -->
+<div id="preloader">
+  <div class="jumper">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<!-- ***** Preloader End ***** -->
+
+
+<!-- ***** Header Area Start ***** -->
+<th:block th:insert="parts/IndexNavBar.html :: header"></th:block>
+<!-- ***** Header Area End ***** -->
+
+
+<div class="welcome-area" id="welcome" >
+
+  <!-- ***** Header Text Start ***** -->
+  <div class="header-text " style="color: #000;"  >
+
+        <div class="offset-xl-3 col-xl-6 offset-lg-2 col-lg-8 col-md-12 col-sm-12">
+
+          <main class="main-content  mt-0">
+            <section style="margin:50px">
+              <div class="page-header min-vh-100">
+                <div class="container card" style="background-color:white;margin-top: 40rem;">
+                  <div class="row  justify-content-center">
+                    <div class="col-xl-12 col-lg-12 col-md-12 d-flex flex-column mx-lg-0 mx-auto">
+                      <div class=" card-plain">
+                        <div class="card-header pb-0 ">
+                          <h5 class="font-weight-bolder">We Apologize In Advance If Our Great Service Is Not Available In Your Area</h5>
+                          <p class="mb-0" style="color: #000;" >Enter your Zip code</p>
+                        </div>
+                        <div class="card-body"  style="margin:10px">
+                          <form role="form" id="myForm">
+                            <div class="mb-3">
+                              <input type="tel" class="form-control form-control-lg" placeholder="Zip Code"  id="zipCode" aria-label="zipCode">
+                            </div>
+
+                            <div class="mb-3" id="result" style="color:black">
+                            </div>
+                            <a href="#features" th:href="@{/booking}"class="main-button-slider" style="font-size:15px; display:none" id="newBooking">Book your Cleaner</a>
+
+                            <div class="text-center">
+                              <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Check</button>
+                            </div>
+                          </form>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </main>
+
+    </div>
+  </div>
+  <!-- ***** Header Text End ***** -->
+</div>
+<!-- ***** Header Area End ***** -->
+
+
+
+
+<script type="text/javascript" th:src="@{/assets/js/jquery-2.1.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/popper.js}"></script>
+
+<script type="text/javascript" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/scrollreveal.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/assets/js/waypoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/jquery.counterup.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/imgfix.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/script.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/custom.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/CheckAvailability.js}"></script>
+<script>
+  $(document).ready(function() {
+    $("#myForm").submit(function(event) {
+        // Stop form from submitting normally
+        event.preventDefault();
+        var zipcode = $("#zipCode").val();
+        if(!isValidZipCode(zipcode)){
+        alert("Invalid Zip Code Formate");
+        }
+
+        checkZipCode(zipcode).then(function(isWithinDistance){
+          var resultDiv = document.getElementById('result');
+    if(isWithinDistance) {
+        resultDiv.innerHTML = "<h6>The location is within 50 miles</h6>";
+        document.getElementById("newBooking").style.display = "block";
+    } else {
+        resultDiv.innerHTML = '<h6>Sorry, The location is more than 50 miles away</h6>';
+            document.getElementById("newBooking").style.display = "none";
+    }
+}).catch(function(error){
+    console.error('Error occurred: ' + error);
+    document.getElementById('result').innerHTML = 'An error occurred: ' + error;
+});
+
+
+
+});
+});
+
+
+</script>
+
+</body>
+</html>
