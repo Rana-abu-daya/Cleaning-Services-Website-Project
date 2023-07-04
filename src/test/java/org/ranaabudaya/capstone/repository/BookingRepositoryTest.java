@@ -3,6 +3,9 @@ package org.ranaabudaya.capstone.repository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.ranaabudaya.capstone.entity.Booking;
 import org.ranaabudaya.capstone.entity.Cleaner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -148,5 +152,21 @@ class BookingRepositoryTest {
         int serviceId = 1;
         long count = bookingRepository.countByServiceId(serviceId);
         assertEquals(1, count);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideStatusAndCleanerId")
+    public void testFindByStatusInAndCleanerId(List<Booking.BookingStatus> statusList, int cleanerId) {
+        List<Booking> bookings = bookingRepository.findByStatusInAndCleanerId(statusList, cleanerId);
+        assertEquals(1, bookings.size());
+    }
+
+    private static Stream<Arguments> provideStatusAndCleanerId() {
+        return Stream.of(
+                Arguments.of(Arrays.asList(Booking.BookingStatus.NEW), 1),
+                Arguments.of(Arrays.asList(Booking.BookingStatus.SUCCESS), 1),
+                Arguments.of(Arrays.asList( Booking.BookingStatus.CANCELLED), 1)
+        );
     }
 }
