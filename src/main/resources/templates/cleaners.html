@@ -75,6 +75,20 @@
 
                     </span></span>
 
+                        <span class="mb-2 text-xs">Rating:
+                      <div th:if="${cleaner.averageRating != 0.0}" class="stars">
+                                                            <span class="fa " th:classappend="${cleaner.averageRating >= 1} ? 'fa-star' : 'fa-star-o'" style="position: inherit;"></span>
+                                                            <span class="fa " th:classappend="${cleaner.averageRating >= 2} ? 'fa-star' : 'fa-star-o'"  style="position: inherit;"></span>
+                                                            <span class="fa " th:classappend="${cleaner.averageRating >= 3} ? 'fa-star' : 'fa-star-o'" style="position: inherit;"></span>
+                                                            <span class="fa " th:classappend="${cleaner.averageRating >= 4} ? 'fa-star' : 'fa-star-o'" style="position: inherit;"></span>
+                                                            <span class="fa " th:classappend="${cleaner.averageRating == 5} ? 'fa-star' : 'fa-star-o'" style="position: inherit;"></span>
+                                                    </div>
+ <div th:if="${cleaner.averageRating == 0.0}" class="stars">
+                                                            <span  style="position: inherit;">Not rated yet</span>
+                                                   </div>
+
+                                                </span>
+
 
 
                         <!--                    <span class="text-xs">VAT Number: <span class="text-dark ms-sm-2 font-weight-bold">FRB1235476</span></span>-->

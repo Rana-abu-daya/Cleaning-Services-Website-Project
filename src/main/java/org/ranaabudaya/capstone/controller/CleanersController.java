@@ -4,10 +4,9 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.ranaabudaya.capstone.dto.UserDTO;
-import org.ranaabudaya.capstone.entity.Admin;
-import org.ranaabudaya.capstone.entity.Booking;
-import org.ranaabudaya.capstone.entity.Services;
+import org.ranaabudaya.capstone.entity.*;
 import org.ranaabudaya.capstone.repository.CleanerRepository;
+import org.ranaabudaya.capstone.repository.ReviewRepository;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +25,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.ranaabudaya.capstone.entity.Cleaner;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -46,13 +44,15 @@ public class CleanersController {
     ServicesService servicesServiceImp;
     BookingService bookingService;
     UserService userService;
+    ReviewRepository reviewRepository;
     @Autowired
-    public CleanersController( BookingService bookingService,  CleanerRepository cleanerRepository,CleanerService cleanerService,    ServicesService servicesServiceImp, UserService userService) {
+    public CleanersController(ReviewRepository reviewRepository, BookingService bookingService,  CleanerRepository cleanerRepository,CleanerService cleanerService,    ServicesService servicesServiceImp, UserService userService) {
         this.cleanerService = cleanerService;
         this.servicesServiceImp = servicesServiceImp;
         this.userService=userService;
         this.cleanerRepository = cleanerRepository;
         this.bookingService=bookingService;
+        this.reviewRepository=reviewRepository;
     }
     Page<Cleaner> cleanersList ;
     @GetMapping("/cleaners")
@@ -66,6 +66,12 @@ public class CleanersController {
 
         }else{
             cleanersList = cleanerService.findAllCleanerPagination( pageable);
+        }
+
+        for (Cleaner cleaner : cleanersList) {
+            List<Review> reviews = reviewRepository.findByBookingCleanerId(cleaner.getId());
+            double averageRating = reviews.stream().mapToInt(Review::getRatingValue).average().orElse(0.0);
+            cleaner.setAverageRating(averageRating);
         }
 
         model.addAttribute("cleanersList", cleanersList);

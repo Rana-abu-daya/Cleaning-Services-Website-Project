@@ -8,6 +8,7 @@ import org.ranaabudaya.capstone.dto.CustomerDTO;
 import org.ranaabudaya.capstone.dto.MessageDTO;
 import org.ranaabudaya.capstone.entity.*;
 import org.ranaabudaya.capstone.helper.CustomerformWrapper;
+import org.ranaabudaya.capstone.repository.ReviewRepository;
 import org.ranaabudaya.capstone.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
@@ -34,14 +35,16 @@ public class mainController {
     UserService userService;
     BookingService bookingService;
     CustomerService customerService;
+    ReviewRepository reviewRepository;
     @Autowired
-    public mainController(CustomerService customerService,ServicesServiceImp servicesServiceImp,CleanerService cleanerService,
+    public mainController(ReviewRepository reviewRepository,CustomerService customerService,ServicesServiceImp servicesServiceImp,CleanerService cleanerService,
                           UserService userService,BookingService bookingService) {
         this.servicesServiceImp = servicesServiceImp;
         this.cleanerService=cleanerService;
         this.userService=userService;
         this.bookingService=bookingService;
         this.customerService =customerService;
+        this.reviewRepository=reviewRepository;
     }
 
     @Autowired
@@ -140,6 +143,12 @@ public class mainController {
                                     Model model){
         LocalDate bookingDate1 = LocalDate.parse(bookingDate);
         List<Cleaner> cleanersList= cleanerService.findAvailableCleanersForServiceAndTime(startTime,hours,bookingDate1,serviceId);
+        for (Cleaner cleaner : cleanersList) {
+            List<Review> reviews = reviewRepository.findByBookingCleanerId(cleaner.getId());
+            double averageRating = reviews.stream().mapToInt(Review::getRatingValue).average().orElse(0.0);
+            cleaner.setAverageRating(averageRating);
+        }
+
         model.addAttribute("cleanersList",  cleanersList);
         //System.out.println(cleanersList);
         return "CleanerDivForBooking";

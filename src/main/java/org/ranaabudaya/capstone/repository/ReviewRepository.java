@@ -12,4 +12,5 @@ public interface ReviewRepository extends JpaRepository<Review,Integer> {
     public Review findByBookingId(int bookingId);
     public  void deleteByBookingId(int bookingId);
     public List<Review> findTop3ByOrderByRatingValueDesc();
+    List<Review> findByBookingCleanerId(int cleanerId);
 }

@@ -47,4 +47,7 @@ public class Cleaner {
 
     private String resume;
 
+    @Transient
+    private Double averageRating;
+
 }

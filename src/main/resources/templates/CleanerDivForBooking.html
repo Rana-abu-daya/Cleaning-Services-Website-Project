@@ -26,11 +26,8 @@
       <label class="" th:for="${cleaner.id}" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}"></label>
     </td>
     <td style="display: inline-grid;">
-      <img th:src="@{/assets/img/marie.jpg}" class="navbar-brand-img" alt="main_logo" style="  width: 80px;height:80px;border-radius: 50%;">
+      <img th:src="${cleaner.user.photo != null} ? '/assets/uploads/'+${cleaner.user.photo} : '/assets/images/empty-photo.png'"  class="navbar-brand-img" alt="main_logo" style="  width: 80px;height:80px;border-radius: 50%;">
 
-      <span class="text-dark ">
-           5 ****
-        </span>
     </td>
     <td>
       <button type="button" class="btn btn-primary" data-toggle="modal"  th:attr="data-target='#exampleModal'+${cleaner.id}">
@@ -45,8 +42,37 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}">
+            <div class="modal-body">
+
+              <ul class="list-group">
+                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg" >
+                  <div class="d-flex flex-column">
+
+                    <h6 class="mb-3 text-sm" ></h6>
+                    <span class=" mb-2 text-xs">Cleaner name : <span class="text-dark ms-sm-2 font-weight-bold" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}"></span></span>
+                    <span class="mb-2 text-xs">About me: <span class="text-dark font-weight-bold ms-sm-2" th:text="${cleaner.about_me}"></span></span>
+                    <span class="mb-2 text-xs">Rating:
+                      <div th:if="${cleaner.averageRating != 0.0}" class="stars">
+                                                            <span class="fa " th:classappend="${cleaner.averageRating >= 1} ? 'fa-star' : 'fa-star-o'" style="position: inherit;"></span>
+                                                            <span class="fa " th:classappend="${cleaner.averageRating >= 2} ? 'fa-star' : 'fa-star-o'"  style="position: inherit;"></span>
+                                                            <span class="fa " th:classappend="${cleaner.averageRating >= 3} ? 'fa-star' : 'fa-star-o'" style="position: inherit;"></span>
+                                                            <span class="fa " th:classappend="${cleaner.averageRating >= 4} ? 'fa-star' : 'fa-star-o'" style="position: inherit;"></span>
+                                                            <span class="fa " th:classappend="${cleaner.averageRating == 5} ? 'fa-star' : 'fa-star-o'" style="position: inherit;"></span>
+                                                    </div>
+ <div th:if="${cleaner.averageRating == 0.0}" class="stars">
+                                                            <span  style="position: inherit;">Not rated yet</span>
+                                                   </div>
+
+                                                </span>
+
+                  </div>
+                </li>
+              </ul>
+
             </div>
+
+
+
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
