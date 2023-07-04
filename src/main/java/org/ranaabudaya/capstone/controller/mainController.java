@@ -118,9 +118,9 @@ public class mainController {
     public  String  dash(Model model){
         double total = bookingService.findTotalMony(Booking.BookingStatus.SUCCESS);
         model.addAttribute("total", total);
-        double totalCustomer = customerService.getAllActive().size();
+        int totalCustomer = customerService.getAllActive().size();
         model.addAttribute("totalCustomer", totalCustomer);
-        double newCleaners = cleanerService.findByIsActiveAndIsNew(false,true).size();
+        int newCleaners = cleanerService.findByIsActiveAndIsNew(false,true).size();
         model.addAttribute("newCleaners", newCleaners);
         List<Cleaner> cleaners = cleanerService.findTopCleaner();
         model.addAttribute("topCleaners", cleaners);

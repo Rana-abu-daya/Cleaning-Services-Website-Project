@@ -103,7 +103,13 @@ public class UserController {
         System.out.println(formWrapper.getUserDTO());
         System.out.println(formWrapper.getCleanerDTO());
         //System.out.println(Arrays.toString(services));
-
+        //upload resume
+        if (formWrapper.getCleanerDTO().getCv().isEmpty()|| formWrapper.getCleanerDTO().getCv() == null) {
+            List<Services> list =  servicesServiceImp.getAllActiveServices();
+            model.addAttribute("servicesList",list );
+            model.addAttribute("resume","Resume is required" );
+            return "sign-up-cleaner";
+        }
         if(userService.findUserByEmail(formWrapper.getUserDTO().getEmail()) != null)
         {  List<Services> list =  servicesServiceImp.getAllActiveServices();
             model.addAttribute("servicesList",list );
@@ -126,15 +132,8 @@ public class UserController {
             cleanerDTO.setActive(false);
             cleanerDTO.setNew(true);
 
-            //upload resume
-            if (cleanerDTO.getCv().isEmpty()) {
-                List<Services> list =  servicesServiceImp.getAllActiveServices();
-                model.addAttribute("servicesList",list );
-                model.addAttribute("resume","Resume is required" );
-                return "sign-up-cleaner";
-            }
 
-            model.addAttribute(cleanerDTO.getCv());
+
             // normalize the file path
             String fileName = StringUtils.cleanPath(cleanerDTO.getCv().getOriginalFilename());
             log.debug("File name {} " + fileName);

@@ -32,7 +32,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findByCustomerIdAndStatus(int customerId, Booking.BookingStatus status);
     Page<Booking> findByDateAndStatusAndCleanerAndCustomerId(LocalDate date, Booking.BookingStatus status, int cleaner, int customerId, Pageable pageable);
     Page<Booking> findByDateAndStatusAndCleanerId(LocalDate date, Booking.BookingStatus status, int cleanerId, Pageable pageable);
-    @Query("SELECT SUM(b.price * b.hours) FROM Booking b WHERE b.status = :status")
+    @Query("SELECT COALESCE(SUM(b.price * b.hours), 0) FROM Booking b WHERE b.status = :status")
     double findTotalMoney(Booking.BookingStatus status);
     Long countByServiceId(int serviceId);
 
