@@ -72,9 +72,9 @@ public class mainController {
     }
     @GetMapping(value = {"/home", "/homey","/index"})
     public String home(Model model){
-
         List<Review> reviews = reviewService.findTop3ByOrderByRatingValueDesc();
         model.addAttribute("reviews", reviews);
+        //System.out.println(reviews);
         model.addAttribute("messageDTO", new MessageDTO());
         return "index";
     }
@@ -122,6 +122,8 @@ public class mainController {
         model.addAttribute("totalCustomer", totalCustomer);
         int newCleaners = cleanerService.findByIsActiveAndIsNew(false,true).size();
         model.addAttribute("newCleaners", newCleaners);
+        int Allcleaners = cleanerService.getAll().size() - newCleaners;
+        model.addAttribute("totalCleaners", Allcleaners);
         List<Cleaner> cleaners = cleanerService.findTopCleaner();
         model.addAttribute("topCleaners", cleaners);
 

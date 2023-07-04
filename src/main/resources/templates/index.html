@@ -277,7 +277,7 @@
                             </div>
                            <p th:text="${review.comment}"></p>
                             <div class="user-image" style="  width: 80px;height: 80px;border-radius: 50%;">
-                                <img th:src="${review.booking.customer.user.photo != null} ? '/assets/uploads/'+${review.booking.customer.user.photo} : '../assets/images/empty-photo.png'" alt="User Photo"  class="navbar-brand-img" style="  width:80;height: 80px;"  >
+                                <img th:src="${review.booking.customer.user.photo != null} ? '../assets/uploads/'+${review.booking.customer.user.photo} : '../assets/images/empty-photo.png'" alt="User Photo"  class="navbar-brand-img" style="  width:80;height: 80px;"  >
                             </div>
                             <div class="team-info">
                                 <h3 th:text="${#strings.capitalize(review.booking.customer.user.firstName)}+' '+ ${#strings.capitalize(review.booking.customer.user.lastName)}" class="user-name"></h3>

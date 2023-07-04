@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+//This controller is an example of REST web sesrvices using Spring  Data REST
+//used Service entity
 @RestController
 @RequestMapping("/api")
 public class WebServiceController {

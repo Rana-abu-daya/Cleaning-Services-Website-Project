@@ -38,7 +38,7 @@ public class ReviewServiceImp implements ReviewService {
             existingReview.setComment(reviewDTO.getComment());
             existingReview.setRatingValue(reviewDTO.getRatingValue());
             existingReview.setBooking(existingReview.getBooking());
-            reviewRepository.save(review);
+            reviewRepository.save(existingReview);
         }else {
             Booking booking = bookingService.findBookingById(reviewDTO.getBookingId()).orElse(null);
             review.setBooking(booking);

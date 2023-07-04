@@ -212,8 +212,10 @@ public class CleanersController {
             userDTO.setRoleName("ROLE_CLEANER");
             userDTO.setId(existCleaner.get().getUser().getId());
             userDTO.setPassword(existCleaner.get().getUser().getPassword());
+            userDTO.setPhoto(existCleaner.get().getUser().getPhoto());
             int idUser =  userService.update(userDTO);
             cleaner.setUser(userService.findById(idUser).get());
+            cleaner.setResume(existCleaner.get().getResume());
             List<Integer> canChangeService = cleanerService.checkUpdatedServices(id,  cleaner.getServices());
             if(!canChangeService.isEmpty()){
                 Collection<Services> newServices =  cleaner.getServices();
@@ -240,6 +242,7 @@ public class CleanersController {
                     return "redirect:/cleaners";
                 }
             }
+
             cleanerRepository.save(cleaner);
             redirectAttrs.addFlashAttribute("message", "Cleaner is updated successfully");
             redirectAttrs.addFlashAttribute("alertType", "alert-success");

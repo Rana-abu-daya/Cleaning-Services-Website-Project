@@ -107,7 +107,7 @@ public class ReviewController {
         }
         model.addAttribute("reviewDTO", new ReviewDTO());
 
-        return "BookingReviews";
+        return "Booking-Reviews";
     }
 
     @GetMapping("/rating/{id}")
@@ -142,15 +142,12 @@ public class ReviewController {
     @ResponseBody
     public String[] addRating(@PathVariable("id") int id, @Valid @ModelAttribute("review") ReviewDTO reviewDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {
          if(bookingService.findBookingById(id).get().getStatus().equals(Booking.BookingStatus.SUCCESS)) {
-             if (reviewDTO.getComment() != null || reviewDTO.getComment().isEmpty()
-                     || reviewDTO.getRatingValue() != 0) {
+             if ((reviewDTO.getComment() != null || reviewDTO.getComment().isEmpty())
+                    && reviewDTO.getRatingValue() != 0) {
                  if (reviewService.findBookingById(id) != null) {
-                    // reviewService.deleteByBookingId(id);
+                     //reviewService.deleteByBookingId(id);
                      reviewDTO.setBookingId(id);
                      System.out.println(reviewDTO.getRatingValue() + reviewDTO.getBookingId()+reviewDTO.getComment());
-                     reviewDTO.setBookingId(id);
-                     System.out.println(reviewDTO.getRatingValue() + reviewDTO.getBookingId()+reviewDTO.getComment());
-
                      reviewService.create(reviewDTO);
                      String arr[] = new String[4];
                      arr[0] = "Thanks for your Review, your old review was deleted";
@@ -170,7 +167,6 @@ public class ReviewController {
                      html.append("</div>");
                      arr[2]=html.toString();
                      arr[3]=id+"";
-
                      return arr;
                  } else {
                      reviewDTO.setBookingId(id);
