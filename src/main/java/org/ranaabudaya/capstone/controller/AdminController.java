@@ -19,6 +19,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -95,7 +101,7 @@ public class AdminController {
         return "edit-admin";
     }
     @PostMapping("/admins/updateAdmin/{id}")
-    public String updateServices(@PathVariable("id") int id, @Valid @ModelAttribute ("admin") Admin admin, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {
+    public String updateServices(@PathVariable("id") int id, @Valid @ModelAttribute ("admin") Admin admin, BindingResult bindingResult, Model model,Principal principal ,RedirectAttributes redirectAttrs) {
         System.out.println(admin.toString());
         System.out.println(admin.getUser().toString());
         if(bindingResult.hasErrors())
@@ -110,6 +116,8 @@ public class AdminController {
         Optional<Admin> admin1 = adminService.findAdminById(id);
         if (admin1.isPresent()) {
 
+
+
             if(userService.findUserByEmail(admin.getUser().getEmail()) != null && userService.findUserByEmail(admin.getUser().getEmail()).getId() != admin1.get().getUser().getId())
             {
                 model.addAttribute("duplicateEmail","Email is used in Homey" );
@@ -121,9 +129,17 @@ public class AdminController {
             userDTO.setRoleName("ROLE_ADMIN");
             userDTO.setId(admin1.get().getUser().getId());
             userDTO.setPassword(admin1.get().getUser().getPassword());
+            boolean logged= admin1.get().getUser().getEmail().equals(principal.getName());
+
            int idUser =  userService.update(userDTO);
             admin.setUser(userService.findById(idUser).get());
-
+           if(logged){
+               Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+               List<GrantedAuthority> authorities = new ArrayList<>(auth.getAuthorities()); // copy the authorities
+               UserDetails newUserDetails = new org.springframework.security.core.userdetails.User(userDTO.getEmail(), admin1.get().getUser().getPassword(), authorities); // create a new UserDetails with the new email
+               Authentication newAuth = new UsernamePasswordAuthenticationToken(newUserDetails, null, authorities); // create a new authentication token
+               SecurityContextHolder.getContext().setAuthentication(newAuth);
+           }
             adminRepository.save(admin);
             redirectAttrs.addFlashAttribute("message", "Admin is updated successfully");
             redirectAttrs.addFlashAttribute("alertType", "alert-success");

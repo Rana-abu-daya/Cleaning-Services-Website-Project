@@ -93,7 +93,7 @@ text-align:left;}
                       <div class="form-group" style="display:flex; align-items: center; ">
                         <label for="serviceId" class="form-control-label col-4" style="margin-right: 10px;">Select your Service<span style="color:red;">*</span></label>
                         <select class="form-control form-select col-8" id="serviceId" name="serviceId" >
-                          <option th:each="service : ${myServicesList}" th:value="${service.id}" th:text="${service.name}"></option>
+                          <option th:each="service : ${myServicesList}" th:value="${service.id}" th:text="${service.name}" th:selected="${service.id == id}"></option>
 
 <!--                          <option>regular cleaning</option>-->
 <!--                          <option>deep cleaning</option>-->

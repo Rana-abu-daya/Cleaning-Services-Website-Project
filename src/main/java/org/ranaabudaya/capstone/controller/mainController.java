@@ -131,7 +131,8 @@ public class mainController {
     }
 
     @GetMapping(value = {"/booking"})
-    public  String  booking(Model model){
+    public  String  booking(Model model,@RequestParam(defaultValue = "0") int id){
+        model.addAttribute("id",id);
         model.addAttribute("Booking", new BookingDTO());
 
         return "Booking";

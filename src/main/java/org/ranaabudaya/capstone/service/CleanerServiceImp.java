@@ -94,6 +94,9 @@ public class CleanerServiceImp implements CleanerService{
     public List<Cleaner>  findAvailableCleanersForServiceAndTime(String startTime, int hours, LocalDate bookingDate, int serviceId){
        return cleanerRepository.findAvailableCleanersForServiceAndTime(startTime,hours,bookingDate,serviceId);
     }
+    public Optional<Cleaner>getCleanerById(int id){
+       return cleanerRepository.findById(id);
+    }
 
     public List<Integer> checkUpdatedServices(int id,  Collection<Services> newServices){
         Cleaner cleaner = this.findCleanerById(id).get();
