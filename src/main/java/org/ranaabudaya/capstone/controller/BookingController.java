@@ -207,21 +207,31 @@ public String checkAvailble(Model model) {
 
 
     @GetMapping("/bookings/edit-booking/{id}")
-    public String editBookingbyId(@PathVariable("id") int id, Model model) {
-        Booking booking=bookingService.findBookingById(id).get();
-        System.out.println(booking);
-        List<Services> services = servicesService.getAllActiveServices();
-        model.addAttribute("services", services);
-        Instant instant = booking.getDate().toInstant();
-        ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
-        LocalDate localDate = zdt.toLocalDate();
-        System.out.println(localDate);
-        List<Cleaner> cleaners = cleanerService.findAvailableCleanersForServiceAndTime(booking.getStartTime(),booking.getHours(),localDate,booking.getService().getId());
-        cleaners.add(booking.getCleaner());
-        model.addAttribute("cleaners", cleaners);
-        model.addAttribute("booking", booking);
-        model.addAttribute("id", id);
-        return "edit-booking";
+    public String editBookingbyId(@PathVariable("id") int id, Model model,Principal principal) {
+        if(principal == null){
+
+            return "redirect:/login";
+        }
+        String username = principal.getName();
+        User user = userService.findUserByEmail(username);
+        Booking booking = bookingService.findBookingById(id).get();
+        if((user.hasRole("ROLE_CLIENT") && booking.getCustomer().getUser().getId() != user.getId()) || user.hasRole("ROLE_ADMIN") ) {
+            System.out.println(booking);
+            List<Services> services = servicesService.getAllActiveServices();
+            model.addAttribute("services", services);
+            Instant instant = booking.getDate().toInstant();
+            ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+            LocalDate localDate = zdt.toLocalDate();
+            System.out.println(localDate);
+            List<Cleaner> cleaners = cleanerService.findByIsActiveAndIsNew(true, false);
+            // cleaners.add(booking.getCleaner());
+            model.addAttribute("cleaners", cleaners);
+            model.addAttribute("booking", booking);
+            model.addAttribute("id", id);
+            return "edit-booking";
+        }else{
+            return "redirect:/bookings";
+        }
     }
 
     @PostMapping("/bookings/updateBooking/{id}")
