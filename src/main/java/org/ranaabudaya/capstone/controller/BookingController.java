@@ -215,7 +215,7 @@ public String checkAvailble(Model model) {
         String username = principal.getName();
         User user = userService.findUserByEmail(username);
         Booking booking = bookingService.findBookingById(id).get();
-        if((user.hasRole("ROLE_CLIENT") && booking.getCustomer().getUser().getId() != user.getId()) || user.hasRole("ROLE_ADMIN") ) {
+        if((user.hasRole("ROLE_CLIENT") && booking.getCustomer().getUser().getId() == user.getId()) || user.hasRole("ROLE_ADMIN") ) {
             System.out.println(booking);
             List<Services> services = servicesService.getAllActiveServices();
             model.addAttribute("services", services);
