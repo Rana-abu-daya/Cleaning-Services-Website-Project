@@ -169,7 +169,7 @@ public class mainController {
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication()+"ROLE_ANONYMOUS");
         if (authentication != null && authentication.isAuthenticated()
                 && !authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ANONYMOUS"))) {
 
@@ -221,7 +221,7 @@ public class mainController {
 
     @RequestMapping("/login-process")
     public String handleSuccessfulLogin(HttpSession session,Authentication authentication) {
-        System.out.println(authentication);
+        System.out.println(session.getAttributeNames());
 
         // Retrieve the pending booking from session or cookie
         if (authentication != null) {

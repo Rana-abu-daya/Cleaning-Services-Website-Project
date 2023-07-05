@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         (auth) -> auth
                                 .requestMatchers("/", "/login*","/home","/homey","/checkAvailability","/bookings",
-                                       "/assets/**", "/css/**", "/js/**", "/sign-up", "/signup-process","/index","/booking","/message/add","/cleaners/sign-up","/cleaners/signup-process","/customers/sign-up","/customers/signup-process").permitAll()
+                                       "/assets/**", "/css/**", "/js/**", "/sign-up", "/signup-process","/index","/booking","/booking/**","/message/add","/cleaners/sign-up","/cleaners/signup-process","/customers/sign-up","/customers/signup-process","/bookings/add-booking").permitAll()
                                 .requestMatchers("/profile","/profile/**","/dashboard","/dashboard/**","/reviews","/bookings").authenticated()
                                 .requestMatchers("/bookings/edit-booking/**","/bookings/updateBooking/**").hasAnyRole("CLIENT","ADMIN")
                                 .requestMatchers("/admins", "/admins/**"

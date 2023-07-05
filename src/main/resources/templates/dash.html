@@ -85,7 +85,7 @@
     </div>
   </div>
 </div>
-<div sec:authorize="hasRole('ROLE_CLIENT')" class="row mt-4">
+<div  sec:authorize="!hasRole('ROLE_CLEANER')" class="row mt-4">
   <div class="col-lg-7 mb-lg-0 mb-4">
     <div class="card ">
       <div class="card-header pb-0 p-3">
