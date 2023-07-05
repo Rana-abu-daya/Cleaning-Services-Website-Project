@@ -40,9 +40,15 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         (auth) -> auth
-                                .requestMatchers("/", "/login*",
-                                        "/css/*", "/js/*", "/sign-up", "/signup-process","/**").permitAll()
-                                .requestMatchers("/").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/", "/login*","/home","/homey","/checkAvailability","/bookings",
+                                       "/assets/**", "/css/**", "/js/**", "/sign-up", "/signup-process","/index","/booking","/message/add","/cleaners/sign-up","/cleaners/signup-process","/customers/sign-up","/customers/signup-process").permitAll()
+                                .requestMatchers("/profile","/profile/**","/dashboard","/dashboard/**","/reviews","/bookings").authenticated()
+                                .requestMatchers("/bookings/edit-booking/**","/bookings/updateBooking/**").hasAnyRole("CLIENT","ADMIN")
+                                .requestMatchers("/admins", "/admins/**"
+                                ,"/cleaners", "/cleaners/**","/customers", "/customers/**","/services","/services/**","/admins/sign-up","/admins/signup-process",
+                                              "/api","/api/**","/customers/admin/sign-up","/customers/admin/signup-process").hasAnyRole( "ADMIN")
+                                .requestMatchers("/bookings/start/**").hasAnyRole( "CLEANER")
+                                .requestMatchers( "/rating/**").hasAnyRole( "CLIENT")
                                 .anyRequest().authenticated()
                 )
                 .formLogin(

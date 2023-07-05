@@ -251,10 +251,16 @@ public String checkAvailble(Model model) {
             if(existbooking.get().getStatus().equals(Booking.BookingStatus.NEW)) {
                 // Get old booking
                 Booking oldBooking = existbooking.get();
+                LocalDate oldBookingLocalDate = oldBooking.getDate().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+                LocalDate newBookingLocalDate = booking.getDate().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
 
                 // If cleaner, time, or hours have changed
                 if (!oldBooking.getCleaner().equals(booking.getCleaner()) ||
-                        !oldBooking.getStartTime().equals(booking.getStartTime()) || !oldBooking.getDate().equals(booking.getDate()) ||
+                        !oldBooking.getStartTime().equals(booking.getStartTime()) || !oldBookingLocalDate.equals(newBookingLocalDate) ||
                         !(oldBooking.getHours() == (booking.getHours()))) {
 
                     Instant instant = booking.getDate().toInstant();
@@ -276,14 +282,15 @@ public String checkAvailble(Model model) {
                         List<Services> services = servicesService.getAllActiveServices();
                         redirectAttrs.addFlashAttribute("services", services);
                         redirectAttrs.addFlashAttribute("booking", oldBooking);
-                        redirectAttrs.addFlashAttribute("message", "The selected cleaner is not available at the requested time.");
+                        redirectAttrs.addFlashAttribute("message", "The selected cleaner is not available at the requested time or the cleaner may not provide this service.");
                         redirectAttrs.addFlashAttribute("alertType", "alert-danger");
                         return "redirect:/bookings/edit-booking/" + booking.getId();
                     }
 
+
                     // If cleaner is the same as old cleaner, check if they would still be available for new time and service
                     if (oldBooking.getCleaner().equals(booking.getCleaner()) &&
-                            oldBooking.getStartTime().equals(booking.getStartTime()) && oldBooking.getDate().equals(booking.getDate()) &&
+                            oldBooking.getStartTime().equals(booking.getStartTime()) && oldBookingLocalDate.equals(newBookingLocalDate) &&
                             (oldBooking.getHours() == (booking.getHours()))){
 
                         //do nothing
