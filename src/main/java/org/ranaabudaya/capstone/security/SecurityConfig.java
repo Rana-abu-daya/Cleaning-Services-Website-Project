@@ -42,8 +42,8 @@ public class SecurityConfig {
                         (auth) -> auth
                                 .requestMatchers("/", "/login*",
                                         "/css/*", "/js/*", "/sign-up", "/signup-process","/**").permitAll()
-//                                .requestMatchers("/").hasAnyRole("USER", "ADMIN")
-//                                .anyRequest().authenticated()
+                                .requestMatchers("/").hasAnyRole("USER", "ADMIN")
+                                .anyRequest().authenticated()
                 )
                 .formLogin(
                         form -> form

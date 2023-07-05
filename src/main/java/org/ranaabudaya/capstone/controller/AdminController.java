@@ -129,6 +129,7 @@ public class AdminController {
             userDTO.setRoleName("ROLE_ADMIN");
             userDTO.setId(admin1.get().getUser().getId());
             userDTO.setPassword(admin1.get().getUser().getPassword());
+            userDTO.setPhoto(admin1.get().getUser().getPhoto());
             boolean logged= admin1.get().getUser().getEmail().equals(principal.getName());
 
            int idUser =  userService.update(userDTO);

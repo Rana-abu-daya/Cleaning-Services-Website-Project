@@ -151,6 +151,7 @@ public class CustomerController {
             userDTO.setRoleName("ROLE_CLIENT");
             userDTO.setId(customer1.get().getUser().getId());
             userDTO.setPassword(customer1.get().getUser().getPassword());
+            userDTO.setPhoto(customer1.get().getUser().getPhoto());
             int idUser =  userService.update(userDTO);
             customer.setUser(userService.findById(idUser).get());
 
