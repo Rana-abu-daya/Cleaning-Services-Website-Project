@@ -29,13 +29,13 @@ import java.util.Optional;
 @Controller
 @Slf4j
 public class CustomerController {
-
+    // Instance variables
     CustomerRepository customerRepository;
     CustomerService customerService;
     UserService userService;
     BookingRepository bookingRepository;
     BookingService bookingService;
-
+    // Constructor for dependency injection
     @Autowired
     public CustomerController(BookingService bookingService, BookingRepository bookingRepository,CustomerRepository customerRepository,CustomerService customerService, UserService userService){
         this.customerRepository = customerRepository;
@@ -44,7 +44,7 @@ public class CustomerController {
         this.bookingRepository=bookingRepository;
         this.bookingService =bookingService;
     }
-
+    // Method to get all customers with pagination
     @GetMapping("/customers")
     private String AllCustomer(Model model, @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5); // get 5 items per page
@@ -55,6 +55,7 @@ public class CustomerController {
 
         return "customers";
     }
+    //Method to get all deleted customers
     @GetMapping("/customers/deletedCustomer")
     private String AllDeletedCustomer(Model model, @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5); // get 5 items per page
@@ -65,7 +66,7 @@ public class CustomerController {
 
         return "DeletedCustomers";
     }
-
+//Method for activating the deleted customer by ID
     @GetMapping("/customers/deletedCustomer/activate/{id}")
     @ResponseBody
     public String[] activateCustomerById(@PathVariable("id") int id, Model model) {
@@ -85,6 +86,9 @@ public class CustomerController {
         }
 
     }
+    //Method for deleting customers by id
+    //if there are customers related to bookings will be converted to deleted customers
+    //otherwise will be deleted from the database
     @GetMapping("/customers/delete/{id}")
     @ResponseBody
     public String[] deleteCustomerById(@PathVariable("id") int id, Model model) {
@@ -118,6 +122,7 @@ public class CustomerController {
         }
 
     }
+    // Method to get a customer by their ID for editing
     @GetMapping("/customers/edit-customer/{id}")
     public String editAdminbyId(@PathVariable("id") int id, Model model) {
         Optional<Customer> customer = customerService.findCustomerById(id);
@@ -125,6 +130,7 @@ public class CustomerController {
         model.addAttribute("id", id);
         return "edit-customer";
     }
+    // Method to process the edit
     @PostMapping("/customers/updateCustomer/{id}")
     public String updateServices(@PathVariable("id") int id, @Valid @ModelAttribute("customer") Customer customer, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {
         System.out.println(customer.toString());

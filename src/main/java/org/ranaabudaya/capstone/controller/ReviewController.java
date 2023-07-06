@@ -45,6 +45,11 @@ public class ReviewController {
         this.customerService =customerService;
         this.cleanerService=cleanerService;
     }
+    // Method to get all reviews with pagination
+    //this get the reviews according to the roles
+    //if Admin all reviews
+    //if cleaner -- the reviews of the bookings that are assigned to this cleaner
+    //if client -- the reviews of the bookings that are created by this client
     @GetMapping("/reviews")
     public String reviews(Model model, Principal principal,@RequestParam(defaultValue = "0") int page) {
         if(principal == null){
@@ -111,6 +116,7 @@ public class ReviewController {
 
         return "Booking-Reviews";
     }
+    //form of the rate
 
     @GetMapping("/rating/{id}")
     public String rating(@PathVariable("id") int id, Model model) {
@@ -120,7 +126,7 @@ public class ReviewController {
         return "review";
     }
 
-
+//add the messages from home page
     @PostMapping("/message/add")
     public String messageadd(@Valid @ModelAttribute ("messageDTO") MessageDTO messageDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {
 
@@ -140,6 +146,8 @@ public class ReviewController {
         return "redirect:/index";
 
     }
+
+    //add review or edit the existed one
     @PostMapping("/rating/add/{id}")
     @ResponseBody
     public String[] addRating(@PathVariable("id") int id, @Valid @ModelAttribute("review") ReviewDTO reviewDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {

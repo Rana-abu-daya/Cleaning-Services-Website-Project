@@ -33,7 +33,7 @@ import java.util.Optional;
 @Controller
 @Slf4j
 public class BookingController {
-
+    // Instance variables
   BookingService bookingService ;
     UserService userService;
     CleanerService cleanerService;
@@ -41,6 +41,8 @@ public class BookingController {
     ServicesService servicesService;
     BookingRepository bookingRepo;
 
+
+    // Constructor for dependency injection
   @Autowired
   public BookingController(BookingRepository bookingRepo,ServicesService servicesService,CustomerService customerService,CleanerService cleanerService,BookingService bookingService,   UserService userService){
       this.bookingService= bookingService;
@@ -50,14 +52,19 @@ public class BookingController {
       this.servicesService=servicesService;
       this.bookingRepo =bookingRepo;
   }
-
+    // Method to check availability to use APi by javascript to
+    // check the distence if within 50 miles or not
 @GetMapping("/checkAvailability")
 public String checkAvailble(Model model) {
 
         return "CheckArea";
     }
 
-
+    // Method to get all bookings with pagination and filters
+    //this get the booking according to the roles
+    //if Admin all bookings
+    //if cleaner -- the bookings that are assigned to this cleaner
+    //if client -- the bookings that are created by this client
     @GetMapping("/bookings")
     public String bookingList(Model model, Principal principal , @RequestParam(defaultValue = "0") int page,@RequestParam(required = false) String date, @RequestParam(required = false) Booking.BookingStatus status, @RequestParam(required = false) Integer cleanerId) {
         // Get the logged-in user's username (which is the user ID)
@@ -126,6 +133,9 @@ public String checkAvailble(Model model) {
 
         return "bookings";
     }
+
+    // Method to start a booking by its ID
+    //the status will change from new to in_progress
     @GetMapping("/bookings/start/{id}")
     @ResponseBody
     public String[] startBookingbyId(@PathVariable("id") int id, Model model) {
@@ -152,7 +162,8 @@ public String checkAvailble(Model model) {
         }
 
     }
-
+    // Method to complete a booking by its ID
+    //the status will change from in_progress to success
     @GetMapping("/bookings/done/{id}")
     @ResponseBody
     public String[] doneBookingbyId(@PathVariable("id") int id, Model model) {
@@ -179,6 +190,9 @@ public String checkAvailble(Model model) {
         }
 
     }
+
+    // Method to delete a booking by its ID
+    //the status will delete new bookings -- status change to canclled
     @GetMapping("/bookings/delete/{id}")
     @ResponseBody
     public String[] deleteBookingbyId(@PathVariable("id") int id, Model model) {
@@ -206,7 +220,7 @@ public String checkAvailble(Model model) {
 
     }
 
-
+    // Method to get a booking by its ID for editing
 
     @GetMapping("/bookings/edit-booking/{id}")
     public String editBookingbyId(@PathVariable("id") int id, Model model,Principal principal) {
@@ -237,7 +251,9 @@ public String checkAvailble(Model model) {
             return "redirect:/bookings";
         }
     }
-
+    // Method to process edit booking
+    //check if the cleaner seleted provide this service
+    //check the time slot and date availbility
     @PostMapping("/bookings/updateBooking/{id}")
     public String updateServices(@PathVariable("id") int id, @Valid @ModelAttribute("booking") Booking booking, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {
         System.out.println(booking.getDate());

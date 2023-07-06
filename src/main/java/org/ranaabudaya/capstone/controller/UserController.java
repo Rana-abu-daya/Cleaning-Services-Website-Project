@@ -58,6 +58,7 @@ public class UserController {
     private BookingService bookingService;
     private FileService fileService;
     private BCryptPasswordEncoder encoder;
+    // Constructor for dependency injection
     @Autowired
     public UserController(BCryptPasswordEncoder encoder,FileService fileService,BookingService bookingService,UserService userDetailsService, ServicesService servicesServiceImp , CleanerService cleanerService,
                           AdminService adminService,CustomerService customerService) {
@@ -70,7 +71,7 @@ public class UserController {
         this.fileService=fileService;
         this.encoder =encoder;
     }
-
+//login
     @GetMapping("/")
     private String redirectToLogin()
     {
@@ -88,7 +89,7 @@ public class UserController {
 //        model.addAttribute("cleanerDTO", new CleanerDTO());
         return "sign-up-cleaner";
     }
-
+//process the sign up for cleaners
     @PostMapping("/cleaners/signup-process")
     public String signupProcess(@Valid @ModelAttribute ("formWrapper") FormWrapper formWrapper, BindingResult bindingResult
     ,  Model model, RedirectAttributes redirectAttrs, HttpSession session) throws IOException {
@@ -160,7 +161,7 @@ public String addAdmin(Model model)
 //        model.addAttribute("cleanerDTO", new CleanerDTO());
     return "sign-up-admin";
 }
-
+    //process the addition of the Admin
     @PostMapping("/admins/signup-process")
     public String signupProcessAdmin(@Valid @ModelAttribute ("AdminForm") AdminformWrapper AdminForm, BindingResult bindingResult
             ,  Model model, RedirectAttributes redirectAttrs)
@@ -202,7 +203,7 @@ public String addAdmin(Model model)
         }
     }
 
-    //Add Client
+    //Add Client by the client
     @GetMapping("/customers/sign-up")
     public String addCustomer(Model model)
     {
@@ -210,6 +211,7 @@ public String addAdmin(Model model)
 
         return "sign-up-customer";
     }
+    //Add Client by the admin
     @GetMapping("/customers/admin/sign-up")
     public String addCustomerAdmin(Model model)
     {
@@ -217,6 +219,7 @@ public String addAdmin(Model model)
 
         return "newCustomer";
     }
+    //process the addition of the client by admin
     @PostMapping("/customers/admin/signup-process")
     public String signupProcessCustomerByAdmin(@Valid @ModelAttribute ("Customerform") CustomerformWrapper Customerform, BindingResult bindingResult
             , Model model, RedirectAttributes redirectAttrs) throws Exception
@@ -252,7 +255,7 @@ public String addAdmin(Model model)
             return "redirect:/customers";
         }
     }
-
+//process the client sign up
     @PostMapping("/customers/signup-process")
     public String signupProcessCustomer(@Valid @ModelAttribute ("Customerform") CustomerformWrapper Customerform, BindingResult bindingResult
             , Model model, RedirectAttributes redirectAttrs, HttpSession session)
@@ -311,7 +314,7 @@ public String addAdmin(Model model)
         log.info("Login page displayed");
         return "login";
     }
-
+//change the password form
     @GetMapping("/profile/changePassword")
     private String changePassword(Model model, Principal principal){
         if(principal == null){
@@ -324,6 +327,7 @@ public String addAdmin(Model model)
         return "changePassword";
 
     }
+    //process the change password
     @PostMapping("/profile/changePassword/update")
     private String changePasswordUpdate(@RequestParam("oldPassword") String oldPassword,
                                         @RequestParam("newPassword") String newPassword,@RequestParam("matchingPassword") String matchingPassword,
@@ -361,6 +365,7 @@ public String addAdmin(Model model)
         return "redirect:/profile";
 
     }
+    //helper for changing password
     public String changePassword(String username, String oldPassword, String newPassword) {
         User user = userService.findUserByEmail(username);
         if (user == null) {
@@ -373,6 +378,8 @@ public String addAdmin(Model model)
         userService.changePassword(newPassword,user);
         return "success";
     }
+
+    //get the profile of the logged in user
 @GetMapping("/profile")
     private String getProfile(Model model, Principal principal){
     if(principal == null){
@@ -390,7 +397,7 @@ public String addAdmin(Model model)
     return "profile";
 
 }
-
+//update the profile changes
     @PostMapping("/profile/update")
     private String setProfile(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult,Principal principal ,Model model, RedirectAttributes redirectAttrs){
         System.out.println("here1");

@@ -59,7 +59,7 @@ public class ServicesController {
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
-
+//get all the services with pagination
     @GetMapping("/services")
     public String servicesListView(Model model, @RequestParam(defaultValue = "0") int page) {
             Pageable pageable = PageRequest.of(page, 5); // get 5 items per page
@@ -75,7 +75,7 @@ public class ServicesController {
 
         return "newService";
     }
-
+//process the add of the service
     @PostMapping("/saveService")
     public String saveService(@Valid @ModelAttribute ("service") ServicesDTO serviceDTO, BindingResult bindingResult, RedirectAttributes redirectAttrs,Model model){
         System.out.println(serviceDTO);
@@ -103,7 +103,7 @@ public class ServicesController {
         return "redirect:/services/services";
 
     }
-
+//delete free servicse by id
     @GetMapping("/delete/{id}")
     @ResponseBody
     public String[] deleteServicebyId(@PathVariable("id") int id) {
@@ -140,6 +140,7 @@ public class ServicesController {
 
        }
     }
+    //get the service by id for editing
     @GetMapping("/edit-service/{id}")
     public String editServicebyId(@PathVariable("id") int id, Model model) {
         Optional<Services> s = servicesServiceImp.getServiceById(id);
@@ -148,7 +149,7 @@ public class ServicesController {
 
         return "edit-service";
     }
-
+//process the edit service
     @PostMapping("/updateService/{id}")
     public String updateServices(@PathVariable("id") int id, @Valid @ModelAttribute ("service") ServicesDTO serviceDTO, BindingResult bindingResult,Model model,RedirectAttributes redirectAttrs) {
 

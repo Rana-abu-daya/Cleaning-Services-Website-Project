@@ -39,12 +39,15 @@ import java.util.*;
 @Controller
 @Slf4j
 public class CleanersController {
+    // Instance variables
     CleanerRepository cleanerRepository;
     CleanerService cleanerService;
     ServicesService servicesServiceImp;
     BookingService bookingService;
     UserService userService;
     ReviewRepository reviewRepository;
+
+    // Constructor for dependency injection
     @Autowired
     public CleanersController(ReviewRepository reviewRepository, BookingService bookingService,  CleanerRepository cleanerRepository,CleanerService cleanerService,    ServicesService servicesServiceImp, UserService userService) {
         this.cleanerService = cleanerService;
@@ -55,6 +58,7 @@ public class CleanersController {
         this.reviewRepository=reviewRepository;
     }
     Page<Cleaner> cleanersList ;
+    // Method to get all cleaners with pagination
     @GetMapping("/cleaners")
     private String AllCleaners(Model model, @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "0") String active) {
         Pageable pageable = PageRequest.of(page, 5);
@@ -78,7 +82,7 @@ public class CleanersController {
         model.addAttribute("currentPage", page);
         return "cleaners";
     }
-
+    // Method to get new cleaners with pagination to approved
     @GetMapping("/cleaners/newCleaners")
     private String newCleaners(Model model, @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5);
@@ -88,6 +92,7 @@ public class CleanersController {
         return "newCleaners";
     }
 
+    // Method to delete a cleaner by their ID if their is no bookings related to this cleaner
     @GetMapping("/cleaners/delete/{id}")
     @ResponseBody
     public String[] deleteCleanerbyId(@PathVariable("id") int id, Model model) {
@@ -127,6 +132,7 @@ public class CleanersController {
         }
 
     }
+    // Method to get a cleaner by their ID for editing
     @GetMapping("/cleaners/edit-cleaner/{id}")
     public String editCleanerbyId(@PathVariable("id") int id, Model model) {
         Optional<Cleaner> cleaner = cleanerService.findCleanerById(id);
@@ -137,6 +143,7 @@ public class CleanersController {
         return "edit-cleaner";
     }
 
+    // Method to approve a cleaner by their ID
     @GetMapping("/cleaners/approve/{id}")
     public String approveCleanerbyId(@PathVariable("id") int id, Model model) {
         Optional<Cleaner> cleaner = cleanerService.findCleanerById(id);
@@ -154,7 +161,7 @@ public class CleanersController {
 
         return "forward:/cleaners";
     }
-
+    // Method to download a cleaner's  cv PDF by their ID
     @GetMapping("/cleaners/viewPdf/{id}")
     public ResponseEntity<InputStreamResource> viewPdf(@PathVariable("id") int id, Model model) throws IOException
     {
@@ -180,6 +187,10 @@ public class CleanersController {
 
         else return null;
         }
+
+    // Method to update a cleaner -- process the edit and check if their are bookings
+    // with serivces that are deleted from cleaner's list to prevent that edit
+    //if everything is correct the edit will be successfully done.
     @PostMapping("/cleaners/update-cleaner/{id}")
     public String updateServices(@PathVariable("id") int id, @Valid @ModelAttribute("cleaner") Cleaner cleaner, BindingResult bindingResult, Model model, RedirectAttributes redirectAttrs) {
         System.out.println(cleaner.toString());

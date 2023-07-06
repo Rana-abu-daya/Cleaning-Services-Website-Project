@@ -42,14 +42,14 @@ import java.util.Optional;
 @Controller
 @Slf4j
 public class AdminController {
-   // private static final Logger log = LoggerFactory.getLogger(AdminController.class);
-
+    // Instance variables
     AdminRepository adminRepository;
     UserService userService;
     AdminService adminService;
     private BCryptPasswordEncoder encoder;
     private RoleService roleService;
 
+    // Constructor for dependency injection
     @Autowired
     public AdminController(RoleService roleService,AdminRepository adminRepository, UserService userService, AdminService adminService, @Lazy BCryptPasswordEncoder encoder){
         this.adminRepository =adminRepository;
@@ -59,6 +59,7 @@ public class AdminController {
         this.roleService=roleService;
     }
 
+    // Method to get all admins with pagination
     @GetMapping("/admins")
     private String AllAdmin(Model model, @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 5); // get 5 items per page
@@ -68,6 +69,7 @@ public class AdminController {
         return "admins";
     }
 
+    // Method to delete an admin by their ID
     @GetMapping("/admins/delete/{id}")
     @ResponseBody
     public String[] deleteAdminbyId(@PathVariable("id") int id, Model model, Principal principal) {
@@ -99,6 +101,7 @@ public class AdminController {
         }
 
     }
+    // Method to get an admin by their ID for editing
     @GetMapping("/admins/edit-admin/{id}")
     public String editAdminbyId(@PathVariable("id") int id, Model model) {
         Optional<Admin> admin = adminService.findAdminById(id);
@@ -106,6 +109,8 @@ public class AdminController {
         model.addAttribute("id", id);
         return "edit-admin";
     }
+
+    // Method to update an admin to process the edit
     @PostMapping("/admins/updateAdmin/{id}")
     public String updateServices(@PathVariable("id") int id, @Valid @ModelAttribute ("admin") Admin admin, BindingResult bindingResult, Model model,Principal principal ,RedirectAttributes redirectAttrs) {
         System.out.println(admin.toString());
