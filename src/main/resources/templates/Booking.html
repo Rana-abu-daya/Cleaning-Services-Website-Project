@@ -365,8 +365,12 @@ if (noCleanerInput && (noCleanerInput.value == "0")) {
       return false;
 }
 if (noCleanerInput && (noCleanerInput.value == 1)) {
+var seletedCleaner = $("input[name='cleanerId']:checked").val();
 var radioButton = document.querySelector('input[name="cleanerId"]');
-if (radioButton && radioButton.checked) {
+console.log(radioButton.checked);
+console.log(seletedCleaner);
+if ((radioButton && radioButton.checked) || seletedCleaner !='undefined') {
+
 }else{
 alert("choose one cleaner");
       return false;

@@ -20,10 +20,10 @@
   <tbody>
   <tr th:each="cleaner : ${cleanersList}">
     <td>
-     <input type="radio" class="" name="cleanerId"  th:id="${cleaner.id}"  th:value="${cleaner.id}"/>
+     <input type="radio" class="" name="cleanerId"  th:id="'cleanerId'+${cleaner.id}"  th:value="${cleaner.id}"/>
     </td>
     <td>
-      <label class="" th:for="${cleaner.id}" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}"></label>
+      <label class="" th:for="'cleanerId'+${cleaner.id}" th:text="${#strings.capitalize(cleaner.user.firstName)}+' '+ ${#strings.capitalize(cleaner.user.lastName)}"></label>
     </td>
     <td style="display: inline-grid;">
       <img th:src="${cleaner.user.photo != null} ? '/assets/uploads/'+${cleaner.user.photo} : '/assets/images/empty-photo.png'"  class="navbar-brand-img" alt="main_logo" style="  width: 80px;height:80px;border-radius: 50%;">

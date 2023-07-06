@@ -61,6 +61,7 @@ public class ReviewController {
             List<Booking.BookingStatus> statuses = new ArrayList<>();
             statuses.add(Booking.BookingStatus.SUCCESS);
             bookings = bookingService.findByStatusInAndCustomerId(statuses,customer.getId());
+
             Pageable pageable = PageRequest.of(page, 5);
             int start = (int)pageable.getOffset();
             int end = Math.min((start + pageable.getPageSize()), bookings.size());
@@ -74,7 +75,7 @@ public class ReviewController {
             model.addAttribute("bookings", list);
 
 
-        } if(user.hasRole("ROLE_CLEANER")){
+        } else if(user.hasRole("ROLE_CLEANER")){
             Cleaner cleaner=cleanerService.findByUserId(user.getId());
             List<Booking.BookingStatus> statuses = new ArrayList<>();
             statuses.add(Booking.BookingStatus.SUCCESS);
@@ -105,6 +106,7 @@ public class ReviewController {
             // Add the bookings to the model
             model.addAttribute("bookings", list);
         }
+
         model.addAttribute("reviewDTO", new ReviewDTO());
 
         return "Booking-Reviews";
