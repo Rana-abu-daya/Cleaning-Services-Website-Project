@@ -127,7 +127,7 @@ public class ReviewController {
         {
 
 
-            // log.warn("Wrong attempt");
+            log.warn("Wrong attempt");
             return "index";
         }
 

@@ -381,7 +381,8 @@ public String addAdmin(Model model)
     }
 
     String username = principal.getName();
-
+    System.out.println(username);
+    System.out.println(principal);
     User user = userService.findUserByEmail(username);
     user.setPassword("1234");
     user.setMatchingPassword("1234");

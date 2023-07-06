@@ -3,6 +3,7 @@ package org.ranaabudaya.capstone.controller;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.ranaabudaya.capstone.dto.BookingDTO;
 import org.ranaabudaya.capstone.dto.CustomerDTO;
 import org.ranaabudaya.capstone.dto.MessageDTO;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class mainController {
 
     ServicesServiceImp servicesServiceImp;
@@ -164,7 +166,7 @@ public class mainController {
         System.out.println(Booking.toString());
         if(bindingResult.hasErrors()  )
         {
-            // log.warn("Wrong attempt to add admin");
+            log.warn("Wrong attempt to add booking");
             return "Booking";
         }
 
@@ -193,6 +195,7 @@ public class mainController {
                         saved = true;
                         session.setAttribute("savedBooking", "Booking is saved successfully");
                         session.setAttribute("savedBookingalertType", "alert-success");
+                        log.info("booking is created");
                     }
                 }
             }

@@ -2,6 +2,7 @@ package org.ranaabudaya.capstone.controller;
 
 import jakarta.persistence.Access;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.ranaabudaya.capstone.dto.ServicesDTO;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@Slf4j
 public class BookingController {
 
   BookingService bookingService ;
@@ -228,8 +230,10 @@ public String checkAvailble(Model model) {
             model.addAttribute("cleaners", cleaners);
             model.addAttribute("booking", booking);
             model.addAttribute("id", id);
+            log.warn("Wrong attempt edit booking");
             return "edit-booking";
         }else{
+            log.warn("attemp to edit booking from cleaner or not own the booking");;
             return "redirect:/bookings";
         }
     }
@@ -242,7 +246,7 @@ public String checkAvailble(Model model) {
         {  List<Services> services = servicesService.getAllActiveServices();
             model.addAttribute("services", services);
             model.addAttribute("id", id);
-            // log.warn("Wrong attempt");
+             log.warn("Wrong attempt edit booking");
             return "edit-booking";
         }
 
@@ -362,7 +366,7 @@ public String checkAvailble(Model model) {
             redirectAttrs.addFlashAttribute("message", "The booking cannot be found");
             redirectAttrs.addFlashAttribute("alertType", "alert-danger");
         }
-
+        log.info("edit booking successfuly");
         return "redirect:/bookings";
     }
 

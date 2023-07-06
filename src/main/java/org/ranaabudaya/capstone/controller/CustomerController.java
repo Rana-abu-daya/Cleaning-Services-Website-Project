@@ -134,6 +134,7 @@ public class CustomerController {
         {
 
             model.addAttribute("id", id);
+            log.warn("Wrong attempt edit customer");
             return "edit-customer";
         }
 
@@ -163,7 +164,7 @@ public class CustomerController {
             redirectAttrs.addFlashAttribute("message", " customer cannot be found");
             redirectAttrs.addFlashAttribute("alertType", "alert-danger");
         }
-
+        log.info("edit customer went successfuly");
         return "redirect:/customers";
 
     }

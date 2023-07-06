@@ -192,7 +192,7 @@ public class CleanersController {
         {
             model.addAttribute("listServices", listServices);
             model.addAttribute("id", id);
-            // log.warn("Wrong attempt");
+             log.warn("Wrong attempt edit cleaner");
             return "edit-cleaner";
         }
 
@@ -251,7 +251,7 @@ public class CleanersController {
             redirectAttrs.addFlashAttribute("message", "Cleaner cannot be found");
             redirectAttrs.addFlashAttribute("alertType", "alert-danger");
         }
-
+        log.info("cleaner is edited sucessfully");
         return "redirect:/cleaners";
 
     }

@@ -1,6 +1,7 @@
 package org.ranaabudaya.capstone.controller;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.ranaabudaya.capstone.dto.ServicesDTO;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@Slf4j
 @RequestMapping("/services")
 public class ServicesController {
 
@@ -80,7 +82,7 @@ public class ServicesController {
 
         if(bindingResult.hasErrors())
         {
-           // log.warn("Wrong attempt");
+           log.warn("Wrong attempt add services");
             return "newService";
         }
         Services services = servicesServiceImp.getServiceByName(serviceDTO.getName());
@@ -97,7 +99,7 @@ public class ServicesController {
         redirectAttrs.addFlashAttribute("message", "The service is added successfully");
         redirectAttrs.addFlashAttribute("alertType", "alert-success");
 
-
+        log.info("service is added");
         return "redirect:/services/services";
 
     }
@@ -143,6 +145,7 @@ public class ServicesController {
         Optional<Services> s = servicesServiceImp.getServiceById(id);
         model.addAttribute("service", s);
         model.addAttribute("id", id);
+
         return "edit-service";
     }
 
@@ -154,7 +157,7 @@ public class ServicesController {
         {
 
             model.addAttribute("id", id);
-            // log.warn("Wrong attempt");
+            log.warn("Wrong attempt edit service");
             return "edit-service";
         }
 
@@ -189,7 +192,7 @@ public class ServicesController {
             redirectAttrs.addFlashAttribute("message", "The service cannot be found");
             redirectAttrs.addFlashAttribute("alertType", "alert-danger");
         }
-
+        log.info("edit service successfully");
         return "redirect:/services/services";
 
     }

@@ -14,6 +14,8 @@ import org.ranaabudaya.capstone.repository.UserRepository;
 import org.ranaabudaya.capstone.service.AdminService;
 import org.ranaabudaya.capstone.service.RoleService;
 import org.ranaabudaya.capstone.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,7 @@ import java.util.Optional;
 @Controller
 @Slf4j
 public class AdminController {
+   // private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
     AdminRepository adminRepository;
     UserService userService;
@@ -76,6 +79,7 @@ public class AdminController {
             String arr[] = new String[2];
             arr[0] = "You can't delete yourself. the logged admin";
             arr[1]= "danger";
+            log.warn("Wrong attempt delete admin");
             return  arr;
         }
         int result =  adminService.deleteById(id);
@@ -83,11 +87,13 @@ public class AdminController {
         if(result>0){
             arr[0] = "The admin is deleted successfully";
             arr[1]= "success";
+            log.info("Admin deleted");
             return  arr;
 
         }else {
             arr[0] = "The admin's deletion failed, there is one admin";
             arr[1]= "danger";
+            log.warn("Wrong attempt deleting admin");
             return  arr;
 
         }
@@ -109,7 +115,7 @@ public class AdminController {
         {
 
             model.addAttribute("id", id);
-            // log.warn("Wrong attempt");
+            log.warn("Wrong attempt edit admin");
             return "edit-admin";
         }
 
@@ -149,7 +155,7 @@ public class AdminController {
             redirectAttrs.addFlashAttribute("message", " Admin cannot be found");
             redirectAttrs.addFlashAttribute("alertType", "alert-danger");
         }
-
+        log.info("Edit admin is done successfully");
         return "redirect:/admins";
 
     }
