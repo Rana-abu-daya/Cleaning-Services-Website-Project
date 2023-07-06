@@ -430,6 +430,12 @@ public String addAdmin(Model model)
         }
         newUser.setId(existUser.getId());
         newUser.setPassword(existUser.getPassword());
+        String role = "";
+        for (Role r: existUser.getRoles()) {
+                role=r.getName();
+
+        }
+        newUser.setRoleName(role);
         int idUser =  userService.update(newUser);
         redirectAttrs.addFlashAttribute("message", "your profile is updated successfully");
         redirectAttrs.addFlashAttribute("alertType", "alert-success");
