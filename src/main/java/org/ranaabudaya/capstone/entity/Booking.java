@@ -29,7 +29,7 @@ public class Booking {
     @JoinColumn(name = "service_id", referencedColumnName = "id")
     private Services service;
     @NotNull(message = "Required")
-    @Future(message = "Please select a date in the future")
+    //@Future(message = "Please select a date in the future")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
     @NotNull
